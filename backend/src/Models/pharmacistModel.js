@@ -34,7 +34,11 @@ const pharmacistSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // Add other fields as needed for pharmacist data
+  status: {
+    type: String,
+    enum: ['accepted', 'rejected', 'pending'], // Allowed values
+    default: 'pending', // Default value
+  }
 });
 
 // Create the Pharmacist model

@@ -1,16 +1,14 @@
 // External variables
-const express = require("express");
+const express = require('express');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const {createUser,getUsers, updateUser, deleteUser} = require("./Routes/userController");
-const MongoURI = 'mongodb+srv://admin:admin@cluster0.8ayf1xv.mongodb.net/?retryWrites=true&w=majority' ;
+const MongoURI = 'mongodb+srv://bissosamir:bissozozo@cluster0.3vkavpd.mongodb.net/' ;
 
 
 //App variables
 const app = express();
 const port = process.env.PORT || "8000";
-const user = require('./Models/User');
 // #Importing the userController
 
 
@@ -25,23 +23,15 @@ mongoose.connect(MongoURI)
   })
 })
 .catch(err => console.log(err));
-/*
-                                                    Start of your code
-*/
-app.get("/home", (req, res) => {
-    res.status(200).send("You have everything installed!");
-  });
-
-// #Routing to userController here
 
 app.use(express.json())
-app.post("/addUser",createUser);
-app.get("/users", getUsers);
-app.put("/updateUser", updateUser);
-app.delete("/deleteUser", deleteUser);
+
+app.get("/", (req, res) => {
+    res.status(200).send("Welcome to el7a2ni");
+  });
+
+const administratorRoutes = require('./Routes/administrator') //to import the router that was exported from administrator.js
+app.use('/api/administrator' , administratorRoutes);
 
 
-/*
-                                                    End of your code
-*/
 
