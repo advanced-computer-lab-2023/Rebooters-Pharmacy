@@ -1,6 +1,7 @@
 const Administrator = require('../Models/administratorModel');
 const Pharmacist = require('../Models/pharmacistModel');
 const Patient = require('../Models/patientModel');
+const NewPharmacistRequest = require('../Models/newPharmacistRequestModel');
 
 const mongoose = require('mongoose');
 
@@ -20,13 +21,20 @@ const addAdministrator= async (req, res) => {
     // Remove a pharmacist or patient from the system
 const removeUserFromSystem =  async (req, res) => {
       try {
-        const userId = req.params.id; // ID of the pharmacist or patient to remove
+        const {id} = req.params; // ID of the pharmacist or patient to remove
         // Check if the user is a pharmacist or patient and remove accordingly
-        const removedUser = await (Pharmacist.findByIdAndRemove(userId) || Patient.findByIdAndRemove(userId));
-        if (!removedUser) {
+        //const removedUser = await (Pharmacist.findOneAndRemove(userId) || Patient.findOneAndRemove(userId));
+        const removedUserPharmacist = await Pharmacist.findOneAndDelete({_id : id});
+        const removedUserPatient = await Patient.findOneAndDelete({_id : id});  
+       
+        console.log(removedUserPatient);
+        console.log(removedUserPharmacist);
+        if (removedUserPharmacist==null && removedUserPatient==null) {
           return res.status(404).json({ message: 'User not found' });
         }
+        else{
         res.status(200).json({ message: 'User removed successfully' });
+      }
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error removing user from the system' });
@@ -37,7 +45,7 @@ const removeUserFromSystem =  async (req, res) => {
 const viewPharmacistApplication = async (req, res) => {
       try {
         // Fetch all pharmacist application data (customize this based on your data structure)
-        const pharmacistApplications = await Pharmacist.find({ status: 'pending' });
+        const pharmacistApplications = await NewPharmacistRequest.find({ status: 'pending' });
         res.status(200).json(pharmacistApplications);
       } catch (error) {
         console.error(error);
@@ -45,6 +53,17 @@ const viewPharmacistApplication = async (req, res) => {
       }
 }
   
+const viewMedicineInventory= async (req, res) => {
+  try {
+    // Fetch all medicines (prescriptions in this context)
+    const medicines = await Prescription.find();
+    res.status(200).json(medicines);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching medicine inventory' });
+  }
+}
+
     // View a pharmacist's information
 const viewPharmacistInformation = async (req, res) => {
       try {

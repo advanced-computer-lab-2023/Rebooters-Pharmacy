@@ -33,5 +33,12 @@ app.get("/", (req, res) => {
 const administratorRoutes = require('./Routes/administrator') //to import the router that was exported from administrator.js
 app.use('/api/administrator' , administratorRoutes);
 
+const guestRoutes = require('./Routes/guest');
+app.use('/api/guest', guestRoutes);
+
+const pharmacistRoutes = require('./Routes/pharmacist');
+app.use('/api/pharmacist', pharmacistRoutes);
+
+
 
 
