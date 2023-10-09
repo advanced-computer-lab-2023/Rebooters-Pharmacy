@@ -18,27 +18,36 @@ const addMedicine = async (req, res) => {
     
   
     // Edit medicine details and price
-// const editMedicine = async (req, res) => {
-//       try {
-//         const medicineId = req.params.id; // ID of the medicine (prescription) to edit
-//         const { name, activeIngredients, price } = req.body;
-//         const updatedMedicine = await Prescription.findByIdAndUpdate(
-//           medicineId,
-//           {
-//             patientName: name,
-//             medication: activeIngredients,
-//           },
-//           { new: true }
-//         );
-//         if (!updatedMedicine) {
-//           return res.status(404).json({ message: 'Medicine not found' });
-//         }
-//         res.status(200).json(updatedMedicine);
-//       } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Error editing medicine' });
-//       }
-//     };
+const editMedicine = async (req, res) => {
+      try {
+        const id = req.params.id; // ID of the medicine (prescription) to edit
+        const { name, activeIngredients, price ,medicinalUse,description,quantity} = req.body;
+        const updatedMedicine = await Medicine.findOneAndUpdate({
+          _id:id
+        },{...req.body},{ new: true })
+        if (!updatedMedicine) {
+          return res.status(404).json({ message: 'Medicine not found' });
+        }
+        res.status(200).json(updatedMedicine);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error editing medicine' });
+      }
+    };
+// const dummyPharmacist = new Pharmacist({
+//   username: 'dummypharmacist',
+//   password: 'dummypharmacistpassword',
+//   name: 'Dummy pharmacist',
+//   email: 'dummypharmacist@example.com',
+//   dateOfBirth: new Date('1990-01-01'), // Assuming the date of birth is stored as a Date
+//   hourlyRate: 100.0, // Example hourly rate
+//   affiliation: 'Hospital ABC',
+//   speciality: 'Cardiology',
+//   educationalBackground: 'pharma School XYZ graduate',
+  
+// });
+
+// dummyPharmacist.save(); 
 
   
-module.exports = { addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName }; 
+module.exports = { addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine }; 

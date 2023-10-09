@@ -31,10 +31,10 @@ const viewMedicineInventory = async (req, res) => {
       if (!medicineName || medicineName.trim() === '') {
         return res.status(400).json({ message: 'Invalid medicine name query.' });
       }
-  
-      // Use a case-insensitive regular expression to find medicines with names containing the input
-      const medicines = await Medicine.find({ name: { $regex: medicineName, $options: 'i' } });
-  
+
+     // Perform an exact, case-insensitive match on the medicine name
+     const medicines = await Medicine.find({ name: { $regex: new RegExp(`^${medicineName}$`, 'i') } });
+
       if (!medicines || medicines.length === 0) {
         return res.status(404).json({ message: 'No matching medicines found.' });
       }
@@ -64,7 +64,7 @@ const filterMedicineByMedicinalUse = async (req, res) => {
     }
 
     // Use a case-insensitive regular expression to find medicines with matching medicinal use
-    const medicines = await Medicine.find({ medicinalUse: { $regex: medicinalUse, $options: 'i' } });
+    const medicines = await Medicine.find({ medicinalUse: { $regex: new RegExp(`^${medicinalUse}$`, 'i') } });
 
     if (!medicines || medicines.length === 0) {
       return res.status(404).json({ message: 'No matching medicines found.' });

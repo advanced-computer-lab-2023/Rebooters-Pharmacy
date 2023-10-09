@@ -20,17 +20,17 @@ const addAdministrator= async (req, res) => {
 }
   
     // Remove a pharmacist or patient from the system
-const removeUserFromSystem =  async (req, res) => {
+    const removeUserFromSystem =  async (req, res) => {
       try {
         const {id} = req.params; // ID of the pharmacist or patient to remove
         // Check if the user is a pharmacist or patient and remove accordingly
         //const removedUser = await (Pharmacist.findOneAndRemove(userId) || Patient.findOneAndRemove(userId));
         const removedUserPharmacist = await Pharmacist.findOneAndDelete({_id : id});
         const removedUserPatient = await Patient.findOneAndDelete({_id : id});  
-       
-        console.log(removedUserPatient);
-        console.log(removedUserPharmacist);
-        if (removedUserPharmacist==null && removedUserPatient==null) {
+        const removedAdmin = await Administrator.findOneAndDelete({_id : id});  
+
+        
+        if (removedUserPharmacist==null && removedUserPatient==null && removedAdmin==null) {
           return res.status(404).json({ message: 'User not found' });
         }
         else{
@@ -41,7 +41,6 @@ const removeUserFromSystem =  async (req, res) => {
         res.status(500).json({ message: 'Error removing user from the system' });
       }
 }
-  
     // View all information uploaded by a pharmacist to apply to join the platform
 const viewPharmacistApplication = async (req, res) => {
       try {
@@ -59,10 +58,9 @@ const viewPharmacistApplication = async (req, res) => {
     // View a pharmacist's information
 const viewPharmacistInformation = async (req, res) => {
       try {
-        const pharmacistId = req.params.id; // ID of the pharmacist to view
-        const pharmacist = await Pharmacist.findById(pharmacistId);
+        const pharmacist = await Pharmacist.find({});
         if (!pharmacist) {
-          return res.status(404).json({ message: 'Pharmacist not found' });
+          return res.status(404).json({ message: 'Pharmacists not found' });
         }
         res.status(200).json(pharmacist);
       } catch (error) {
@@ -74,18 +72,13 @@ const viewPharmacistInformation = async (req, res) => {
     // View a patient's basic information
 const viewPatientInformation = async (req, res) => {
       try {
-        const patientId = req.params.id; // ID of the patient to view
-        const patient = await Patient.findById(patientId);
+        
+        const patient = await Patient.find({});
         if (!patient) {
-          return res.status(404).json({ message: 'Patient not found' });
+          return res.status(404).json({ message: 'Patients not found' });
         }
-        // Customize this to send only basic patient information
-        const basicInfo = {
-          name: patient.name,
-          email: patient.email,
-          // Add other basic fields as needed
-        };
-        res.status(200).json(basicInfo);
+        
+        res.status(200).json(patient);
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching patient information' });
