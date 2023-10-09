@@ -2,6 +2,7 @@ const Administrator = require('../Models/administratorModel');
 const Pharmacist = require('../Models/pharmacistModel');
 const Patient = require('../Models/patientModel');
 const NewPharmacistRequest = require('../Models/newPharmacistRequestModel');
+const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 
 const mongoose = require('mongoose');
 
@@ -51,18 +52,9 @@ const viewPharmacistApplication = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Error fetching pharmacist applications' });
       }
-}
-  
-const viewMedicineInventory= async (req, res) => {
-  try {
-    // Fetch all medicines (prescriptions in this context)
-    const medicines = await Prescription.find();
-    res.status(200).json(medicines);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching medicine inventory' });
-  }
-}
+};
+
+
 
     // View a pharmacist's information
 const viewPharmacistInformation = async (req, res) => {
@@ -106,5 +98,8 @@ module.exports = {
   removeUserFromSystem,
   viewPharmacistApplication,
   viewPharmacistInformation,
-  viewPatientInformation
+  viewPatientInformation,
+  viewMedicineInventory,
+  filterMedicineByMedicinalUse,
+  searchMedicineByName
  }; 

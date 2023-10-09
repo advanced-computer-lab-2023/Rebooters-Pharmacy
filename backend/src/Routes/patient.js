@@ -1,11 +1,12 @@
 const express = require('express') //require or import express
-const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
+const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName} = require('../Controllers/PatientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
-router.post('/addMedicine' , addMedicine);
 router.get('/viewMedicineInventory', viewMedicineInventory);
-router.post('/filterMedicineByMedicinalUse', filterMedicineByMedicinalUse);
+
 router.post('/searchMedicineByName', searchMedicineByName);
+
+router.post('/filterMedicineByMedicinalUse', filterMedicineByMedicinalUse);
 
 module.exports = router //we need to export that router at the end so that App.js can access it
