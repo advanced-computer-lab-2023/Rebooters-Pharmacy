@@ -15,7 +15,9 @@ const viewMedicineInventory = async (req, res) => {
         name: medicine.name,
         price: medicine.price,
         description: medicine.description,
-        image: medicine.image, // You can include the image data if it's stored in your database
+        image: medicine.image,
+        sales: medicine.sales,
+        quantity: medicine.quantity // You can include the image data if it's stored in your database
       }));
   
       res.status(200).json(medicinesInfo);

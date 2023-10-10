@@ -17,6 +17,30 @@ const addMedicine = async (req, res) => {
     // Add a new medicine with details, price, and available quantity
     
   
+const viewMedicineInventoryPharmacist = async (req, res) => {
+  try {
+    // Fetch medicines with quantity greater than 0
+    const medicines = await Medicine.find({ quantity: { $gt: 0 } });
+
+    if (!medicines || medicines.length === 0) {
+      return res.status(404).json({ message: 'No available medicines found.' });
+    }
+
+    // Map the medicines to only include relevant information
+    const medicinesInfo = medicines.map((medicine) => ({
+      quantity: medicine.quantity,
+      sales: medicine.sales
+    }));
+
+    res.status(200).json(medicinesInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching available medicine inventory' });
+  }
+};
+
+
+
     // Edit medicine details and price
 const editMedicine = async (req, res) => {
       try {
@@ -50,4 +74,4 @@ const editMedicine = async (req, res) => {
 // dummyPharmacist.save(); 
 
   
-module.exports = { addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine }; 
+module.exports = { viewMedicineInventoryPharmacist, addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine }; 
