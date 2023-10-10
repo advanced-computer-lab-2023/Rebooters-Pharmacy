@@ -1,7 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-//import Home from "./pages/Home";
-//import Navbar from "./components/Navbar";
+
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
 //import DoctorHome from "./pages/DoctorHome";
+
+import Medicine from "./components/Medicine";
+
 
 function App() {
   return (
@@ -11,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pharmacist-home" element={<PharmacistHome />} />
+          <Route path="/medicine" element={<Medicine modelName="administrator"/>} />
         </Routes>
       </BrowserRouter>
     </div>

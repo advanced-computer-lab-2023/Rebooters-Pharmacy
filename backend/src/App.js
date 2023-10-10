@@ -3,7 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-const MongoURI = 'mongodb+srv://anthonyuiskander:Babaoba7@cluster0.052zrmb.mongodb.net/' ;
+const MongoURI = '';
+
 
 
 //App variables

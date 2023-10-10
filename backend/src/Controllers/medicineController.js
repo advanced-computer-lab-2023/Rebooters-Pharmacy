@@ -1,5 +1,14 @@
+const Medicine = require("../Models/medicineModel");
 
-const Medicine = require('../Models/medicineModel');
+/*const dummyMedicines = new Medicine({
+  name: "Medicine 1",
+  activeIngredients: "Ingredient A",
+  price: 10.99,
+  description: "Description for Medicine 1",
+  medicinalUse: "Use Case A",
+  quantity: 100,
+});
+dummyMedicines.save();*/
 
 const viewMedicineInventory = async (req, res) => {
     try {
@@ -15,7 +24,7 @@ const viewMedicineInventory = async (req, res) => {
         name: medicine.name,
         price: medicine.price,
         description: medicine.description,
-        image: medicine.image,
+        image: medicine.image, // You can include the image data if it's stored in your database
         sales: medicine.sales,
         quantity: medicine.quantity // You can include the image data if it's stored in your database
       }));
@@ -34,42 +43,13 @@ const viewMedicineInventory = async (req, res) => {
         return res.status(400).json({ message: 'Invalid medicine name query.' });
       }
 
-     // Perform an exact, case-insensitive match on the medicine name
-     const medicines = await Medicine.find({ name: { $regex: new RegExp(`^${medicineName}$`, 'i') } });
-
-      if (!medicines || medicines.length === 0) {
-        return res.status(404).json({ message: 'No matching medicines found.' });
-      }
-  
-      // Map the matching medicines to only include relevant information
-      const medicinesInfo = medicines.map((medicine) => ({
-        name: medicine.name,
-        price: medicine.price,
-        description: medicine.description,
-        image: medicine.image, // You can include the image data if it's stored in your database
-      }));
-  
-      res.status(200).json(medicinesInfo);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error searching for medicines by name' });
-    }
-  };
-  
-
-const filterMedicineByMedicinalUse = async (req, res) => {
-  try {
-    const { medicinalUse } = req.body; // Assuming medicinal use is provided as a query parameter
-
-    if (!medicinalUse || medicinalUse.trim() === '') {
-      return res.status(400).json({ message: 'Invalid medicinal use query.' });
-    }
-
-    // Use a case-insensitive regular expression to find medicines with matching medicinal use
-    const medicines = await Medicine.find({ medicinalUse: { $regex: new RegExp(`^${medicinalUse}$`, 'i') } });
+    // Perform an exact, case-insensitive match on the medicine name
+    const medicines = await Medicine.find({
+      name: { $regex: new RegExp(`^${medicineName}$`, "i") },
+    });
 
     if (!medicines || medicines.length === 0) {
-      return res.status(404).json({ message: 'No matching medicines found.' });
+      return res.status(404).json({ message: "No matching medicines found." });
     }
 
     // Map the matching medicines to only include relevant information
@@ -83,14 +63,46 @@ const filterMedicineByMedicinalUse = async (req, res) => {
     res.status(200).json(medicinesInfo);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error filtering medicines by medicinal use' });
+    res.status(500).json({ message: "Error searching for medicines by name" });
   }
 };
 
+const filterMedicineByMedicinalUse = async (req, res) => {
+  try {
+    const { medicinalUse } = req.body; // Assuming medicinal use is provided as a query parameter
 
+    if (!medicinalUse || medicinalUse.trim() === "") {
+      return res.status(400).json({ message: "Invalid medicinal use query." });
+    }
 
-  
-  
-     
+    // Use a case-insensitive regular expression to find medicines with matching medicinal use
+    const medicines = await Medicine.find({
+      medicinalUse: { $regex: new RegExp(`^${medicinalUse}$`, "i") },
+    });
 
-  module.exports = { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName };
+    if (!medicines || medicines.length === 0) {
+      return res.status(404).json({ message: "No matching medicines found." });
+    }
+
+    // Map the matching medicines to only include relevant information
+    const medicinesInfo = medicines.map((medicine) => ({
+      name: medicine.name,
+      price: medicine.price,
+      description: medicine.description,
+      image: medicine.image, // You can include the image data if it's stored in your database
+    }));
+
+    res.status(200).json(medicinesInfo);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error filtering medicines by medicinal use" });
+  }
+};
+
+module.exports = {
+  viewMedicineInventory,
+  filterMedicineByMedicinalUse,
+  searchMedicineByName,
+};
