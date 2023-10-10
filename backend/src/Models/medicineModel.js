@@ -30,6 +30,7 @@ const MedicineSchema = new Schema({
         data: Buffer, // You can use Buffer to store binary image data
         contentType: String, // Store the content type (e.g., 'image/jpeg', 'image/png')
         filename: String, // Store the filename (optional)
+
       },
    
   }, { timestamps: true });
