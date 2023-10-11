@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AddPharmacist = () => {
+const PharmReq = () => {
   const [newPharmacist, setNewPharmacist] = useState({
     username: "",
     name: "",
@@ -23,7 +23,7 @@ const AddPharmacist = () => {
 
   const handleAddPharmacist = async () => {
     try {
-      const response = await fetch("/api/pharmacist/addPharmacist", {
+      const response = await fetch("/api/guest/createNewPharmacistRequest", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,4 +160,4 @@ const AddPharmacist = () => {
   );
 };
 
-export default AddPharmacist;
+export default PharmReq;
