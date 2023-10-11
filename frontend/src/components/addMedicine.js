@@ -12,6 +12,7 @@ const AddMedicine = () => {
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [image, setImage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,6 +20,11 @@ const AddMedicine = () => {
       ...newMedicine,
       [name]: value,
     });
+  };
+
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
   };
 
   const handleAddMedicine = async () => {
@@ -36,18 +42,33 @@ const AddMedicine = () => {
     }
 
     try {
+      const formData = new FormData();
+      formData.append("name", newMedicine.name);
+      formData.append("activeIngredients", newMedicine.activeIngredients);
+      formData.append("price", newMedicine.price);
+      formData.append("description", newMedicine.description);
+      formData.append("medicinalUse", newMedicine.medicinalUse);
+      formData.append("quantity", newMedicine.quantity);
+      formData.append("image", image);
+
       const response = await fetch("/api/pharmacist/addMedicine", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newMedicine),
+        body: formData,
       });
 
       if (response.ok) {
         setMessage("Medicine added successfully");
         setError("");
         //window.location.reload();//comment this
+        setNewMedicine({
+          name: "",
+          activeIngredients: "",
+          price: 0,
+          description: "",
+          medicinalUse: "",
+          quantity: 0,
+        });
+        setImage(null);
       } else {
         const errorData = await response.json();
         setError(errorData.error);
@@ -141,6 +162,18 @@ const AddMedicine = () => {
             name="quantity"
             value={newMedicine.quantity}
             onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="image" className="form-label">
+            Image: (Optional)
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="image"
+            name="image"
+            onChange={handleImageChange}
           />
         </div>
         <button className="btn btn-primary" onClick={handleAddMedicine}>

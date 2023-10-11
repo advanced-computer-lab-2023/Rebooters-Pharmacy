@@ -12,11 +12,9 @@ const EditMedicine = () => {
 
   const [error, setError] = useState("");
 
-  
-
   const [medicineName, setMedicineName] = useState("");
   const [searchedMedicine, setSearchedMedicine] = useState([]); // To store the searched medicine
-  const [updatedMedicine , setUpdatedMedicine] = useState(null);
+  const [updatedMedicine, setUpdatedMedicine] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,9 +27,9 @@ const EditMedicine = () => {
   const handleSearchMedicine = async () => {
     try {
       const response = await fetch(`/api/pharmacist/searchMedicineByName`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ medicineName: medicineName }),
       });
@@ -49,7 +47,10 @@ const EditMedicine = () => {
         console.error("Error searching for medicine");
       }
     } catch (error) {
-      console.error("An error occurred while searching for the medicine:", error);
+      console.error(
+        "An error occurred while searching for the medicine:",
+        error
+      );
     }
   };
 
@@ -66,7 +67,6 @@ const EditMedicine = () => {
       return;
     }
 
-
     try {
       const response = await fetch("/api/pharmacist/editMedicine", {
         method: "PATCH",
@@ -80,7 +80,6 @@ const EditMedicine = () => {
         setError("");
         const updatedMedicineData = await response.json();
         setUpdatedMedicine(updatedMedicineData);
-        
       } else {
         const errorData = await response.json();
         setError(errorData.error);
@@ -107,22 +106,30 @@ const EditMedicine = () => {
             value={medicineName}
             onChange={(e) => setMedicineName(e.target.value)}
           />
-          <button className="btn btn-primary mt-2" onClick={handleSearchMedicine}>
+          <button
+            className="btn btn-primary mt-2"
+            onClick={handleSearchMedicine}
+          >
             Search Medicine
           </button>
         </div>
         {/* Display searched medicine details */}
-        {searchedMedicine && searchedMedicine.map((medicine) => (
-    <div>
-      <p>Name: {medicine.name}</p>
-      <p>Active Ingredients: {medicine.activeIngredients}</p>
-      <p>Price: {medicine.price}</p>
-      <p>Description: {medicine.description}</p>
-      <p>Medicinal Use: {medicine.medicinalUse}</p>
-      <p>Quantity: {medicine.quantity}</p>
-    </div>
-        )
-)}
+        {searchedMedicine &&
+          searchedMedicine.map((medicine) => (
+            <div>
+              <p>Name: {medicine.name}</p>
+              <p>Active Ingredients: {medicine.activeIngredients}</p>
+              <p>Price: {medicine.price}</p>
+              <p>Description: {medicine.description}</p>
+              <p>Medicinal Use: {medicine.medicinalUse}</p>
+              <p>Quantity: {medicine.quantity}</p>
+              {medicine.image.filename ? (
+                <img src={`${medicine.image.filename}`} alt="Medicine" />
+              ) : (
+                <p>No Image Available</p>
+              )}
+            </div>
+          ))}
         {/* Rest of the form fields for editing */}
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
@@ -150,7 +157,7 @@ const EditMedicine = () => {
             onChange={handleInputChange}
           />
         </div>
-        
+
         <div className="mb-3">
           <label htmlFor="price" className="form-label">
             Price:
@@ -208,15 +215,15 @@ const EditMedicine = () => {
         </button>
       </div>
       {updatedMedicine && (
-  <div>
-    <p>Name: {updatedMedicine.name}</p>
-    <p>Active Ingredients: {updatedMedicine.activeIngredients}</p>
-    <p>Price: {updatedMedicine.price}</p>
-    <p>Description: {updatedMedicine.description}</p>
-    <p>Medicinal Use: {updatedMedicine.medicinalUse}</p>
-    <p>Quantity: {updatedMedicine.quantity}</p>
-  </div>
-)}
+        <div>
+          <p>Name: {updatedMedicine.name}</p>
+          <p>Active Ingredients: {updatedMedicine.activeIngredients}</p>
+          <p>Price: {updatedMedicine.price}</p>
+          <p>Description: {updatedMedicine.description}</p>
+          <p>Medicinal Use: {updatedMedicine.medicinalUse}</p>
+          <p>Quantity: {updatedMedicine.quantity}</p>
+        </div>
+      )}
     </div>
   );
 };
