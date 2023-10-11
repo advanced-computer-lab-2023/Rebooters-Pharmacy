@@ -5,6 +5,7 @@ const MedicineSchema = new Schema({
     name: {
         type: String,
         required: true,
+        unique: true
     },
     activeIngredients: {
       type: String,

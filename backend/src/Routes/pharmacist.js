@@ -7,6 +7,6 @@ router.post('/addMedicine' , addMedicine);
 router.get('/viewMedicineInventory', viewMedicineInventory);
 router.post('/filterMedicineByMedicinalUse', filterMedicineByMedicinalUse);
 router.post('/searchMedicineByName', searchMedicineByName);
-router.patch('/editMedicine/:id',editMedicine);
+router.patch('/editMedicine',editMedicine);
 router.get('/viewMedicineInventoryPharmacist', viewMedicineInventoryPharmacist);
 module.exports = router //we need to export that router at the end so that App.js can access it
