@@ -36,6 +36,7 @@ const viewMedicineInventoryPharmacist = async (req, res) => {
 
     // Map the medicines to only include relevant information
     const medicinesInfo = medicines.map((medicine) => ({
+      name: medicine.name,
       quantity: medicine.quantity,
       sales: medicine.sales
     }));
