@@ -4,8 +4,9 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Medicine from "./components/Medicine";
 import PharmacistHome from "./pages/PharmacistHome";
-
-
+import PharmReq from "./pages/PharmReq";
+import AddPatient from "./pages/Patient";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -16,6 +17,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/pharmacist-home" element={<PharmacistHome />} />   
           <Route path="/medicine" element={<Medicine modelName="administrator"/>} />
+          <Route path= "/PharmReq" element={<PharmReq/>}/>
+          <Route path= "/admin" element={<Admin/>}/>
+          <Route path= "/AddPatient" element={<AddPatient/>}/>
+          
         </Routes>
       </BrowserRouter>
     </div>

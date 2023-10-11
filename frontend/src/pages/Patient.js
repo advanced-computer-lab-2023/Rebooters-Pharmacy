@@ -40,7 +40,7 @@ const AddPatient = () => {
 
   const handleAddPatient = async () => {
     try {
-      const response = await fetch("/api/patient/addPatient", {
+      const response = await fetch("/api/guest/createPatient", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

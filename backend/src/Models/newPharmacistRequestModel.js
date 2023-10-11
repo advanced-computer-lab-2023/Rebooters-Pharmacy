@@ -36,10 +36,7 @@ const newPharmacistRequestSchema = new Schema({
     type: Number,
     required: true,
   },
-  speciality: {
-    type: String,
-    //required: true,
-  },
+  
   affiliation: {
     type: String,
     required: true,
