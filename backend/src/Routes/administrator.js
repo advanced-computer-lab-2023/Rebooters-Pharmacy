@@ -9,13 +9,13 @@ const router = express.Router() //create a router
 
 router.post('/addAdministrator' , addAdministrator);
 
-router.delete('/removeUserFromSystem/:id' , removeUserFromSystem);
+router.delete('/removeUserFromSystem' , removeUserFromSystem);
 
 router.get('/viewPharmacistApplication' , viewPharmacistApplication);
 
-router.get('/viewPharmacistInformation' , viewPharmacistInformation);
+router.post('/viewPharmacistInformation' , viewPharmacistInformation);
 
-router.get('/viewPatientInformation' , viewPatientInformation);
+router.post('/viewPatientInformation' , viewPatientInformation);
 
 router.get('/viewMedicineInventory', viewMedicineInventory);
 
