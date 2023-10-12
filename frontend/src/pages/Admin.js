@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function Administrator({ modelName }) {
+function Administrator() {
   const [administrators, setAdministrators] = useState([]);
   const [pharmacists, setPharmacists] = useState([]);
   const [patients, setPatients] = useState([]);
   const [pharmacistApplications, setPharmacistApplications] = useState([]);
-  const [pharmacistUsername, setPharmacistUsername] = useState('');
-  const [patientUsername, setPatientUsername] = useState('');
-  const [adminUsername, setAdminUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [userToRemove, setUserToRemove] = useState('');
+  const [pharmacistUsername, setPharmacistUsername] = useState("");
+  const [patientUsername, setPatientUsername] = useState("");
+  const [adminUsername, setAdminUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [userToRemove, setUserToRemove] = useState("");
   const [newPharmacistRequestData, setNewPharmacistRequestData] = useState([]);
 
   const viewAdministrators = async () => {
     try {
-      const response = await fetch(`/api/${modelName}/viewAdministrators`);
+      const response = await fetch(`/api/administrator/viewAdministrators`);
       if (!response.ok) {
-        throw new Error('Failed to fetch administrators');
+        throw new Error("Failed to fetch administrators");
       }
       const data = await response.json();
       setAdministrators(data);
@@ -28,15 +28,18 @@ function Administrator({ modelName }) {
 
   const viewPharmacists = async () => {
     try {
-      const response = await fetch(`/api/${modelName}/viewPharmacistInformation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: pharmacistUsername }),
-      });
+      const response = await fetch(
+        `/api/administrator/viewPharmacistInformation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ pharmacistUsername: pharmacistUsername }),
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch pharmacists');
+        throw new Error("Failed to fetch pharmacists");
       }
       const data = await response.json();
       setPharmacists(data);
@@ -47,15 +50,18 @@ function Administrator({ modelName }) {
 
   const viewPatients = async () => {
     try {
-      const response = await fetch(`/api/${modelName}/viewPatientInformation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: patientUsername }),
-      });
+      const response = await fetch(
+        `/api/administrator/viewPatientInformation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ patientUsername: patientUsername }),
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch patients');
+        throw new Error("Failed to fetch patients");
       }
       const data = await response.json();
       setPatients(data);
@@ -66,20 +72,20 @@ function Administrator({ modelName }) {
 
   const addAdministrator = async () => {
     try {
-      const response = await fetch(`/api/${modelName}/addAdministrator`, {
-        method: 'POST',
+      const response = await fetch(`/api/administrator/addAdministrator`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username: adminUsername, password }),
       });
       if (!response.ok) {
-        throw new Error('Failed to add administrator');
+        throw new Error("Failed to add administrator");
       }
       const data = await response.json();
-      console.log('Administrator added successfully');
-      setAdminUsername('');
-      setPassword('');
+      console.log("Administrator added successfully");
+      setAdminUsername("");
+      setPassword("");
     } catch (error) {
       console.error(error);
     }
@@ -87,18 +93,18 @@ function Administrator({ modelName }) {
 
   const removeUserFromSystem = async () => {
     try {
-      const response = await fetch(`/api/${modelName}/removeUserFromSystem`, {
-        method: 'DELETE',
+      const response = await fetch(`/api/administrator/removeUserFromSystem`, {
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username: userToRemove }),
       });
       if (!response.ok) {
-        throw new Error('Failed to remove pharmacist/patient');
+        throw new Error("Failed to remove pharmacist/patient");
       }
-      console.log('Pharmacist/patient removed successfully');
-      setUserToRemove('');
+      console.log("Pharmacist/patient removed successfully");
+      setUserToRemove("");
     } catch (error) {
       console.error(error);
     }
@@ -106,9 +112,11 @@ function Administrator({ modelName }) {
 
   const viewNewPharmacistRequests = async () => {
     try {
-      const response = await fetch(`/api/administrator/viewPharmacistApplication`);
+      const response = await fetch(
+        `/api/administrator/viewPharmacistApplication`
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch new pharmacist requests');
+        throw new Error("Failed to fetch new pharmacist requests");
       }
       const data = await response.json();
       setNewPharmacistRequestData(data);
@@ -121,8 +129,7 @@ function Administrator({ modelName }) {
     viewAdministrators();
     viewPharmacists();
     viewPatients();
-  },);
-  
+  });
 
   return (
     <div className="container mt-4">
@@ -161,24 +168,25 @@ function Administrator({ modelName }) {
         </button>
       </div>
       <div>
-
-      {pharmacists.length > 0 && (
-        <div >
-          <h4>Search Results</h4>
-          <ul>
-            {pharmacists.map((result) => (
-              <li key={result.id}>
-                <p>ID: {result._id}</p>
-                <p>Name: {result.name}</p>
-                <p>Email: {result.email}</p>
-                <p>Date of Birth: {new Date(result.dateOfBirth).toLocaleDateString()}</p>
-                <p>Gender: {result.gender}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
+        {pharmacists.length > 0 && (
+          <div>
+            <h4>Search Results</h4>
+            <ul>
+              {pharmacists.map((result) => (
+                <li key={result.id}>
+                  <p>ID: {result._id}</p>
+                  <p>Name: {result.name}</p>
+                  <p>Email: {result.email}</p>
+                  <p>
+                    Date of Birth:{" "}
+                    {new Date(result.dateOfBirth).toLocaleDateString()}
+                  </p>
+                  <p>Gender: {result.gender}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="mb-3">
         <h2>Search for Patient</h2>
@@ -193,6 +201,28 @@ function Administrator({ modelName }) {
           Search Patient
         </button>
       </div>
+      <div>
+        {patients.length > 0 && (
+          <div>
+            <h4>Search Results</h4>
+            <ul>
+              {patients.map((result) => (
+                <li key={result.id}>
+                  <p>ID: {result._id}</p>
+                  <p>Name: {result.name}</p>
+                  <p>Email: {result.email}</p>
+                  <p>
+                    Date of Birth:{" "}
+                    {new Date(result.dateOfBirth).toLocaleDateString()}
+                  </p>
+                  <p>Gender: {result.gender}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
       <div className="mt-4">
         <h2>Pharmacist/Patient to remove</h2>
         <div className="mb-3">
@@ -203,7 +233,10 @@ function Administrator({ modelName }) {
             onChange={(e) => setUserToRemove(e.target.value)}
             className="form-control"
           />
-          <button className="btn btn-danger mt-2" onClick={removeUserFromSystem}>
+          <button
+            className="btn btn-danger mt-2"
+            onClick={removeUserFromSystem}
+          >
             Remove Pharmacist/Patient
           </button>
         </div>
