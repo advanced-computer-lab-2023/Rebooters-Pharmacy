@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const PharmReq = () => {
   const [newPharmacist, setNewPharmacist] = useState({
@@ -11,6 +12,8 @@ const PharmReq = () => {
     affiliation: "",
     educationalBackground: "",
   });
+  const [submissionStatus, setSubmissionStatus] = useState(null); 
+  const [message, setMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +25,20 @@ const PharmReq = () => {
   };
 
   const handleAddPharmacist = async () => {
+    if (
+      !newPharmacist.username ||
+      !newPharmacist.name ||
+      !newPharmacist.email ||
+      !newPharmacist.password ||
+      !newPharmacist.dateOfBirth ||
+      !newPharmacist.hourlyRate ||
+      !newPharmacist.affiliation ||
+      !newPharmacist.educationalBackground
+    ) {
+      setSubmissionStatus("error");
+      setMessage("Please fill in all required fields.");
+      return;
+    }
     try {
       const response = await fetch("/api/guest/createNewPharmacistRequest", {
         method: "POST",
@@ -32,20 +49,41 @@ const PharmReq = () => {
       });
 
       if (response.ok) {
+        setSubmissionStatus("success");
+        setMessage("Pharmacist added successfully!");
+        setNewPharmacist({
+          username: "",
+          name: "",
+          email: "",
+          password: "",
+          dateOfBirth: "",
+          hourlyRate: "",
+          affiliation: "",
+          educationalBackground: "",
+        });
         console.log("Pharmacist added successfully!");
-        // You can add further logic here if needed
       } else {
+        setSubmissionStatus("error");
+        setMessage("Error adding pharmacist to the database.");
         console.error("Error adding pharmacist to the database.");
       }
     } catch (error) {
+      setSubmissionStatus("error");
+      setMessage("An error occurred while adding the pharmacist: " + error.message);
       console.error("An error occurred while adding the pharmacist:", error);
     }
   };
 
   return (
-    <div className="card mt-4">
+    <div className="card container mt-4">
       <div className="card-body">
-        <h2>Register as a Pharmacist</h2>
+        <h2>Request to register as a Pharmacist</h2>
+        {submissionStatus === "success" && (
+          <div className="alert alert-success">{message}</div>
+        )}
+        {submissionStatus === "error" && (
+          <div className="alert alert-danger">{message}</div>
+        )}
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
             Username:

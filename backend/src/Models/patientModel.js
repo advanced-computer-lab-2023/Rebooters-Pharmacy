@@ -69,7 +69,8 @@ const PatientSchema = new Schema({
     firstName: String,
     middleName: String,
     lastName: String,
-    mobile_number: String
+    mobile_number: String,
+    relation: String
     },
   selectedDoctors: [String],
   healthPackage: { // Add patient's health package

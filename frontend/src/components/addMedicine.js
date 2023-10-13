@@ -59,7 +59,6 @@ const AddMedicine = () => {
       if (response.ok) {
         setMessage("Medicine added successfully");
         setError("");
-        //window.location.reload();//comment this
         setNewMedicine({
           name: "",
           activeIngredients: "",

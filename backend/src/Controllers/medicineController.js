@@ -24,9 +24,11 @@ const viewMedicineInventory = async (req, res) => {
         name: medicine.name,
         price: medicine.price,
         description: medicine.description,
-        image: medicine.image, // You can include the image data if it's stored in your database
+        image: medicine.image, 
         sales: medicine.sales,
-        quantity: medicine.quantity // You can include the image data if it's stored in your database
+        quantity: medicine.quantity,
+        activeIngredients: medicine.activeIngredients,
+        medicinalUse: medicine.medicinalUse
       }));
   
       res.status(200).json(medicinesInfo);
@@ -37,13 +39,12 @@ const viewMedicineInventory = async (req, res) => {
   };
   const searchMedicineByName = async (req, res) => {
     try {
-      const { medicineName } = req.body; // Assuming the medicine name is provided as a query parameter
+      const { medicineName } = req.body; 
   
       if (!medicineName || medicineName.trim() === '') {
         return res.status(400).json({ message: 'Invalid medicine name query.' });
       }
 
-    // Perform an exact, case-insensitive match on the medicine name
     const medicines = await Medicine.find({
       name: { $regex: new RegExp(`^${medicineName}$`, "i") },
     });
@@ -58,7 +59,7 @@ const viewMedicineInventory = async (req, res) => {
       price: medicine.price,
       description: medicine.description,
       activeIngredients: medicine.activeIngredients,
-      //image: medicine.image, // You can include the image data if it's stored in your database
+      image: medicine.image, 
       quantity: medicine.quantity,
       medicinalUse: medicine.medicinalUse,
       image : medicine.image

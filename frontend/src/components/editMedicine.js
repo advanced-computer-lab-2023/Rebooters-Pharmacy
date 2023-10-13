@@ -79,6 +79,14 @@ const EditMedicine = () => {
       if (response.ok) {
         setError("");
         const updatedMedicineData = await response.json();
+        setMedicineToUpdate({
+          name: "",
+          activeIngredients: "",
+          price: 0,
+          description: "",
+          medicinalUse: "",
+          quantity: 0,
+        });
         setUpdatedMedicine(updatedMedicineData);
       } else {
         const errorData = await response.json();

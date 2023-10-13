@@ -24,14 +24,9 @@ const addAdministrator= async (req, res) => {
 const removeUserFromSystem = async (req, res) => {
   try {
     const { username } = req.body;
-
-    // Check if the user exists in the pharmacist model and delete if found
     const removedPharmacist = await Pharmacist.findOneAndDelete({ username });
-
-    // If the user is not a pharmacist, check the patient model and delete if found
     if (!removedPharmacist) {
       const removedPatient = await Patient.findOneAndDelete({ username });
-
       if (!removedPatient) {
         return res.status(404).json({ message: 'User not found' });
       }

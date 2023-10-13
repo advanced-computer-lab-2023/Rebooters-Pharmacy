@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
+import Medicine from "../components/Medicine";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Administrator() {
-  const [administrators, setAdministrators] = useState([]);
+  //const [administrators, setAdministrators] = useState([]);
   const [pharmacists, setPharmacists] = useState([]);
   const [patients, setPatients] = useState([]);
-  const [pharmacistApplications, setPharmacistApplications] = useState([]);
   const [pharmacistUsername, setPharmacistUsername] = useState("");
   const [patientUsername, setPatientUsername] = useState("");
   const [adminUsername, setAdminUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userToRemove, setUserToRemove] = useState("");
   const [newPharmacistRequestData, setNewPharmacistRequestData] = useState([]);
+  const [submissionStatus, setSubmissionStatus] = useState(null); 
+  const [message, setMessage] = useState("");
 
-  const viewAdministrators = async () => {
+  /*const viewAdministrators = async () => {
     try {
       const response = await fetch(`/api/administrator/viewAdministrators`);
       if (!response.ok) {
@@ -24,9 +26,16 @@ function Administrator() {
     } catch (error) {
       console.error(error);
     }
-  };
+  };*/
 
   const viewPharmacists = async () => {
+    if (
+      !pharmacistUsername 
+    ) {
+      setSubmissionStatus("error");
+      setMessage("Please fill in all required fields.");
+      return;
+    }
     try {
       const response = await fetch(
         `/api/administrator/viewPharmacistInformation`,
@@ -39,16 +48,31 @@ function Administrator() {
         }
       );
       if (!response.ok) {
+        setSubmissionStatus("error");
+        setMessage("Failed to fetch pharmacists");
         throw new Error("Failed to fetch pharmacists");
       }
       const data = await response.json();
+      if(!data){
+        setSubmissionStatus("error");
+        setMessage("Pharmacist not found");
+      }
       setPharmacists(data);
     } catch (error) {
+      setSubmissionStatus("error");
+      setMessage("Failed to fetch pharmacists");
       console.error(error);
     }
   };
 
   const viewPatients = async () => {
+    if (
+      !patientUsername 
+    ) {
+      setSubmissionStatus("error");
+      setMessage("Please fill in all required fields.");
+      return;
+    }
     try {
       const response = await fetch(
         `/api/administrator/viewPatientInformation`,
@@ -61,16 +85,32 @@ function Administrator() {
         }
       );
       if (!response.ok) {
+        setSubmissionStatus("error");
+        setMessage("Failed to fetch patients");
         throw new Error("Failed to fetch patients");
+      }
+      if(!data){
+        setSubmissionStatus("error");
+        setMessage("Patient not found");
       }
       const data = await response.json();
       setPatients(data);
     } catch (error) {
+      setSubmissionStatus("error");
+      setMessage("Failed to fetch patients");
       console.error(error);
     }
   };
 
   const addAdministrator = async () => {
+    if (
+      !adminUsername ||
+      !password
+    ) {
+      setSubmissionStatus("error");
+      setMessage("Please fill in all required fields.");
+      return;
+    }
     try {
       const response = await fetch(`/api/administrator/addAdministrator`, {
         method: "POST",
@@ -80,18 +120,31 @@ function Administrator() {
         body: JSON.stringify({ username: adminUsername, password }),
       });
       if (!response.ok) {
+        setSubmissionStatus("error");
+        setMessage("Failed to add administrator");
         throw new Error("Failed to add administrator");
       }
-      const data = await response.json();
+      //const data = await response.json();
+      setSubmissionStatus("success");
+      setMessage("Administrator added successfully");
       console.log("Administrator added successfully");
       setAdminUsername("");
       setPassword("");
     } catch (error) {
+      setSubmissionStatus("error");
+      setMessage("Failed to add administrator");
       console.error(error);
     }
   };
 
   const removeUserFromSystem = async () => {
+    if (
+      !userToRemove
+    ) {
+      setSubmissionStatus("error");
+      setMessage("Please fill in all required fields.");
+      return;
+    }
     try {
       const response = await fetch(`/api/administrator/removeUserFromSystem`, {
         method: "DELETE",
@@ -101,12 +154,18 @@ function Administrator() {
         body: JSON.stringify({ username: userToRemove }),
       });
       if (!response.ok) {
+        setSubmissionStatus("error");
+        setMessage("Failed to remove pharmacist/patient");
         throw new Error("Failed to remove pharmacist/patient");
       }
       console.log("Pharmacist/patient removed successfully");
       setUserToRemove("");
+      setSubmissionStatus("success");
+      setMessage("Pharmacist/patient removed successfully");
     } catch (error) {
       console.error(error);
+      setSubmissionStatus("error");
+      setMessage("Failed to remove pharmacist/patient");
     }
   };
 
@@ -116,24 +175,32 @@ function Administrator() {
         `/api/administrator/viewPharmacistApplication`
       );
       if (!response.ok) {
+        setSubmissionStatus("error");
+        setMessage("Failed to fetch new pharmacist requests");
         throw new Error("Failed to fetch new pharmacist requests");
       }
       const data = await response.json();
+      if(data.length ==0){
+        setSubmissionStatus("error");
+        setMessage("There are no pharmacist requests");
+      }
       setNewPharmacistRequestData(data);
     } catch (error) {
+      setSubmissionStatus("error");
+      setMessage("Failed to fetch new pharmacist requests");
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    viewAdministrators();
-    viewPharmacists();
-    viewPatients();
-  });
-
   return (
     <div className="container mt-4">
-      <h1 className="mb-4">Administrator and Pharmacist Management</h1>
+      <h1 className="mb-4 text-center">Administrator Dashboard</h1>
+      {submissionStatus === "success" && (
+          <div className="alert alert-success">{message}</div>
+        )}
+        {submissionStatus === "error" && (
+          <div className="alert alert-danger">{message}</div>
+        )}
       <div className="mb-3">
         <h2>Add Administrator</h2>
         <input
@@ -181,7 +248,10 @@ function Administrator() {
                     Date of Birth:{" "}
                     {new Date(result.dateOfBirth).toLocaleDateString()}
                   </p>
-                  <p>Gender: {result.gender}</p>
+                  <p>Affiliation: {result.affiliation}</p>
+                  <p>Educational Background: {result.educationalBackground}</p>
+                  <p>Hourly Rate: {result.hourlyRate}</p>
+                  <p>Status: {result.status}</p>
                 </li>
               ))}
             </ul>
@@ -216,6 +286,12 @@ function Administrator() {
                     {new Date(result.dateOfBirth).toLocaleDateString()}
                   </p>
                   <p>Gender: {result.gender}</p>
+                  <p>Mobile Phone: {result.mobile_number}</p>
+                  <p>Emergency Contact First Name: {result.emergency_contact.firstName}</p>
+                  <p>Emergency Contact Middle Name: {result.emergency_contact.middleName}</p>
+                  <p>Emergency Contact Last Name: {result.emergency_contact.lastName}</p>
+                  <p>Emergency Contact Mobile Phone: {result.emergency_contact.mobile_number}</p>
+                  <p>Emergency Contact Relation: {result.emergency_contact.relation}</p>
                 </li>
               ))}
             </ul>
@@ -277,6 +353,9 @@ function Administrator() {
           </tbody>
         </table>
       </div>
+      <div className="mt-4">
+        {<Medicine modelName="pharmacist"/>}
+        </div>
     </div>
   );
 }

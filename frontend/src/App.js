@@ -2,11 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import Medicine from "./components/Medicine";
-import PharmacistHome from "./pages/PharmacistHome";
-import PharmReq from "./pages/PharmReq";
-import AddPatient from "./pages/Patient";
+import Pharmacist from "./pages/PharmacistHome";
 import Admin from "./pages/Admin";
+import Guest from "./pages/Guest";
+import Patient from "./pages/Patient";
 
 function App() {
   return (
@@ -15,11 +14,10 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/pharmacist-home" element={<PharmacistHome />} />   
-          <Route path="/medicine" element={<Medicine modelName="administrator"/>} />
-          <Route path= "/PharmReq" element={<PharmReq/>}/>
+          <Route path="/guest" element={<Guest />} />
+          <Route path="/pharmacist" element={<Pharmacist />} />   
           <Route path= "/admin" element={<Admin/>}/>
-          <Route path= "/AddPatient" element={<AddPatient/>}/>
+          <Route path= "/patient" element={<Patient/>}/>
           
         </Routes>
       </BrowserRouter>
