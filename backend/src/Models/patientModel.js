@@ -78,11 +78,23 @@ const PatientSchema = new Schema({
     default: null,
   },
   familyMembers: [FamilyMemberSchema],
-
- 
   
-  
- 
+  cart: [
+    {
+      medicineName: {
+        type: String,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
 }, { timestamps: true });
 
 const Patient = mongoose.model('Patient', PatientSchema);

@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   
   
 const upload = multer({ storage: storage });
-
+//const upload= require ('../Controllers/uploadMiddleware');
 const router = express.Router() //create a router
 
 router.post('/addMedicine' , upload.single('image'),addMedicine);
