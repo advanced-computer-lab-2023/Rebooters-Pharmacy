@@ -148,7 +148,53 @@ const changeAmountOfAnItem = async (req, res) => {
 }
 };
 
+const addMedicineToCart = async (req, res) => {
+  try {
+    const username = req.body.username; // Get the patient's username from the request
+
+    const patient = await Patient.findOne({ username: username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const name = req.body.medicineName; // Assuming you receive the OTC medicine's name in the request body
+
+    const medicine = await Medicine.findOne({ name: name });
+
+    if (!medicine) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    // Check if the medicine is OTC (over the counter)
+    if (!medicine.PrescriptionNeeded) {
+      // Create a cart item with the medicine's details
+      const cartItem = {
+        medicine: medicine._id, // Store the medicine's ID
+        name: medicine.name,
+        price: medicine.price,
+        quantity: 1, // You can set an initial quantity
+      };
+
+      // Add the cart item to the patient's cart
+      patient.cart.push(cartItem);
+
+      // Save the updated patient information to the database
+      await patient.save();
+
+      res.status(200).json({ message: 'Medicine added to the cart' });
+    } else {
+      res.status(400).json({ message: 'Prescription is needed for this medicine' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error adding medicine to the cart' });
+  }
+};
+
+
+
 
 
 module.exports = {  viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress }; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart}; 

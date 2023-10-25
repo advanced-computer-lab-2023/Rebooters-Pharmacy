@@ -86,6 +86,44 @@ const viewPatientInformation = async (req, res) => {
       }
 }
 
+const approvePharmacistRequest = async (req, res) => {
+  try {
+    const { username } = req.body;
+    const request = await NewPharmacistRequest.findOne({ username: username });
+
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    request.status = 'accepted';
+    await request.save();
+
+    res.status(200).json({ message: 'Request accepted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while approving the request' });
+  }
+};
+
+const rejectPharmacistRequest = async (req, res) => {
+  try {
+    const { username } = req.body;
+    const request = await NewPharmacistRequest.findOne({ username: username });
+
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    request.status = 'rejected';
+    await request.save();
+
+    res.status(200).json({ message: 'Request rejected' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while rejecting the request' });
+  }
+};
+
     
 module.exports = {  
   addAdministrator,
@@ -95,5 +133,7 @@ module.exports = {
   viewPatientInformation,
   viewMedicineInventory,
   filterMedicineByMedicinalUse,
-  searchMedicineByName
+  searchMedicineByName,
+  approvePharmacistRequest,
+  rejectPharmacistRequest
  }; 

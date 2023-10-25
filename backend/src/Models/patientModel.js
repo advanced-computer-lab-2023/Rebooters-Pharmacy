@@ -86,7 +86,7 @@ const PatientSchema = new Schema({
   
   cart: [
     {
-      medicineName: {
+      name: {
         type: String,
         required: true,
       },

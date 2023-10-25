@@ -51,7 +51,24 @@ const newPharmacistRequestSchema = new Schema({
     type: String,
     enum: ['accepted', 'rejected', 'pending'], // Allowed values
     default: 'pending', // Default value
-  }
+  },
+
+  idDocument: {
+    data: Buffer,
+    contentType: String,
+    filename: String,
+  },
+  pharmacyDegreeDocument: {
+    data: Buffer,
+    contentType: String,
+    filename: String,
+  },
+  workingLicenseDocument: {
+    data: Buffer,
+    contentType: String,
+    filename: String,
+  },
+
 }, { timestamps: true });
 
 const NewPharmacistRequest = mongoose.model('NewPharmacistRequest', newPharmacistRequestSchema);

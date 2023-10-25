@@ -6,15 +6,15 @@ const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByNam
 
 const addMedicine = async (req, res) => {
   try {
-    const { name, activeIngredients, price, quantity, description, medicinalUse } = req.body;
-    const newMedicine = new Medicine({ name, activeIngredients, price, quantity, description, medicinalUse });
+    const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded } = req.body;
+    const newMedicine = new Medicine({ name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded });
 
     // Check if an image file was uploaded
-    /*if (req.file) {
+    if (req.file) {
       newMedicine.image.data = req.file.buffer;
       newMedicine.image.contentType = req.file.mimetype;
       newMedicine.image.filename = req.file.originalname;
-    }*/
+    }
 
     await newMedicine.save();
     res.status(201).json(newMedicine);

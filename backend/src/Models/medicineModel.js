@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const MedicineSchema = new Schema({
-    name: {
+  name: {
         type: String,
         required: true,
         unique: true
@@ -31,6 +31,10 @@ const MedicineSchema = new Schema({
       type: Number,
       default: 0
 
+    },
+    PrescriptionNeeded: {
+      type: Boolean,
+      required: true
     },
     image: {
         data: Buffer, // You can use Buffer to store binary image data

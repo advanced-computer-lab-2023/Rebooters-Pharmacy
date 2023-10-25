@@ -2,9 +2,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
+const multer = require('multer'); // Import multer here
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 require("dotenv").config();
 
-const MongoURI = "mongodb+srv://mayamokhtarr:mokhtar2002.19@cluster0.y06tvkg.mongodb.net/?retryWrites=true&w=majority";
+const MongoURI = 'mongodb+srv://farouqrere:Nourhan31_@cluster0.kjbaaaz.mongodb.net/';
 
 
 //App variables
