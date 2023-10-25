@@ -89,5 +89,66 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+
+
+
+const viewDeliveryAdresses = async (req, res) => {
+  try {
+    const patientUsername = req.query.patientUsername;
+    const patient = await Patient.findOne({username:patientUsername});
+    if (!patient ) {
+      return res.status(404).json({ message: 'No available delivery Adresses found.' });
+    }
+    res.status(200).json(patient.deliveryAddresses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching delivery addresses' });
+  }
+};
+const AddNewDeliveryAdress = async (req, res) => {
+  try{
+  const patientUsername = req.query.patientUsername;
+  const patient = await Patient.findOne({username:patientUsername});
+  const deliveryAddresses=patient.deliveryAddresses
+
+        deliveryAddresses.push(req.body.deliveryAddress)
+        const updatePatient = await Patient.findOneAndUpdate(
+          { username: patientUsername },
+          { deliveryAddresses},
+          { new: true }
+        );
+        if (!updatePatient) {
+          return res.status(404).json({ message: 'Patient not found' });
+        }
+        res.status(200).json(updatePatient);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error adding new Address' });
+      }
+};
+const changeAmountOfAnItem = async (req, res) => {
+  try{
+  const patientUsername = req.query.patientUsername;
+  const patient = await Order.findOne({patientUsername:patientUsername});
+  const items=patient.items;
+  let index=items.findIndex(item => item.name === req.query.name)
+  items[index].quantity=req.query.quantity
+  const updateItems = await Order.findOneAndUpdate(
+    { patientUsername: patientUsername },
+    { items},
+    { new: true }
+  );
+  if (!updateItems) {
+    return res.status(404).json({ message: 'Item not found' });
+  }
+  res.status(200).json(updateItems);
+} catch (error) {
+  console.error(error);
+  res.status(500).json({ message: 'Error updating quantity of an item' });
+}
+};
+
+
+
 module.exports = {  viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder }; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress }; 

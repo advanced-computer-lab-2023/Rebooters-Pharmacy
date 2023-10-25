@@ -1,5 +1,8 @@
-const express = require('express') //require or import express
-const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, cancelOrder, removeCartItem, viewCartItems  } = require('../Controllers/PatientController') //we're destructuring so we need curly braces
+const express = require('express'); //require or import express
+const { viewMedicineInventory, filterMedicineByMedicinalUse,
+    AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
+    removeCartItem, changeAmountOfAnItem,viewCartItems,viewDeliveryAdresses  } = 
+    require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
@@ -15,5 +18,10 @@ router.post('/cancelOrder/:username/:orderId', cancelOrder);
 router.delete('/removeCartItem/:patientUsername/:medicineName', removeCartItem);
 
 router.get('/viewCartItems/:patientUsername', viewCartItems);
+router.post('/viewDeliveryAddresses', viewDeliveryAdresses);
+
+router.put('/addNewDeliveryAddress', AddNewDeliveryAdress);
+router.put('/changeAmountOfAnItem', changeAmountOfAnItem);
+
 
 module.exports = router //we need to export that router at the end so that App.js can access it

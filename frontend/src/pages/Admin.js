@@ -89,11 +89,12 @@ function Administrator() {
         setMessage("Failed to fetch patients");
         throw new Error("Failed to fetch patients");
       }
+      const data = await response.json();
       if(!data){
         setSubmissionStatus("error");
         setMessage("Patient not found");
       }
-      const data = await response.json();
+    
       setPatients(data);
     } catch (error) {
       setSubmissionStatus("error");
