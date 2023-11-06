@@ -1,7 +1,7 @@
 const express = require('express'); //require or import express
-const { viewMedicineInventory, filterMedicineByMedicinalUse,
+const {checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
-    removeCartItem, changeAmountOfAnItem,viewCartItems,viewDeliveryAdresses,addMedicineToCart  } = 
+    removeCartItem, viewItems,changeAmountOfAnItem,viewCartItems,viewDeliveryAdresses,addMedicineToCart  } = 
     require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
@@ -19,9 +19,11 @@ router.delete('/removeCartItem/:patientUsername/:medicineName', removeCartItem);
 
 router.get('/viewCartItems/:patientUsername', viewCartItems);
 router.post('/viewDeliveryAddresses', viewDeliveryAdresses);
+router.post('/viewItems', viewItems);
 
 router.put('/addNewDeliveryAddress', AddNewDeliveryAdress);
 router.put('/changeAmountOfAnItem', changeAmountOfAnItem);
+router.post('/checkout', checkout);
 
 router.post('/addMedicineToCart', addMedicineToCart);
 

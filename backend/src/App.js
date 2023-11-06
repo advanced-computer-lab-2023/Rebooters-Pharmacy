@@ -7,7 +7,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 require("dotenv").config();
 
-const MongoURI = 'mongodb+srv://farouqrere:Nourhan31_@cluster0.kjbaaaz.mongodb.net/';
+const MongoURI = 'mongodb+srv://mayamokhtarr:mokhtar2002.19@cluster0.y06tvkg.mongodb.net/?retryWrites=true&w=majority';
 
 
 //App variables
