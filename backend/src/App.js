@@ -6,8 +6,9 @@ const multer = require('multer'); // Import multer here
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 require("dotenv").config();
+const cookieParser = require('cookie-parser');
 
-const MongoURI = 'mongodb+srv://farouqrere:Nourhan31_@cluster0.kjbaaaz.mongodb.net/';
+const MongoURI = 'mongodb+srv://admin:admin@cluster0.8ayf1xv.mongodb.net/pharmacy?retryWrites=true&w=majority';
 
 
 //App variables
@@ -29,6 +30,7 @@ mongoose.connect(MongoURI)
 .catch(err => console.log(err));
 
 app.use(express.json())
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.status(200).send("Welcome to el7a2ni");

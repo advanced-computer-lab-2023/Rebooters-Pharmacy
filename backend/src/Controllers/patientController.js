@@ -3,6 +3,21 @@ const Medicine = require('../Models/medicineModel');
 const Order= require ('../Models/orderModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 
+// const dummyOrder2 = new Order({
+//   patient: '651ff56acf374b1cacaa2cc3',
+//   patientUsername:'dummypatient', 
+//   patientMobileNumber: '3232323', 
+//   status: 'Processing', 
+//   items: [
+//     {
+//       medicine: '6523f85bbdd733cb0b368cc2',
+//       name:'paracetamol',
+//       price: 40,
+//       quantity: 2,
+//     }], 
+// });
+// dummyOrder2.save();
+
 const viewCartItems = async (req, res) => {
   try {
     const patientUsername = req.params.patientUsername; // Get the patient's username from the request
@@ -192,9 +207,36 @@ const addMedicineToCart = async (req, res) => {
   }
 };
 
+const viewOrderDetails = async (req, res) => {
+  try {
+    const patientUsername = req.params.patientUsername; // Get the patient's username from the request
+    const orderId = req.params.orderId; // Get the order _id from the request
+
+    // Find the order with the given orderId
+    const order = await Order.findOne({ _id: orderId, patientUsername: patientUsername });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Construct a response object with the order details
+    const orderDetails = {
+      orderDate: order.orderDate,
+      status: order.status,
+      items: order.items,
+    };
+
+    res.status(200).json(orderDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error viewing order details' });
+  }
+};
+
+
 
 
 
 
 module.exports = {  viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart}; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails}; 

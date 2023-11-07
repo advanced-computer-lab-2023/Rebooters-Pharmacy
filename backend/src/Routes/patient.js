@@ -1,29 +1,31 @@
 const express = require('express'); //require or import express
+const { requireAuth } = require('../Middleware/authMiddleware');
+const jwt = require('jsonwebtoken');
 const { viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
-    removeCartItem, changeAmountOfAnItem,viewCartItems,viewDeliveryAdresses,addMedicineToCart  } = 
+    removeCartItem, changeAmountOfAnItem,viewCartItems,viewDeliveryAdresses,addMedicineToCart, viewOrderDetails  } = 
     require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
-router.get('/viewMedicineInventory', viewMedicineInventory);
+router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
 
-router.post('/searchMedicineByName', searchMedicineByName);
+router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
 
-router.post('/filterMedicineByMedicinalUse', filterMedicineByMedicinalUse);
+router.post('/filterMedicineByMedicinalUse', requireAuth, filterMedicineByMedicinalUse);
 
-router.post('/cancelOrder/:username/:orderId', cancelOrder);
+router.post('/cancelOrder/:username/:orderId',requireAuth, cancelOrder);
 //http://localhost:8000/api/patient/cancelOrder/exampleUser/123
 
-router.delete('/removeCartItem/:patientUsername/:medicineName', removeCartItem);
+router.delete('/removeCartItem/:patientUsername/:medicineName',requireAuth, removeCartItem);
 
-router.get('/viewCartItems/:patientUsername', viewCartItems);
-router.post('/viewDeliveryAddresses', viewDeliveryAdresses);
+router.get('/viewCartItems/:patientUsername',requireAuth, viewCartItems);
+router.post('/viewDeliveryAddresses',requireAuth, viewDeliveryAdresses);
 
-router.put('/addNewDeliveryAddress', AddNewDeliveryAdress);
-router.put('/changeAmountOfAnItem', changeAmountOfAnItem);
+router.put('/addNewDeliveryAddress',requireAuth, AddNewDeliveryAdress);
+router.put('/changeAmountOfAnItem', requireAuth, changeAmountOfAnItem);
 
-router.post('/addMedicineToCart', addMedicineToCart);
-
+router.post('/addMedicineToCart',requireAuth, addMedicineToCart);
+router.get('/viewOrderDetails/:patientUsername/:orderId',requireAuth, viewOrderDetails);
 
 module.exports = router //we need to export that router at the end so that App.js can access it

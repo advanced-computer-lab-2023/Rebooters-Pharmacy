@@ -1,4 +1,6 @@
 const express = require('express') //require or import express
+const { requireAuth } = require('../Middleware/authMiddleware');
+const jwt = require('jsonwebtoken');
 const {addAdministrator,
     removeUserFromSystem,
     viewPharmacistApplication,
@@ -7,25 +9,25 @@ const {addAdministrator,
 
 const router = express.Router() //create a router
 
-router.post('/addAdministrator' , addAdministrator);
+router.post('/addAdministrator' , requireAuth, addAdministrator);
 
-router.delete('/removeUserFromSystem' , removeUserFromSystem);
+router.delete('/removeUserFromSystem' ,requireAuth, removeUserFromSystem);
 
-router.get('/viewPharmacistApplication' , viewPharmacistApplication);
+router.get('/viewPharmacistApplication' , requireAuth, viewPharmacistApplication);
 
-router.post('/viewPharmacistInformation' , viewPharmacistInformation);
+router.post('/viewPharmacistInformation' , requireAuth, viewPharmacistInformation);
 
-router.post('/viewPatientInformation' , viewPatientInformation);
+router.post('/viewPatientInformation' ,requireAuth, viewPatientInformation);
 
-router.get('/viewMedicineInventory', viewMedicineInventory);
+router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
 
-router.post('/searchMedicineByName', searchMedicineByName);
+router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
 
-router.post('/filterMedicineByMedicinalUse', filterMedicineByMedicinalUse);
+router.post('/filterMedicineByMedicinalUse',requireAuth, filterMedicineByMedicinalUse);
 
-router.post('/approvePharmacistRequest' , approvePharmacistRequest);
+router.post('/approvePharmacistRequest' ,requireAuth, approvePharmacistRequest);
 
-router.post('/rejectPharmacistRequest' , rejectPharmacistRequest);
+router.post('/rejectPharmacistRequest' , requireAuth, rejectPharmacistRequest);
 
 
 module.exports = router //we need to export that router at the end so that App.js can access it

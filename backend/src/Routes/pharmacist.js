@@ -1,4 +1,6 @@
 const express = require('express') //require or import express
+const { requireAuth } = require('../Middleware/authMiddleware');
+const jwt = require('jsonwebtoken');
 const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine, viewMedicineInventoryPharmacist} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
 
 const multer = require('multer'); 
@@ -18,10 +20,10 @@ const upload = multer({ storage: storage });
 //const upload= require ('../Controllers/uploadMiddleware');
 const router = express.Router() //create a router
 
-router.post('/addMedicine' , upload.single('image'),addMedicine);
-router.get('/viewMedicineInventory', viewMedicineInventory);
-router.post('/filterMedicineByMedicinalUse', filterMedicineByMedicinalUse);
-router.post('/searchMedicineByName', searchMedicineByName);
-router.patch('/editMedicine',editMedicine);
-router.get('/viewMedicineInventoryPharmacist', viewMedicineInventoryPharmacist);
+router.post('/addMedicine' , requireAuth, upload.single('image'),addMedicine);
+router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
+router.post('/filterMedicineByMedicinalUse',requireAuth, filterMedicineByMedicinalUse);
+router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
+router.patch('/editMedicine',requireAuth, editMedicine);
+router.get('/viewMedicineInventoryPharmacist', requireAuth, viewMedicineInventoryPharmacist);
 module.exports = router //we need to export that router at the end so that App.js can access it
