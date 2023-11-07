@@ -1,3 +1,4 @@
+
 const Patient = require('../Models/patientModel');
 const Medicine = require('../Models/medicineModel');
 const Order= require ('../Models/orderModel');
@@ -21,7 +22,6 @@ const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByNam
 const viewCartItems = async (req, res) => {
   try {
     const patientUsername = req.params.patientUsername; // Get the patient's username from the request
-
     const patient = await Patient.findOne({ username: patientUsername });
 
     if (!patient) {
@@ -125,8 +125,11 @@ const AddNewDeliveryAdress = async (req, res) => {
   const patientUsername = req.query.patientUsername;
   const patient = await Patient.findOne({username:patientUsername});
   const deliveryAddresses=patient.deliveryAddresses
-
-        deliveryAddresses.push(req.body.deliveryAddress)
+  var arrayOfAddresses = req.body.deliveryAddress.split("%");
+  for(let i=0;i<arrayOfAddresses.length-1;i++){
+        deliveryAddresses.push(arrayOfAddresses[i])
+      
+  }
         const updatePatient = await Patient.findOneAndUpdate(
           { username: patientUsername },
           { deliveryAddresses},
@@ -146,6 +149,7 @@ const changeAmountOfAnItem = async (req, res) => {
   const patientUsername = req.query.patientUsername;
   const patient = await Order.findOne({patientUsername:patientUsername});
   const items=patient.items;
+  
   let index=items.findIndex(item => item.name === req.query.name)
   items[index].quantity=req.query.quantity
   const updateItems = await Order.findOneAndUpdate(
@@ -166,9 +170,7 @@ const changeAmountOfAnItem = async (req, res) => {
 const addMedicineToCart = async (req, res) => {
   try {
     const username = req.body.username; // Get the patient's username from the request
-
     const patient = await Patient.findOne({ username: username });
-
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
@@ -206,6 +208,44 @@ const addMedicineToCart = async (req, res) => {
     res.status(500).json({ message: 'Error adding medicine to the cart' });
   }
 };
+const viewItems = async (req, res) => {
+  try {
+    const patientUsername = req.query.patientUsername; // Get the patient's username from the request
+    const patient = await Patient.findOne({ username: patientUsername });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const cartItems = patient.cart; // Access the cart property
+
+    res.status(200).json(cartItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error viewing cart items' });
+  }
+};
+const checkout = async (req, res) => {
+  try {
+    const orderDate = new Date();
+    const patientUsername=req.query.patientUsername;
+    const givenPatient = await Patient.findOne({ username: patientUsername });
+    const patient=givenPatient._id;  
+    const status="Pending";
+    const { address,items,patientMobileNumber,paymentMethod,total } = req.body;
+    for(let i=0;i<items.length;i++){
+    const givenMedicine = await Medicine.findOne({ name:items[i].name });
+    items[i].medicine=givenMedicine._id
+    }
+    const newOrder = new Order({ total,paymentMethod,address,items,orderDate,
+      patientMobileNumber,patientUsername,status,patient });
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error checkout' });
+  }
+};
 
 const viewOrderDetails = async (req, res) => {
   try {
@@ -238,5 +278,5 @@ const viewOrderDetails = async (req, res) => {
 
 
 
-module.exports = {  viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
+module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
   viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails}; 

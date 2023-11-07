@@ -26,6 +26,14 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  paymentMethod: {
+    type: String,
+    required: true,
+  },
+  total: {
+    type: Number,
+    required: true,
+  },
   items: [
     {
       medicine: {

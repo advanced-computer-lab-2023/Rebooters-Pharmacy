@@ -1,10 +1,12 @@
 const express = require('express'); //require or import express
+
 const { requireAuth } = require('../Middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
-const { viewMedicineInventory, filterMedicineByMedicinalUse,
+const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
-    removeCartItem, changeAmountOfAnItem,viewCartItems,viewDeliveryAdresses,addMedicineToCart, viewOrderDetails  } = 
-    require('../Controllers/patientController') //we're destructuring so we need curly braces
+    removeCartItem, changeAmountOfAnItem,viewItems,changeAmountOfAnItem, 
+    viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
+    viewOrderDetails  } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
@@ -19,11 +21,15 @@ router.post('/cancelOrder/:username/:orderId',requireAuth, cancelOrder);
 
 router.delete('/removeCartItem/:patientUsername/:medicineName',requireAuth, removeCartItem);
 
-router.get('/viewCartItems/:patientUsername',requireAuth, viewCartItems);
-router.post('/viewDeliveryAddresses',requireAuth, viewDeliveryAdresses);
+router.get('/viewCartItems/:patientUsername', viewCartItems);
+router.post('/viewDeliveryAddresses', viewDeliveryAdresses);
+router.post('/viewItems', viewItems);
 
-router.put('/addNewDeliveryAddress',requireAuth, AddNewDeliveryAdress);
-router.put('/changeAmountOfAnItem', requireAuth, changeAmountOfAnItem);
+router.put('/addNewDeliveryAddress', AddNewDeliveryAdress);
+router.put('/changeAmountOfAnItem', changeAmountOfAnItem);
+router.post('/checkout', checkout);
+
+router.post('/addMedicineToCart', addMedicineToCart);
 
 router.post('/addMedicineToCart',requireAuth, addMedicineToCart);
 router.get('/viewOrderDetails/:patientUsername/:orderId',requireAuth, viewOrderDetails);
