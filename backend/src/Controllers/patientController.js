@@ -3,6 +3,7 @@ const Patient = require('../Models/patientModel');
 const Medicine = require('../Models/medicineModel');
 const Order= require ('../Models/orderModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
+const {logout, changePassword} = require('./authController');
 
 // const dummyOrder2 = new Order({
 //   patient: '651ff56acf374b1cacaa2cc3',
@@ -279,4 +280,4 @@ const viewOrderDetails = async (req, res) => {
 
 
 module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails}; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword}; 

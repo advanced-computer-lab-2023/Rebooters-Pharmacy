@@ -4,11 +4,18 @@ const { requireAuth } = require('../Middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
 const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
-    removeCartItem, changeAmountOfAnItem,viewItems,changeAmountOfAnItem, 
+    removeCartItem, changeAmountOfAnItem,viewItems, 
     viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
-    viewOrderDetails  } = require('../Controllers/patientController') //we're destructuring so we need curly braces
+    viewOrderDetails, logout, changePassword  } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
+router.get('/logout', requireAuth, logout);
+
+// router.get('/requestPasswordResetOTP', requireAuth, requestPasswordResetOTP);
+
+// router.post('/resetPasswordWithOTP', requireAuth, resetPasswordWithOTP);
+
+router.post('/changePassword', requireAuth, changePassword);
 
 router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
 
@@ -21,15 +28,15 @@ router.post('/cancelOrder/:username/:orderId',requireAuth, cancelOrder);
 
 router.delete('/removeCartItem/:patientUsername/:medicineName',requireAuth, removeCartItem);
 
-router.get('/viewCartItems/:patientUsername', viewCartItems);
-router.post('/viewDeliveryAddresses', viewDeliveryAdresses);
-router.post('/viewItems', viewItems);
+router.get('/viewCartItems/:patientUsername', requireAuth, viewCartItems);
+router.post('/viewDeliveryAddresses', requireAuth, viewDeliveryAdresses);
+router.post('/viewItems', requireAuth, viewItems);
 
-router.put('/addNewDeliveryAddress', AddNewDeliveryAdress);
-router.put('/changeAmountOfAnItem', changeAmountOfAnItem);
-router.post('/checkout', checkout);
+router.put('/addNewDeliveryAddress', requireAuth, AddNewDeliveryAdress);
+router.put('/changeAmountOfAnItem', requireAuth, changeAmountOfAnItem);
+router.post('/checkout', requireAuth, checkout);
 
-router.post('/addMedicineToCart', addMedicineToCart);
+router.post('/addMedicineToCart', requireAuth, addMedicineToCart);
 
 router.post('/addMedicineToCart',requireAuth, addMedicineToCart);
 router.get('/viewOrderDetails/:patientUsername/:orderId',requireAuth, viewOrderDetails);

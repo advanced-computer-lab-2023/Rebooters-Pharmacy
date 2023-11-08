@@ -1,7 +1,7 @@
 const express = require('express') //require or import express
 const { requireAuth } = require('../Middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
-const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine, viewMedicineInventoryPharmacist} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
+const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine, viewMedicineInventoryPharmacist, logout, changePassword} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
 
 const multer = require('multer'); 
 const storage = multer.diskStorage({
@@ -20,6 +20,10 @@ const upload = multer({ storage: storage });
 //const upload= require ('../Controllers/uploadMiddleware');
 const router = express.Router() //create a router
 
+router.get('/logout', requireAuth, logout);
+// router.get('/requestPasswordResetOTP', requireAuth, requestPasswordResetOTP);
+// router.post('/resetPasswordWithOTP', requireAuth, resetPasswordWithOTP);
+router.post('/changePassword', requireAuth, changePassword);
 router.post('/addMedicine' , requireAuth, upload.single('image'),addMedicine);
 router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
 router.post('/filterMedicineByMedicinalUse',requireAuth, filterMedicineByMedicinalUse);

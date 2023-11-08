@@ -5,9 +5,17 @@ const {addAdministrator,
     removeUserFromSystem,
     viewPharmacistApplication,
     viewPharmacistInformation,
-    viewPatientInformation, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,approvePharmacistRequest,rejectPharmacistRequest} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
+    viewPatientInformation, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,approvePharmacistRequest,rejectPharmacistRequest, logout, changePassword} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
+
+router.get('/logout', requireAuth, logout);
+
+// router.get('/requestPasswordResetOTP', requireAuth, requestPasswordResetOTP);
+
+// router.post('/resetPasswordWithOTP', requireAuth, resetPasswordWithOTP);
+
+router.post('/changePassword', requireAuth, changePassword);
 
 router.post('/addAdministrator' , requireAuth, addAdministrator);
 

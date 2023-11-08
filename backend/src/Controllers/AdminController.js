@@ -2,18 +2,20 @@ const Administrator = require('../Models/administratorModel');
 const Pharmacist = require('../Models/pharmacistModel');
 const Patient = require('../Models/patientModel');
 const NewPharmacistRequest = require('../Models/newPharmacistRequestModel');
+const bcrypt = require('bcrypt');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
-
+const {logout, changePassword, createToken} = require('./authController');
 const mongoose = require('mongoose');
 
-
-    // Add another administrator with a set username and password
 const addAdministrator= async (req, res) => {
       try {
         const { username, password } = req.body;
-        const newAdministrator = new Administrator({ username, password });
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newAdministrator = new Administrator({ username, password:hashedPassword });
         const savedAdministrator = await newAdministrator.save();
-        res.status(201).json(savedAdministrator);
+        const token = createToken(newAdministrator._id);
+        res.status(201).json({ username, token, savedAdministrator });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error adding administrator' });
@@ -135,5 +137,6 @@ module.exports = {
   filterMedicineByMedicinalUse,
   searchMedicineByName,
   approvePharmacistRequest,
-  rejectPharmacistRequest
+  rejectPharmacistRequest,
+  logout, changePassword, createToken
  }; 

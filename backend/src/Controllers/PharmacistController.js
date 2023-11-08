@@ -1,9 +1,42 @@
 const Pharmacist = require('../Models/pharmacistModel');
 const Medicine = require('../Models/medicineModel');
 //const upload = require ('./uploadMiddleware');
-const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
-// Controller functions for Pharmacist
+const {viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
+const {logout, changePassword} = require('./authController');
+const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist for testing only
 
+// Generate a random password (you can use a library like 'crypto' for this)
+// const randomPassword = 'randompassword123'; // Replace with your random password generation logic
+
+// // Hash the password
+// bcrypt.hash(randomPassword, 10, async (err, hashedPassword) => {
+//     if (err) {
+//         console.error('Error hashing the password:', err);
+//         return;
+//     }
+
+//     try {
+//         // Create a new pharmacist document with the hashed password
+//         const newPharmacist = new Pharmacist({
+//             username: 'anaPharmacist',
+//             name: 'Dummy Pharmacist Name',
+//             email: 'shahd@gmail.com',
+//             password: hashedPassword,
+//             dateOfBirth: new Date('1990-01-01'),
+//             hourlyRate: 25, // Replace with the desired rate
+//             affiliation: 'Dummy Affiliation',
+//             educationalBackground: 'PharmD',
+//         });
+
+//         // Save the new pharmacist to the database
+//         await newPharmacist.save();
+
+//         console.log('Dummy pharmacist created successfully.');
+//     } catch (error) {
+//         console.error('Error creating the dummy pharmacist:', error);
+//     }
+// });
+// Controller functions for Pharmacist
 const addMedicine = async (req, res) => {
   try {
     const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded } = req.body;
@@ -71,22 +104,5 @@ const editMedicine = async (req, res) => {
         res.status(500).json({ message: 'Error editing medicine' });
       }
     };
-
-/*    
-const dummyPharmacist = new Pharmacist({
-  username: 'dummypharmacist',
-  password: 'dummypharmacistpassword',
-  name: 'Dummy pharmacist',
-  email: 'dummypharmacist@example.com',
-  dateOfBirth: new Date('1990-01-01'), // Assuming the date of birth is stored as a Date
-  hourlyRate: 100.0, // Example hourly rate
-  affiliation: 'Hospital ABC',
-  speciality: 'Cardiology',
-  educationalBackground: 'pharma School XYZ graduate',
   
-});
-
-dummyPharmacist.save(); 
-*/
-  
-module.exports = { viewMedicineInventoryPharmacist, addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine }; 
+module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword }; 
