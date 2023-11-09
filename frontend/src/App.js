@@ -8,6 +8,7 @@ import Guest from "./pages/Guest";
 import Patient from "./pages/Patient";
 import PatientActivities from "./components/PatientAddAddress";
 import CheckingOut from "./components/CheckingOut";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
           <Route path="/guest" element={<Guest />} />
           <Route path="/pharmacist" element={<Pharmacist />} />   
           <Route path= "/admin" element={<Admin/>}/>
