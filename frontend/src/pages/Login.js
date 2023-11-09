@@ -2,12 +2,15 @@ import '../styles/login.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //import { useHistory } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     //const history = useHistory();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const location = useLocation();
+    const errorMessage = location.state && location.state.errorMessage;
     const handleLogin = async () => {
         
         try {
@@ -52,6 +55,7 @@ const Login = () => {
       };
     return(
         <div className="login-card">
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <div className="title">
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <h2>LOGIN</h2>

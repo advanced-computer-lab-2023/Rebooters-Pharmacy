@@ -1,6 +1,7 @@
 // External variables
 const express = require('express');
 const mongoose = require('mongoose');
+const { requireAuth } = require('./Middleware/authMiddleware');
 mongoose.set('strictQuery', false);
 const multer = require('multer'); // Import multer here
 const storage = multer.memoryStorage();
@@ -48,4 +49,6 @@ app.use('/api/pharmacist', pharmacistRoutes);
 const patientRoutes = require('./Routes/patient');
 app.use('/api/patient', patientRoutes);
 
-
+app.get('/pharmacist', requireAuth);
+app.get('/patient', requireAuth);
+app.get('/admin', requireAuth);

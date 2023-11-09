@@ -44,15 +44,15 @@ const requireAuth = (req, res, next) => {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-    if (type === 'patient' && req.originalUrl.startsWith('/api/patient')) {
+    if (type === 'patient' && (req.originalUrl.startsWith('/api/patient') || (req.originalUrl.startsWith('/patient')))) {
       // Allow access to patient routes.
       return next();
     } 
-    else if (type === 'admin' && req.originalUrl.startsWith('/api/admin')) {
+    else if (type === 'admin' && (req.originalUrl.startsWith('/api/admin') || (req.originalUrl.startsWith('/admin')))) {
       // Allow access to admin routes.
       return next();
     }
-    else if (type === 'pharmacist' && req.originalUrl.startsWith('/api/pharmacist')) {
+    else if (type === 'pharmacist' && (req.originalUrl.startsWith('/api/pharmacist') || (req.originalUrl.startsWith('/pharmacist')))) {
       // Allow access to pharmacist routes.
       return next();
     }
