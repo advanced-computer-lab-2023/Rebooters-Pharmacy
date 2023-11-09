@@ -23,12 +23,11 @@ router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
 
 router.post('/filterMedicineByMedicinalUse', requireAuth, filterMedicineByMedicinalUse);
 
-router.post('/cancelOrder/:username/:orderId',requireAuth, cancelOrder);
-//http://localhost:8000/api/patient/cancelOrder/exampleUser/123
+router.post('/cancelOrder',requireAuth, cancelOrder);
 
-router.delete('/removeCartItem/:patientUsername/:medicineName',requireAuth, removeCartItem);
+router.delete('/removeCartItem', requireAuth, removeCartItem);
 
-router.get('/viewCartItems/:patientUsername', requireAuth, viewCartItems);
+router.post('/viewCartItems', requireAuth, viewCartItems);
 router.post('/viewDeliveryAddresses', requireAuth, viewDeliveryAdresses);
 router.post('/viewItems', requireAuth, viewItems);
 
