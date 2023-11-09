@@ -39,6 +39,6 @@ router.post('/checkout', requireAuth, checkout);
 router.post('/addMedicineToCart', requireAuth, addMedicineToCart);
 
 router.post('/addMedicineToCart',requireAuth, addMedicineToCart);
-router.get('/viewOrderDetails/:patientUsername/:orderId',requireAuth, viewOrderDetails);
+router.post('/viewOrderDetails',requireAuth, viewOrderDetails);
 
 module.exports = router //we need to export that router at the end so that App.js can access it
