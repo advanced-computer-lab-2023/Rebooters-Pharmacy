@@ -74,7 +74,7 @@ function CheckingOut({ modelName }) {
             <label htmlFor="dropdown">Choose a shipping address:</label>
             <select id="dropdown" >
 
-                {elementsArray.map((element, index) => (
+                {Array.isArray(elementsArray) && elementsArray.map((element, index) => (
                     <option key={index} value={element}>
                         {element}
                     </option>
@@ -85,7 +85,7 @@ function CheckingOut({ modelName }) {
             
             <p>Order Details:</p>
             {
-             cartItems.map(obj=><p key={obj._id} >  
+             Array.isArray(cartItems)&& cartItems.map(obj=><p key={obj._id} >  
            
              name: {obj.name}<br></br>
               price: {obj.price}<br></br>

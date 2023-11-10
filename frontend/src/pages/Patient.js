@@ -1,4 +1,5 @@
-//import React from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Medicine from "../components/Medicine";
 import PatientActivities from "../components/PatientActivities";
 import ViewCartItems from "../components/ViewCartItems";
@@ -6,6 +7,21 @@ import CancelOrder from "../components/CancelOrder";
 import CheckingOut from "../components/CheckingOut";
 
 const Patient = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkUserType = async () => {
+      try {
+        const response = await fetch("/patient")
+        if (response.status === 401 ||response.status === 403) {
+          navigate("/", { state: { errorMessage: "Access Denied" } });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkUserType();
+  }, []);
   return (
     <div>
       <div className="mt-4">

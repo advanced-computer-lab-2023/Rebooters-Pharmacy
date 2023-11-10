@@ -132,17 +132,17 @@ const generateOTP = () => {
       if (!user) {
         return res.status(400).json({ error: "User not found" });
       }
-      user.OTP = otp;
-      user.save();
-      try {
-        // Send the OTP to the user's email
-      await sendOTPByEmail(email, otp);
-      res.status(200).json({ message: "OTP sent successfully" });
-    } catch (error) {
-        console.error(error);
-      res.status(500).json({ error: "Failed to send OTP" });
-    }
   }
+  user.OTP = otp;
+  user.save();
+  try {
+    // Send the OTP to the user's email
+  await sendOTPByEmail(email, otp);
+  res.status(200).json({ message: "OTP sent successfully" });
+} catch (error) {
+    console.error(error);
+  res.status(500).json({ error: "Failed to send OTP" });
+}
 };
 // Function to reset the password with OTP and a new password
 const resetPasswordWithOTP = async (req, res) => {
@@ -162,26 +162,26 @@ const resetPasswordWithOTP = async (req, res) => {
     if (otp !== user.OTP) {
       return res.status(400).json({ error: "Invalid OTP" });
     }
-    // Check if the new password meets your criteria
-    if (
-      !validator.isStrongPassword(newPassword, {
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-      })
-    ) {
-      return res
-        .status(400)
-        .json({ error: "New password does not meet the criteria" });
-    }
-    // Update the user's password in the appropriate model
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    user.save();
-    res.status(200).json({ message: "Password reset successful" });
   }
+      // Check if the new password meets your criteria
+      if (
+        !validator.isStrongPassword(newPassword, {
+          minLength: 8,
+          minLowercase: 1,
+          minUppercase: 1,
+          minNumbers: 1,
+          minSymbols: 1,
+        })
+      ) {
+        return res
+          .status(400)
+          .json({ error: "New password does not meet the criteria" });
+      }
+      // Update the user's password in the appropriate model
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      user.save();
+      res.status(200).json({ message: "Password reset successful" });
 };
 module.exports= {logout, changePassword, createToken, resetPasswordWithOTP,
     requestPasswordResetOTP};
