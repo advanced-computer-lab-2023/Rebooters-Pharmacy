@@ -91,7 +91,7 @@ const cancelOrder = async (req, res) => {
     }
 
     // Update the order status to "Cancelled"
-    order.status = 'Cancelled';
+    order.status = 'Cancelled'; 
     await order.save();
 
     res.status(200).json({ message: 'Order canceled' });

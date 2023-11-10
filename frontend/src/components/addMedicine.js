@@ -8,19 +8,26 @@ const AddMedicine = () => {
     description: "",
     medicinalUse: "",
     quantity: 0,
+    prescription: false,
   });
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [image, setImage] = useState(null);
 
+ 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+  
+    // If the input type is a checkbox, handle it differently
+    const inputValue = type === 'checkbox' ? checked : value;
+  
     setNewMedicine({
       ...newMedicine,
-      [name]: value,
+      [name]: inputValue,
     });
   };
+  
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -49,6 +56,7 @@ const AddMedicine = () => {
       formData.append("description", newMedicine.description);
       formData.append("medicinalUse", newMedicine.medicinalUse);
       formData.append("quantity", newMedicine.quantity);
+      formData.append("PrescriptionNeeded", newMedicine.prescription); // Include prescription field
       formData.append("image", image);
 
       const response = await fetch("/api/pharmacist/addMedicine", {
@@ -163,6 +171,23 @@ const AddMedicine = () => {
             onChange={handleInputChange}
           />
         </div>
+        <div className="mb-3">
+  <label htmlFor="quantity" className="form-label">
+    Prescription Needed:
+  </label>
+  <input
+    type="checkbox"
+    className="form-check-input"
+    id="prescription"
+    name="prescription"
+    checked={newMedicine.prescription}
+    onChange={handleInputChange}
+  />
+  <label className="form-check-label" htmlFor="prescription">
+    Prescription Needed
+  </label>
+</div>
+
         <div className="mb-3">
           <label htmlFor="image" className="form-label">
             Image: (Optional)

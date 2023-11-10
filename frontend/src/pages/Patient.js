@@ -2,7 +2,6 @@
 import Medicine from "../components/Medicine";
 import PatientActivities from "../components/PatientActivities";
 import ViewCartItems from "../components/ViewCartItems";
-import RemoveCartItem from "../components/RemoveCartItem";
 import CancelOrder from "../components/CancelOrder";
 import CheckingOut from "../components/CheckingOut";
 
@@ -20,10 +19,7 @@ const Patient = () => {
           <ViewCartItems />
         </div>
 
-      <div className="mt-4">
-          <RemoveCartItem />
-        </div>
-
+      
       <div className="mt-4">
           <CancelOrder />
         </div>

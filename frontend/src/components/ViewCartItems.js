@@ -39,7 +39,7 @@ const ViewCartItems = () => {
   const handleRemoveItem = async (medicineName) => {
     try {
       const response = await fetch('/api/patient/removeCartItem', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
