@@ -1,5 +1,5 @@
 const express = require('express') //require or import express
-const {createPatient, createNewPharmacistRequest, login} = require('../Controllers/guestController') //we're destructuring so we need curly braces
+const {createPatient, createNewPharmacistRequest, login, requestPasswordResetOTP , resetPasswordWithOTP} = require('../Controllers/guestController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
@@ -16,6 +16,10 @@ const storage = multer.diskStorage({
   
 const upload = multer({ storage: storage });
 router.post('/login', login);
+
+router.post('/requestPasswordResetOTP', requestPasswordResetOTP);
+
+router.post('/resetPasswordWithOTP', resetPasswordWithOTP);
 
 router.post('/createPatient' , createPatient);
 

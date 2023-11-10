@@ -30,6 +30,10 @@ const pharmacistSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  OTP:{
+    type: String,
+    default: "",
+  },
   educationalBackground: {
     type: String,
     required: true,

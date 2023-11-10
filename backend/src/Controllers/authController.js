@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const nodemailer = require('nodemailer');
+require("dotenv").config();
+
 
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (username) => {
@@ -80,121 +82,106 @@ const changePassword = async (req, res) => {
     }
 };
 
-// const otpStorage = new Map(); // Temporary storage for OTPs
+// Generate a random 6-digit OTP
+const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+  
+  const sendOTPByEmail = async (email, otp) => {
+    try {
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+      });
+      // Send emails to users
+      let info = await transporter.sendMail({
+        from: "Rebooters",
+        to: email,
+        subject: "OTP Code",
+        html: `   <h1>El7a2ni OTP Code</h1>
+        <p>Code: ${otp}</p> `,
+      });
+      console.log("Email info: ", info);
+      return info;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  
+  // Function to request OTP for password reset
+  const requestPasswordResetOTP = async (req, res) => {
+    const { email } = req.body;
+  
+    let user;
+    // Generate a random OTP
+    const otp = generateOTP();
+  
+    // Check if the user with the provided email exists in the appropriate model
+  
+    user = await Patient.findOne({ email: email });
+    if (!user) {
+      user = await Admin.findOne({ email: email });
+      if (!user) {
+        user = await Pharmacist.findOne({ email: email });
+      }
+      if (!user) {
+        return res.status(400).json({ error: "User not found" });
+      }
+      user.OTP = otp;
+      user.save();
+      try {
+        // Send the OTP to the user's email
+      await sendOTPByEmail(email, otp);
+      res.status(200).json({ message: "OTP sent successfully" });
+    } catch (error) {
+        console.error(error);
+      res.status(500).json({ error: "Failed to send OTP" });
+    }
+  }
+};
+// Function to reset the password with OTP and a new password
+const resetPasswordWithOTP = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
 
-// // Generate a random 6-digit OTP
-// const generateOTP = () => {
-//   return Math.floor(100000 + Math.random() * 900000).toString();
-// };
-
-// // Send OTP to the user's email
-// const sendOTPByEmail = async (email, otp) => {
-//   // Create a nodemailer transporter for sending emails
-//   const transporter = nodemailer.createTransport({
-//     service: 'Gmail', // e.g., Gmail
-//     auth: {
-//       user: 'shahdsharaf02@gmail.com',
-//       pass: 'Ss10082002',
-//     },
-//   });
-
-//   // Define email data
-//   const mailOptions = {
-//     from: 'shahdsharaf02@gmail.com',
-//     to: email,
-//     subject: 'Password Reset OTP',
-//     text: `Your OTP for password reset is: ${otp}`,
-//   };
-
-//   // Send the email
-//   return new Promise((resolve, reject) => {
-//     transporter.sendMail(mailOptions, (error, info) => {
-//       if (error) {
-//         reject(error);
-//       } else {
-//         resolve(info);
-//       }
-//     });
-//   });
-// };
-
-// // Function to request OTP for password reset
-// const requestPasswordResetOTP = async (req, res) => {
-//   const { email, userType } = req.body;
-
-//   let user;
-
-//   // Check if the user with the provided email exists in the appropriate model
-//   if (userType === 'patient') {
-//     user = await Patient.findOne({ email });
-//   } else if (userType === 'admin') {
-//     user = await Admin.findOne({ email });
-//   } else if (userType === 'pharmacist') {
-//     user = await Pharmacist.findOne({ email });
-//   } else {
-//     return res.status(400).json({ error: 'Invalid user type' });
-//   }
-
-//   if (!user) {
-//     return res.status(404).json({ error: 'User not found' });
-//   }
-
-//   // Generate a random OTP
-//   const otp = generateOTP();
-
-//   // Store the OTP in temporary storage (you should use a database for production)
-//   otpStorage.set(email, otp);
-
-//   try {
-//     // Send the OTP to the user's email
-//     await sendOTPByEmail(email, otp);
-
-//     // Return a success response
-//     res.status(200).json({ message: 'OTP sent successfully' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Failed to send OTP' });
-//   }
-// };
-
-// // Function to reset the password with OTP and a new password
-// const resetPasswordWithOTP = async (req, res) => {
-//   const { email, otp, newPassword, userType } = req.body;
-
-//   // Check if the provided OTP matches the stored OTP for the email
-//   if (otp !== otpStorage.get(email)) {
-//     return res.status(400).json({ error: 'Invalid OTP' });
-//   }
-
-//   // Check if the new password meets your criteria
-//   if (!validator.isStrongPassword(newPassword, {
-//     minLength: 8,
-//     minLowercase: 1,
-//     minUppercase: 1,
-//     minNumbers: 1,
-//     minSymbols: 1,
-//   })) {
-//     return res.status(400).json({ error: 'New password does not meet the criteria' });
-//   }
-
-//   // Update the user's password in the appropriate model
-//   const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-//   if (userType === 'patient') {
-//     await Patient.updateOne({ email }, { password: hashedPassword });
-//   } else if (userType === 'admin') {
-//     await Admin.updateOne({ email }, { password: hashedPassword });
-//   } else if (userType === 'pharmacist') {
-//     await Pharmacist.updateOne({ email }, { password: hashedPassword });
-//   } else {
-//     return res.status(400).json({ error: 'Invalid user type' });
-//   }
-
-//   // Clear the stored OTP for security
-//   otpStorage.delete(email);
-
-//   // Return a success response
-//   res.status(200).json({ message: 'Password reset successful' });
-// };
-
-module.exports= {logout, changePassword, createToken};
+  let user;
+  user = await Patient.findOne({ email: email });
+  if (!user) {
+    user = await Admin.findOne({ email: email });
+    if (!user) {
+      user = await Pharmacist.findOne({ email: email });
+    }
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+    // Check if the provided OTP matches the stored OTP for the email
+    if (otp !== user.OTP) {
+      return res.status(400).json({ error: "Invalid OTP" });
+    }
+    // Check if the new password meets your criteria
+    if (
+      !validator.isStrongPassword(newPassword, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      return res
+        .status(400)
+        .json({ error: "New password does not meet the criteria" });
+    }
+    // Update the user's password in the appropriate model
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.save();
+    res.status(200).json({ message: "Password reset successful" });
+  }
+};
+module.exports= {logout, changePassword, createToken, resetPasswordWithOTP,
+    requestPasswordResetOTP};

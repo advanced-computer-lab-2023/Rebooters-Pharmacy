@@ -21,8 +21,6 @@ const upload = multer({ storage: storage });
 const router = express.Router() //create a router
 
 router.get('/logout', requireAuth, logout);
-// router.get('/requestPasswordResetOTP', requireAuth, requestPasswordResetOTP);
-// router.post('/resetPasswordWithOTP', requireAuth, resetPasswordWithOTP);
 router.post('/changePassword', requireAuth, changePassword);
 router.post('/addMedicine' , requireAuth, upload.single('image'),addMedicine);
 router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);

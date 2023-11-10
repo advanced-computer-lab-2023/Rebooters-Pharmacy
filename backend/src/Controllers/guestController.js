@@ -6,7 +6,7 @@ const NewPharmacistRequest = require('../Models/newPharmacistRequestModel');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const {createToken} = require('./authController');
+const {createToken, requestPasswordResetOTP, resetPasswordWithOTP} = require('./authController');
 const maxAge = 3 * 24 * 60 * 60;
 
 const login = async(req, res) => {
@@ -122,7 +122,7 @@ const createPatient = async (req, res) => {
   
 
 
-module.exports = {createPatient, createNewPharmacistRequest, login, createToken};
+module.exports = {createPatient, createNewPharmacistRequest, login, createToken, requestPasswordResetOTP, resetPasswordWithOTP};
 
 
 

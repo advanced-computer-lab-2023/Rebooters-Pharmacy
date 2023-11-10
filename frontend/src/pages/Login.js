@@ -81,13 +81,13 @@ const Login = () => {
             />
             <br/>
 
-            <a className='forgot' href=''>forgot password?</a>
+            <a className='forgot' href='/forgotpassword'>forgot password?</a>
             <br/>
 
             <button onClick={handleLogin}>Login</button>
             <br/>
 
-            <a className='forgot center' href='/register'>CREATE ACCOUNT!</a>
+            <a className='forgot center' href='/guest'>CREATE ACCOUNT!</a>
             
             </div>
         </div>

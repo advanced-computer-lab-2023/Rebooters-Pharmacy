@@ -70,6 +70,10 @@ const PatientSchema = new Schema({
     type: String,
     required: true,
   },
+  OTP:{
+    type: String,
+    default: "",
+  },
   emergency_contact: {
     firstName: String,
     middleName: String,

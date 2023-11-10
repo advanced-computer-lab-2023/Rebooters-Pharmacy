@@ -18,9 +18,9 @@ const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist 
 //     try {
 //         // Create a new pharmacist document with the hashed password
 //         const newPharmacist = new Pharmacist({
-//             username: 'anaPharmacist',
+//             username: 'shahdsharaf',
 //             name: 'Dummy Pharmacist Name',
-//             email: 'shahd@gmail.com',
+//             email: 'shahdsharaf02@gmail.com',
 //             password: hashedPassword,
 //             dateOfBirth: new Date('1990-01-01'),
 //             hourlyRate: 25, // Replace with the desired rate
