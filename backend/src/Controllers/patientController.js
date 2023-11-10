@@ -104,7 +104,7 @@ const cancelOrder = async (req, res) => {
 
 const viewDeliveryAdresses = async (req, res) => {
   try {
-    const patientUsername = req.query.patientUsername;
+    const patientUsername = req.cookies.username;
     const patient = await Patient.findOne({username:patientUsername});
     if (!patient ) {
       return res.status(404).json({ message: 'No available delivery Adresses found.' });
@@ -117,14 +117,17 @@ const viewDeliveryAdresses = async (req, res) => {
 };
 const AddNewDeliveryAdress = async (req, res) => {
   try{
-  const patientUsername = req.query.patientUsername;
+  const patientUsername = req.cookies.username;
   const patient = await Patient.findOne({username:patientUsername});
+ 
   const deliveryAddresses=patient.deliveryAddresses
+ 
   var arrayOfAddresses = req.body.deliveryAddress.split("%");
   for(let i=0;i<arrayOfAddresses.length-1;i++){
         deliveryAddresses.push(arrayOfAddresses[i])
       
   }
+  
         const updatePatient = await Patient.findOneAndUpdate(
           { username: patientUsername },
           { deliveryAddresses},
@@ -141,15 +144,14 @@ const AddNewDeliveryAdress = async (req, res) => {
 };
 const changeAmountOfAnItem = async (req, res) => {
   try{
-  const patientUsername = req.query.patientUsername;
-  const patient = await Order.findOne({patientUsername:patientUsername});
-  const items=patient.items;
-  
-  let index=items.findIndex(item => item.name === req.query.name)
-  items[index].quantity=req.query.quantity
-  const updateItems = await Order.findOneAndUpdate(
-    { patientUsername: patientUsername },
-    { items},
+  const patientUsername =  req.cookies.username;
+  const patient = await Patient.findOne({username:patientUsername});
+  const cart=patient.cart;
+  let index=cart.findIndex(item => item.name === req.query.name)
+  cart[index].quantity=req.query.quantity
+  const updateItems = await Patient.findOneAndUpdate(
+    { username: patientUsername },
+    { cart},
     { new: true }
   );
   if (!updateItems) {
@@ -223,7 +225,7 @@ const viewItems = async (req, res) => {
 const checkout = async (req, res) => {
   try {
     const orderDate = new Date();
-    const patientUsername=req.query.patientUsername;
+    const patientUsername= req.cookies.username;
     const givenPatient = await Patient.findOne({ username: patientUsername });
     const patient=givenPatient._id;  
     const status="Pending";
@@ -249,7 +251,6 @@ const viewOrderDetails = async (req, res) => {
 
     // Find the order with the given orderId
     const order = await Order.findOne({ _id: orderId, patientUsername: patientUsername });
-
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
