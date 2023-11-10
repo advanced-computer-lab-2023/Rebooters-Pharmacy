@@ -4,12 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const ViewCartItems = () => {
   const [cartItems, setCartItems] = useState([]);
   const [error, setError] = useState('');
-
+  const numbersArray = Array.from({ length: 20 }, (_, i) => i + 1);
+   const[selected,setSelected]=useState(0);
   useEffect(() => {
     const getCartItems = async () => {
       try {
         const response = await fetch('/api/patient/viewCartItems', {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -55,9 +56,31 @@ const ViewCartItems = () => {
       setError('Error removing medicine from the cart');
     }
   };
-
+  const handleUpdateItem= async (productName,quantity) => {
+    try {
+      alert(quantity)
+        let index=cartItems.findIndex(item => item.name === productName);
+        cartItems[index].quantity=quantity;
+           const response = await fetch(`/api/patient/changeAmountOfAnItem?name=${productName}&quantity=${quantity}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+          });
+          if (!response.ok) {       
+            throw new Error("Failed to add order");
+          }
+          alert('quantity updated successfully')
+        } catch (error) {
+          console.error(error);
+        
+        }
+}
   return (
+  
     <div>
+
       {error && <p className="text-danger">{error}</p>}
       <h2>Cart Items</h2>
       <table className="table">
@@ -66,6 +89,9 @@ const ViewCartItems = () => {
             <th>Medicine Name</th>
             <th>Price</th>
             <th>Actions</th>
+
+            <th>Actions</th>
+            <th>Quantity</th>
           </tr>
         </thead>
         <tbody>
@@ -75,6 +101,21 @@ const ViewCartItems = () => {
               <td>{item.price}</td>
               <td>
                 <button onClick={() => handleRemoveItem(item.name)}>Remove</button>
+              </td>
+              <td>
+                <button onClick={() => handleUpdateItem(item.name,document.getElementById('quantity').value)}>Update</button>
+              </td>
+              <td>
+              <select id="quantity" >
+
+{numbersArray.map((element, index) => (
+    <option  key={index} value={element }selected={element === item.quantity}>
+        {element}
+    </option>
+))}
+
+
+</select>
               </td>
             </tr>
           ))}

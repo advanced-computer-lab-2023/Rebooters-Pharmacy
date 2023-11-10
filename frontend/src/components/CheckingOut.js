@@ -2,7 +2,6 @@ import React, { useState,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function CheckingOut({ modelName }) {
-    const numbersArray = Array.from({ length: 20 }, (_, i) => i + 1);
 
     const [elementsArray,setelementsArray] = React.useState([]);
     const [cartItems,setCartItems] = React.useState([]);
@@ -12,8 +11,7 @@ function CheckingOut({ modelName }) {
     });
 
     useEffect(()=>{  
-            //patientUsername to be taken from login
-             fetch(`/api/patient/viewDeliveryAddresses?patientUsername=myy`, {
+             fetch(`/api/patient/viewDeliveryAddresses`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -22,7 +20,7 @@ function CheckingOut({ modelName }) {
             }) .then(res=>(res.json()))
             .then(data=>setelementsArray(data))
              .catch(err=>console.log(err))
-             fetch(`/api/patient/viewItems?patientUsername=myy`, {
+             fetch(`/api/patient/viewCartItems`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -52,7 +50,7 @@ function CheckingOut({ modelName }) {
           let address=document.getElementById('dropdown').value;
           let paymentMethod=document.getElementById('paymentMethod').value;
          
-             const response = await fetch(`/api/patient/checkout?patientUsername=myy`, {
+             const response = await fetch(`/api/patient/checkout`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -68,29 +66,11 @@ function CheckingOut({ modelName }) {
           }
     }
     //here the user can update the quantity when checking out lessa f cart
-    const handleUpdate= async (productName,quantity) => {
-        try {
-          
-            let index=cartItems.findIndex(item => item.name === productName);
-            cartItems[index].quantity=quantity;
-          //patientUsername to be changed from login!!
-               const response = await fetch(`/api/patient/changeAmountOfAnItem?patientUsername=myy&name=${productName}&quantity=${quantity}`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({}),
-              });
-              if (!response.ok) {       
-                throw new Error("Failed to add order");
-              }
-             alert('quantity updated successfully')
-            } catch (error) {
-              console.error(error);
-            }
-    }
+   
     return (
+    
         <div>
+            <p>Order CheckOut </p>
             <label htmlFor="dropdown">Choose a shipping address:</label>
             <select id="dropdown" >
 
@@ -109,20 +89,7 @@ function CheckingOut({ modelName }) {
            
              name: {obj.name}<br></br>
               price: {obj.price}<br></br>
-               quantity: <select id="quantity" >
-
-{numbersArray.map((element, index) => (
-    <option key={index} value={element}selected={element === obj.quantity}>
-        {element}
-    </option>
-))}
-
-
-</select>
-              
-               <br></br>
-               <button onClick={() => handleUpdate(obj.name,document.getElementById('quantity').value)}>update</button>
-
+               quantity: {obj.quantity}
                </p>
               
 
