@@ -1,12 +1,22 @@
 // External variables
+require("dotenv").config()
+
 const express = require('express');
 const mongoose = require('mongoose');
+const cors=require('cors')
+
 const { requireAuth } = require('./Middleware/authMiddleware');
 mongoose.set('strictQuery', false);
 const multer = require('multer'); // Import multer here
 const storage = multer.memoryStorage();
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
+//database or json file 
+const storeItems=new Map([
+  [ 1,{priceInCents:10000,name:"Learn React Today"}],
+  [ 2,{priceInCents:20000,name:"Learn CSS Today"}],
+])//database json file
+
 const upload = multer({ storage });
-require("dotenv").config();
 const cookieParser = require('cookie-parser');
 
 const MongoURI = process.env.MONGO_URI;
@@ -36,6 +46,34 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
     res.status(200).send("Welcome to el7a2ni");
   });
+  app.post('/create-checkout-session',async (req,res)=>{
+    try{
+        const session =await stripe.checkout.sessions.create({
+payment_method_types:['card'],
+line_items:req.body.items.map(item=>{
+    const storeItem=storeItems.get(item.id)
+return{
+    price_data:{
+        currency:'usd',
+        product_data:{
+            name:storeItem.name
+        },
+        unit_amount:storeItem.priceInCents
+    },
+    quantity:item.quantity
+}
+}),
+mode:'payment',
+success_url:`${process.env.FRONTEND_URL}/sucess.html`,
+cancel_url:`${process.env.FRONTEND_URL}/cancel.html`
+
+        })
+        res.json({url:session.url})
+    } catch(e){
+        res.status(500).json({error:e.message})
+    }
+    
+})
 
 const administratorRoutes = require('./Routes/administrator') //to import the router that was exported from administrator.js
 app.use('/api/administrator' , administratorRoutes);
