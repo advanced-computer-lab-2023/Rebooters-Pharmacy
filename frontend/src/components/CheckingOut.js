@@ -35,7 +35,7 @@ function CheckingOut({ modelName }) {
               setsubTotal(newValue)
               localStorage.setItem("subTotal", newValue);
               
-        },[])
+        },[cartItems,setelementsArray])
         const calculateNewValue = () => {
             let sum=0;
             for(let i=0;i<cartItems.length;i++){

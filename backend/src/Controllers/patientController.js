@@ -237,6 +237,13 @@ const checkout = async (req, res) => {
     const newOrder = new Order({ total,paymentMethod,address,items,orderDate,
       patientMobileNumber,patientUsername,status,patient });
     const savedOrder = await newOrder.save();
+    let cart=[];
+    const updatePatient = await Patient.findOneAndUpdate(
+      { username: patientUsername },
+      { cart},
+      { new: true }
+    );
+    
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error(error);
