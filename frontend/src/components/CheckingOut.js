@@ -44,29 +44,52 @@ function CheckingOut({ modelName }) {
             }            
             return sum;
         };
-     const checkout= async () => {
-        try {
-          let patientMobileNumber=document.getElementById('phone').value;
-          let address=document.getElementById('dropdown').value;
-          let paymentMethod=document.getElementById('paymentMethod').value;
-         
-             const response = await fetch(`/api/patient/checkout`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ total:subTotal,address,patientMobileNumber,paymentMethod, items:cartItems}),
-            });
-            if (!response.ok) {       
-              throw new Error("Failed to add order");
-            }
-           alert('order added successfully')
-          } catch (error) {
-            console.error(error);
-          }
-    }
-    //here the user can update the quantity when checking out lessa f cart
-   
+        const checkout= async () => {
+          try {
+            let patientMobileNumber=document.getElementById('phone').value;
+            let address=document.getElementById('dropdown').value;
+            let paymentMethod=document.getElementById('paymentMethod').value;
+           
+               const response = await fetch(`/api/patient/checkout`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ total:subTotal,address,patientMobileNumber,paymentMethod, items:cartItems}),
+              });
+              if (!response.ok) {       
+                throw new Error("Failed to add order");
+              }
+              console.log(process.env.STRIPE_PRIVATE_KEY);
+             
+                fetch('http://localhost:3000/create-checkout-session', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    items: [
+                      { id: 1, quantity: 3 },
+                      { id: 2, quantity: 1 },
+                    ],
+                  }),
+                })
+                  .then(res => {
+                    if (res.ok) return res.json();
+                    throw new Error('Network response was not ok');
+                  })
+                  .then(({ url }) => {
+                    window.location = url;
+                    console.log(url);
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                  });
+              } catch (error) {
+                console.error('Outer Error:', error);
+              
+              }             
+      }
     return (
     
         <div>
