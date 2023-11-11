@@ -274,13 +274,19 @@ let total = 0;
     const orderItems = [];
     for (let i = 0; i < items.length; i++) {
       const givenMedicine = await Medicine.findOne({ name: items[i].name });
+      if (givenMedicine.quantity < items[i].quantity) {
+        return res.status(400).json({ message: `Not enough stock for ${givenMedicine.name}` });
+      }
       orderItems.push({
         medicine: givenMedicine._id,
         name: items[i].name,
         price: items[i].price,
         quantity: items[i].quantity,
       });
-      total+=items[i].price;
+      total += items[i].price;
+      givenMedicine.quantity -= items[i].quantity;
+      givenMedicine.sales += items[i].quantity;
+      await givenMedicine.save();
     }
 
     // Create a new order using the Order schema

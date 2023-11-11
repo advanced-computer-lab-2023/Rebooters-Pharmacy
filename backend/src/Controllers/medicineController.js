@@ -45,7 +45,7 @@ const filterMedicineByMedicinalUse = async (req, res) => {
 const viewMedicineInventory = async (req, res) => {
     try {
       // Fetch medicines with quantity greater than 0
-      const medicines = await Medicine.find({ quantity: { $gt: 0 } });
+      const medicines = await Medicine.find();
   
       if (!medicines || medicines.length === 0) {
         return res.status(404).json({ message: 'No available medicines found.' });

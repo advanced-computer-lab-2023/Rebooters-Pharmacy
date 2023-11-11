@@ -160,7 +160,7 @@ function Medicine({ modelName }) {
                 ) : (
                   <p>No Image Available</p>
                 )}
-                {modelName === "patient" && (
+                {modelName === "patient" && medicine.quantity >0 && (
                   <button
                     className="btn btn-success"
                     onClick={() => addMedicineToCart(medicine.name)}

@@ -68,6 +68,7 @@ function CheckingOut({ modelName }) {
         throw new Error("Failed to add order");
       }
       alert("order added");
+      window.location.reload();
       if (paymentMethod === "credit card (using Stripe)") {
         try {
           const stripeResponse = await fetch(
