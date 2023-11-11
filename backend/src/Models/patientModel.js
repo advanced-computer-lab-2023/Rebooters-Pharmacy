@@ -104,6 +104,12 @@ const PatientSchema = new Schema({
       },
     },
   ],
+orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order',
+    },
+  ],
 }, { timestamps: true });
 
 const Patient = mongoose.model('Patient', PatientSchema);

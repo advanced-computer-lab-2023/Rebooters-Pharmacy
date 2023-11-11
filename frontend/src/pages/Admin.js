@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Medicine from "../components/Medicine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import ChangePassword from "../components/ChangePassword";
 
 function Administrator() {
   //const [administrators, setAdministrators] = useState([]);
@@ -10,11 +11,13 @@ function Administrator() {
   const [pharmacistUsername, setPharmacistUsername] = useState("");
   const [patientUsername, setPatientUsername] = useState("");
   const [adminUsername, setAdminUsername] = useState("");
+  const [email, setAdminEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userToRemove, setUserToRemove] = useState("");
   const [newPharmacistRequestData, setNewPharmacistRequestData] = useState([]);
   const [submissionStatus, setSubmissionStatus] = useState(null); 
   const [message, setMessage] = useState("");
+  const [showPharmacistRequests, setshowPharmacistRequests] = useState(false);
 
   /*const viewAdministrators = async () => {
     try {
@@ -123,7 +126,8 @@ function Administrator() {
   const addAdministrator = async () => {
     if (
       !adminUsername ||
-      !password
+      !password ||
+      !email
     ) {
       setSubmissionStatus("error");
       setMessage("Please fill in all required fields.");
@@ -135,7 +139,7 @@ function Administrator() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: adminUsername, password }),
+        body: JSON.stringify({ username: adminUsername, password ,email}),
       });
       if (!response.ok) {
         setSubmissionStatus("error");
@@ -148,6 +152,7 @@ function Administrator() {
       console.log("Administrator added successfully");
       setAdminUsername("");
       setPassword("");
+      setAdminEmail("");
     } catch (error) {
       setSubmissionStatus("error");
       setMessage("Failed to add administrator");
@@ -187,11 +192,9 @@ function Administrator() {
     }
   };
 
-  const viewNewPharmacistRequests = async () => {
+const viewNewPharmacistRequests = async () => {
     try {
-      const response = await fetch(
-        `/api/administrator/viewPharmacistApplication`
-      );
+      const response = await fetch('/api/administrator/viewPharmacistApplication');
       if (!response.ok) {
         setSubmissionStatus("error");
         setMessage("Failed to fetch new pharmacist requests");
@@ -203,6 +206,7 @@ function Administrator() {
         setMessage("There are no pharmacist requests");
       }
       setNewPharmacistRequestData(data);
+      setshowPharmacistRequests(true);
     } catch (error) {
       setSubmissionStatus("error");
       setMessage("Failed to fetch new pharmacist requests");
@@ -210,9 +214,106 @@ function Administrator() {
     }
   };
 
+ const approvePharmacistRequest = async (username) => {
+    try {
+      const response = await fetch('/api/administrator/approvePharmacistRequest', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username }),
+      });
+      if (response.ok) {
+        const updatedRequests = newPharmacistRequestData.filter(
+          (request) => request.username !== username
+        );
+        setNewPharmacistRequestData(updatedRequests);
+        // Show success message or update UI as needed
+      } else {
+        // Handle HTTP error codes (response status not OK)
+        throw new Error("Failed to approve pharmacist request"); // Throw a new error to be caught in the catch block
+      }
+    } catch (error) {
+      // Handle network errors or exceptions during the fetch
+      console.error("Error approving pharmacist request:", error);
+      // Update the state or show an error message to the user
+      // For example, set a state to display an error message on the UI
+    }
+  };
+
+  const rejectPharmacistRequest = async (username) => {
+    try {
+      const response = await fetch('/api/administrator/rejectPharmacistRequest', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username }),
+      });
+      if (response.ok) {
+        const updatedRequests = newPharmacistRequestData.filter(
+          (request) => request.username !== username
+        );
+        setNewPharmacistRequestData(updatedRequests);
+      } else {
+        // Handle HTTP error codes (response status not OK)
+        throw new Error("Failed to reject pharmacist request"); // Throw a new error to be caught in the catch block
+      }
+    } catch (error) {
+      // Handle network errors or exceptions during the fetch
+      console.error("Error rejecting pharmacist request:", error);
+      // Update the state or show an error message to the user
+      // For example, set a state to display an error message on the UI
+    }
+  };
+
+  const downloadDocument = async (fileName ) => {
+    const link = document.createElement('a');
+      const url = fileName;
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  };
+  
+  const togglePharmacistRequests = () => {
+    if (!showPharmacistRequests) {
+      viewNewPharmacistRequests();
+    } else {
+      setshowPharmacistRequests(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/administrator/logout", {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        navigate("/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+
   return (
     <div className="container mt-4">
+      <button onClick={handleLogout} className="btn btn-danger mt-2">
+        Logout
+      </button>
       <h1 className="mb-4 text-center">Administrator Dashboard</h1>
+      <div className="card mt-4">
+        <ChangePassword userType="patient" />
+      </div>
+      <div className="card mt-4">
+        <ChangePassword userType="administrator" />
+      </div>
       {submissionStatus === "success" && (
           <div className="alert alert-success">{message}</div>
         )}
@@ -233,6 +334,13 @@ function Administrator() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="form-control mb-2"
+        />
+        <input
+          type="text"
+          placeholder="Administrator Email"
+          value={email}
+          onChange={(e) => setAdminEmail(e.target.value)}
           className="form-control mb-2"
         />
         <button className="btn btn-primary" onClick={addAdministrator}>
@@ -337,42 +445,83 @@ function Administrator() {
       </div>
       <div className="mt-4">
         <h2>New Pharmacist Requests</h2>
-        <button className="btn btn-primary" onClick={viewNewPharmacistRequests}>
-          View New Pharmacist Requests
+        <button className="btn btn-primary" onClick={togglePharmacistRequests}>
+          {showPharmacistRequests ? "Hide New Pharmacist Requests" : "View New Pharmacist Requests"}
         </button>
-        <table className="table mt-2">
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Date of Birth</th>
-              <th>Hourly Rate</th>
-              <th>Speciality</th>
-              <th>Affiliation</th>
-              <th>Educational Background</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {newPharmacistRequestData.map((request) => (
-              <tr key={request._id}>
-                <td>{request.username}</td>
-                <td>{request.name}</td>
-                <td>{request.email}</td>
-                <td>{request.dateOfBirth}</td>
-                <td>{request.hourlyRate}</td>
-                <td>{request.speciality}</td>
-                <td>{request.affiliation}</td>
-                <td>{request.educationalBackground}</td>
-                <td>{request.status}</td>
+        {showPharmacistRequests && (
+          <table className="table mt-2">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Hourly Rate</th>
+                <th>Affiliation</th>
+                <th>Educational Background</th>
+                <th>ID Document</th>
+                <th>Pharmacy Degree</th>
+                <th>Working License</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+           <tbody>
+      {newPharmacistRequestData.map((request) => (
+         console.log(request.idDocument),
+         console.log(request.pharmacyDegreeDocument),
+         console.log(request.workingLicenseDocument),
+        <tr key={request._id}>
+          <td>{request.username}</td>
+          <td>{request.name}</td>
+          <td>{request.email}</td>
+          <td>{request.dateOfBirth}</td>
+          <td>{request.hourlyRate}</td>
+          <td>{request.affiliation}</td>
+          <td>{request.educationalBackground}</td>
+          <td>
+            {request.idDocument && (
+              <button onClick={() => downloadDocument(request.idDocument.filename)}>
+                Download ID Document
+              </button>
+            )}
+          </td>
+          <td>
+            {request.pharmacyDegreeDocument && (
+              <button onClick={() => downloadDocument(request.pharmacyDegreeDocument.filename)}>
+                Download Pharmacy Degree Document
+              </button>
+            )}
+          </td>
+          <td>
+            {request.workingLicenseDocument && (
+              <button onClick={() => downloadDocument(request.workingLicenseDocument.filename)}>
+                Download Working License Document
+              </button>
+            )}
+          </td>
+          <td>
+            {request.status === 'pending' ? (
+              <div>
+                <button onClick={() => approvePharmacistRequest(request.username)}>
+                  Accept
+                </button>
+                <button onClick={() => rejectPharmacistRequest(request.username)}>
+                  Reject
+                </button>
+
+              </div>
+            ) : (
+              'Request Handled'
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+        )}
+</div>
       <div className="mt-4">
-        {<Medicine modelName="pharmacist"/>}
+        {<Medicine modelName="pharmacist" />}
         </div>
     </div>
   );

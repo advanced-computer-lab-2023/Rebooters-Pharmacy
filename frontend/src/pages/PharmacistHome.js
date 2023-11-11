@@ -5,6 +5,7 @@ import ViewMedicineQuantitySales from "../components/ViewMedicineQuantitySales";
 import Medicine from "../components/Medicine";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ChangePassword from "../components/ChangePassword";
 
 
 const PharmacistHome = () => {
@@ -23,10 +24,32 @@ const PharmacistHome = () => {
 
     checkUserType();
   }, []);
+
+const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/pharmacist/logout", {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        navigate("/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
   
     return (
       <div className="container">
+   <button onClick={handleLogout} className="btn btn-danger mt-2">
+        Logout
+      </button>
         <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
+        <div className="card mt-4">
+        <ChangePassword userType="patient" />
+      </div>
         <div className="mt-4">
         {<Medicine modelName="pharmacist"/>}
         </div>

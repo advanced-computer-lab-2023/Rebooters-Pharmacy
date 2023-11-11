@@ -12,7 +12,7 @@ const RemoveCartItem = () => {
       const username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
       const response = await fetch('/api/patient/removeCartItem', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },

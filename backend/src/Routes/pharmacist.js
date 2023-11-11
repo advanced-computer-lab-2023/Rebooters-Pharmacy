@@ -23,7 +23,7 @@ const router = express.Router() //create a router
 router.get('/logout', requireAuth, logout);
 router.post('/changePassword', requireAuth, changePassword);
 router.post('/addMedicine' , requireAuth, upload.single('image'),addMedicine);
-router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
+router.get('/viewMedicineInventory',viewMedicineInventory);
 router.post('/filterMedicineByMedicinalUse',requireAuth, filterMedicineByMedicinalUse);
 router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
 router.patch('/editMedicine',requireAuth, editMedicine);

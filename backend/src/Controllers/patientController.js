@@ -166,8 +166,10 @@ const changeAmountOfAnItem = async (req, res) => {
 
 const addMedicineToCart = async (req, res) => {
   try {
-    const username = req.body.username; // Get the patient's username from the request
+    const username = req.cookies.username; // Get the patient's username from the request
+
     const patient = await Patient.findOne({ username: username });
+
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
@@ -205,6 +207,8 @@ const addMedicineToCart = async (req, res) => {
     res.status(500).json({ message: 'Error adding medicine to the cart' });
   }
 };
+
+
 const viewItems = async (req, res) => {
   try {
     const patientUsername = req.query.patientUsername; // Get the patient's username from the request

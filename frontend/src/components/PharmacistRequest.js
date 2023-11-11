@@ -11,17 +11,27 @@ const PharmReq = () => {
     hourlyRate: "",
     affiliation: "",
     educationalBackground: "",
+    idDocument: null,
+    pharmacyDegreeDocument: null,
+    workingLicenseDocument: null,
   });
   const [submissionStatus, setSubmissionStatus] = useState(null); 
   const [message, setMessage] = useState("");
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, files } = e.target;
 
-    setNewPharmacist({
-      ...newPharmacist,
-      [name]: value,
-    });
+    if (type === "file") {
+      setNewPharmacist({
+        ...newPharmacist,
+        [name]: files[0], // Assuming only one file is uploaded
+      });
+    } else {
+      setNewPharmacist({
+        ...newPharmacist,
+        [name]: e.target.value,
+      });
+    }
   };
 
   const handleAddPharmacist = async () => {
@@ -33,19 +43,23 @@ const PharmReq = () => {
       !newPharmacist.dateOfBirth ||
       !newPharmacist.hourlyRate ||
       !newPharmacist.affiliation ||
-      !newPharmacist.educationalBackground
+      !newPharmacist.educationalBackground ||
+      !newPharmacist.idDocument ||
+      !newPharmacist.pharmacyDegreeDocument ||
+      !newPharmacist.workingLicenseDocument
     ) {
       setSubmissionStatus("error");
       setMessage("Please fill in all required fields.");
       return;
     }
+    const formData = new FormData();
+    for (let key in newPharmacist) {
+      formData.append(key, newPharmacist[key]);
+    }
     try {
       const response = await fetch("/api/guest/createNewPharmacistRequest", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newPharmacist),
+        body: formData,
       });
 
       if (response.ok) {
@@ -60,6 +74,9 @@ const PharmReq = () => {
           hourlyRate: "",
           affiliation: "",
           educationalBackground: "",
+          idDocument: null,
+          pharmacyDegreeDocument: null,
+          workingLicenseDocument: null,
         });
         console.log("Pharmacist added successfully!");
       } else {
@@ -189,6 +206,42 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
           </div>
+          <div className="mb-3">
+          <label htmlFor="idDocument" className="form-label">
+            ID Document:
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="idDocument"
+            name="idDocument"
+            onChange={handleInputChange}
+          />
+        </div> 
+        <div className="mb-3">
+          <label htmlFor="pharmacyDegreeDocument" className="form-label">
+            Pharmacy Degree Document:
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="pharmacyDegreeDocument"
+            name="pharmacyDegreeDocument"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="workingLicenseDocument" className="form-label">
+            Working License Document:
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="workingLicenseDocument"
+            name="workingLicenseDocument"
+            onChange={handleInputChange}
+          />
+        </div>
         <button className="btn btn-primary" onClick={handleAddPharmacist}>
           Request to be a Pharmacist
           
