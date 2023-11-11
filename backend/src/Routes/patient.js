@@ -6,14 +6,12 @@ const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
     removeCartItem, changeAmountOfAnItem,viewItems, 
     viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
-    viewOrderDetails, logout, changePassword  } = require('../Controllers/patientController') //we're destructuring so we need curly braces
+    viewOrderDetails, logout, changePassword , viewAllOrders } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 router.get('/logout', requireAuth, logout);
 
-// router.get('/requestPasswordResetOTP', requireAuth, requestPasswordResetOTP);
-
-// router.post('/resetPasswordWithOTP', requireAuth, resetPasswordWithOTP);
+router.get('/viewAllOrders', requireAuth, viewAllOrders);
 
 router.post('/changePassword', requireAuth, changePassword);
 

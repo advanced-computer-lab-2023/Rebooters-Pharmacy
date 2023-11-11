@@ -46,7 +46,7 @@ function CheckingOut({ modelName }) {
         };
         const checkout= async () => {
           try {
-            let patientMobileNumber = document.getElementById('phone').value;
+            let patientMobileNumber = document.getElementById('phone').value.toString();
             let address = document.getElementById('dropdown').value;
             let paymentMethod = document.getElementById('paymentMethod').value;
           
@@ -55,7 +55,7 @@ function CheckingOut({ modelName }) {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ total: subTotal, address, patientMobileNumber, paymentMethod, items: cartItems }),
+              body: JSON.stringify({ address, patientMobileNumber, paymentMethod, items: cartItems }),
             });
           
             if (!response.ok) {

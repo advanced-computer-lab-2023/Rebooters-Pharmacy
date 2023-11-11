@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Medicine from "../components/Medicine";
 import PatientActivities from "../components/PatientActivities";
 import ViewCartItems from "../components/ViewCartItems";
-import CancelOrder from "../components/CancelOrder";
+import ViewAndCancelOrder from "../components/viewAndCancelOrder";
 import CheckingOut from "../components/CheckingOut";
-import { useNavigate } from "react-router-dom";
 import ChangePassword from "../components/ChangePassword";
 
 const Patient = () => {
@@ -62,7 +61,7 @@ const Patient = () => {
 
       
       <div className="mt-4">
-          <CancelOrder />
+          <ViewAndCancelOrder />
         </div>
     </div>
   );

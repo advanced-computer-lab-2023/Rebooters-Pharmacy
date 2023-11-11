@@ -17,7 +17,7 @@ const ViewCartItems = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'same-origin', // Include cookies
+          
         });
 
         if (response.ok) {

@@ -73,34 +73,35 @@ const removeCartItem = async (req, res) => {
   }
 };
 
-
-
 const cancelOrder = async (req, res) => {
   try {
-    const username = req.cookies.username; // Assuming you can get the username from the request
-    const orderId = req.params.orderId;
+    const patientUsername = req.cookies.username; // Get the patient's username from the request
+    const orderId = req.body.orderId; // Get the order _id from the request
 
-    const order = await Order.findById(orderId);
+    // Find the order with the given orderId
+    const order = await Order.findOne({ _id: orderId, patientUsername: patientUsername });
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    if (order.patientUsername !== username) {
-      return res.status(403).json({ message: 'Permission denied. This order does not belong to the patient.' });
+    // Check if the order is currently in 'Pending' status
+    if (order.status !== 'Pending') {
+      return res.status(400).json({ message: 'Order cannot be canceled as it is not in Pending status' });
     }
 
-    // Update the order status to "Cancelled"
-    order.status = 'Cancelled'; 
+    // Update the order status to 'Canceled'
+    order.status = 'Canceled';
+
+    // Save the updated order information to the database
     await order.save();
 
-    res.status(200).json({ message: 'Order canceled' });
+    res.status(200).json({ message: 'Order canceled successfully', updatedOrder: order });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error canceling the order' });
+    res.status(500).json({ message: 'Error canceling order' });
   }
 };
-
 
 const viewDeliveryAdresses = async (req, res) => {
   try {
@@ -226,35 +227,92 @@ const viewItems = async (req, res) => {
     res.status(500).json({ message: 'Error viewing cart items' });
   }
 };
+// const checkout = async (req, res) => {
+//   try {
+//     const orderDate = new Date();
+//     const patientUsername= req.cookies.username;
+//     const givenPatient = await Patient.findOne({ username: patientUsername });
+//     const patient=givenPatient._id;  
+//     const status="Pending";
+//     const { address,items,patientMobileNumber,paymentMethod,total } = req.body;
+//     for(let i=0;i<items.length;i++){
+//     const givenMedicine = await Medicine.findOne({ name:items[i].name });
+//     items[i].medicine=givenMedicine._id
+//     }
+//     const newOrder = new Order({ total,paymentMethod,address,items,orderDate,
+//       patientMobileNumber,patientUsername,status,patient });
+//     const savedOrder = await newOrder.save();
+//     let cart=[];
+//     const updatePatient = await Patient.findOneAndUpdate(
+//       { username: patientUsername },
+//       { cart},
+//       { new: true }
+//     );
+    
+//     res.status(201).json(savedOrder);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Error checkout' });
+//   }
+// };
 const checkout = async (req, res) => {
+let total = 0;
   try {
     const orderDate = new Date();
-    const patientUsername= req.cookies.username;
+    const patientUsername = req.cookies.username;
     const givenPatient = await Patient.findOne({ username: patientUsername });
-    const patient=givenPatient._id;  
-    const status="Pending";
-    const { address,items,patientMobileNumber,paymentMethod,total } = req.body;
-    for(let i=0;i<items.length;i++){
-    const givenMedicine = await Medicine.findOne({ name:items[i].name });
-    items[i].medicine=givenMedicine._id
+
+    if (!givenPatient) {
+      return res.status(404).json({ message: 'Patient not found' });
     }
-    const newOrder = new Order({ total,paymentMethod,address,items,orderDate,
-      patientMobileNumber,patientUsername,status,patient });
+
+    const patientId = givenPatient._id;
+    const status = 'Pending';
+    const { address, items, patientMobileNumber, paymentMethod } = req.body;
+
+    // Create an array of item objects for the order
+    const orderItems = [];
+    for (let i = 0; i < items.length; i++) {
+      const givenMedicine = await Medicine.findOne({ name: items[i].name });
+      orderItems.push({
+        medicine: givenMedicine._id,
+        name: items[i].name,
+        price: items[i].price,
+        quantity: items[i].quantity,
+      });
+      total+=items[i].price;
+    }
+
+    // Create a new order using the Order schema
+    const newOrder = new Order({
+      total,
+      paymentMethod,
+      address,
+      items: orderItems,
+      orderDate,
+      patientMobileNumber,
+      patientUsername,
+      status,
+      patient: patientId,
+    });
+
+    // Save the new order
     const savedOrder = await newOrder.save();
-    let cart=[];
-    const updatePatient = await Patient.findOneAndUpdate(
-      { username: patientUsername },
-      { cart},
-      { new: true }
-    );
-    
+
+    // Update the patient's orders array with the new order
+    givenPatient.orders.push(savedOrder._id);
+    await givenPatient.save();
+
+    // Clear the patient's cart
+    givenPatient.cart = [];
+    await givenPatient.save();
+
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error checkout' });
+    res.status(500).json({ message: 'Error checking out' });
   }
 };
-
 const viewOrderDetails = async (req, res) => {
   try {
     const patientUsername = req.cookies.username; // Get the patient's username from the request
@@ -270,6 +328,7 @@ const viewOrderDetails = async (req, res) => {
     const orderDetails = {
       orderDate: order.orderDate,
       status: order.status,
+      total: order.total,
       items: order.items,
     };
 
@@ -280,10 +339,25 @@ const viewOrderDetails = async (req, res) => {
   }
 };
 
+const viewAllOrders = async (req, res) => {
+  try {
+    const patientUsername = req.cookies.username; // Get the patient's username from the request
 
+    // Find the order with the given orderId
+    const orders = await Order.find({ patientUsername: patientUsername });
+    if (!orders) {
+      return res.status(404).json({ message: 'Orders not found' });
+    }
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error viewing orders' });
+  }
+};
 
 
 
 
 module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword}; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders}; 
