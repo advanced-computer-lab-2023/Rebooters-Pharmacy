@@ -8,6 +8,8 @@ import CheckingOut from "../components/CheckingOut";
 import ChangePassword from "../components/ChangePassword";
 
 const Patient = () => {
+  const [sharedState, setSharedState] = useState('');
+
   const navigate = useNavigate();
   useEffect(() => {
     const checkUserType = async () => {
@@ -49,14 +51,14 @@ const Patient = () => {
       <div className="card mt-4">
         <ChangePassword userType="patient" />
       </div >
-      <div className="card mt-4"> {<Medicine modelName="patient" />}</div>
+      <div className="card mt-4"> {<Medicine sharedState={sharedState} modelName="patient" />}</div>
       <div className="card mt-4">{<PatientActivities modelName="patient" />}</div>
       <div className="container card mt-4">
       <h3>Order CheckOut </h3>
       <div>
         <ViewCartItems />
       </div>
-      <div >{<CheckingOut modelName="patient" />}</div>
+      <div >{<CheckingOut sharedState={sharedState} setSharedState={setSharedState} modelName="patient" />}</div>
       </div>
 
 

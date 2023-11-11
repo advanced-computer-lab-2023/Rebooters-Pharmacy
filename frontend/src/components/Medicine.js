@@ -1,21 +1,35 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function Medicine({ modelName }) {
+function Medicine({ modelName , sharedState }) {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [medicinalUse, setMedicinalUse] = useState("");
   const [showMedicineList, setShowMedicineList] = useState(false);
 
-  const viewMedicineInventory = async () => {
-    try {
-      console.log("View Medicine Inventory button clicked");
+ 
+    useEffect(() => {
+     
+      const fetchData = async () => {
+        try {
+          console.log("View Medicine Inventory button clicked");
       const response = await fetch(`/api/${modelName}/viewMedicineInventory`);
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      setMedicines(data);
+      setMedicines(data)
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }, [sharedState]);
+
+
+  const viewMedicineInventory = async () => {
+    try {
+     
       setShowMedicineList(true);
     } catch (error) {
       console.error(error);

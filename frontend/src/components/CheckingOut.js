@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function CheckingOut({ modelName }) {
+function CheckingOut({ modelName ,sharedState, setSharedState }) {
+  const handleChange = (event) => {
+    // Update the shared state when the input changes
+    setSharedState(cartItems);
+  };
   const [elementsArray, setelementsArray] = React.useState([]);
   const [cartItems, setCartItems] = React.useState([]);
   const [subTotal, setsubTotal] = useState(() => {
@@ -68,7 +72,7 @@ function CheckingOut({ modelName }) {
         throw new Error("Failed to add order");
       }
       alert("order added");
-      window.location.reload();
+    
       if (paymentMethod === "credit card (using Stripe)") {
         try {
           const stripeResponse = await fetch(
@@ -97,6 +101,9 @@ function CheckingOut({ modelName }) {
         } catch (stripeError) {
           console.error("Stripe Error:", stripeError);
         }
+      }
+      else{
+        window.location.reload();
       }
     } catch (error) {
       console.error("Outer Error:", error);
