@@ -48,7 +48,7 @@ const handleLogout = async () => {
       </button>
         <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
         <div className="card mt-4">
-        <ChangePassword userType="patient" />
+        <ChangePassword userType="pharmacist" />
       </div>
         <div className="mt-4">
         {<Medicine modelName="pharmacist"/>}
@@ -59,9 +59,9 @@ const handleLogout = async () => {
         <div className="mt-4">
           <EditMedicine />
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <ViewMedicineQuantitySales />
-        </div>
+        </div> */}
       </div>
       
     );

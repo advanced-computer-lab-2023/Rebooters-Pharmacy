@@ -86,7 +86,7 @@ const ViewCartItems = () => {
   
       <div>
         {error && <p className="text-danger">{error}</p>}
-        <h2>Cart Items</h2>
+        <h4>Cart Items:</h4>
         <table className="table">
           <thead>
             <tr>
@@ -103,7 +103,7 @@ const ViewCartItems = () => {
                 <td>{item.name}</td>
                 <td>{item.price}</td>
                 <td>
-                  <button onClick={() => handleRemoveItem(item.name)}>Remove</button>
+                  <button className="btn btn-danger" onClick={() => handleRemoveItem(item.name)}>Remove</button>
                 </td>
                 
                 <td>

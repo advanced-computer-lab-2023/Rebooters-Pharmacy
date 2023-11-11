@@ -16,15 +16,23 @@ function Medicine({ modelName }) {
       }
       const data = await response.json();
       setMedicines(data);
-      setShowMedicineList(true); 
+      setShowMedicineList(true);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const toggleViewMedicines = () => {
+    if (!showMedicineList) {
+      viewMedicineInventory();
+    } else {
+      setShowMedicineList(false);
+    }
+  };
+
   const searchMedicineByName = async () => {
     try {
-      const response = await fetch('/api/${modelName}/searchMedicineByName', {
+      const response = await fetch(`/api/${modelName}/searchMedicineByName`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,6 +43,7 @@ function Medicine({ modelName }) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
+      setShowMedicineList(true);
       setSearchTerm("");
       setMedicines(data);
     } catch (error) {
@@ -58,6 +67,7 @@ function Medicine({ modelName }) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
+      setShowMedicineList(true);
       setMedicinalUse("");
       setMedicines(data);
     } catch (error) {
@@ -78,24 +88,16 @@ function Medicine({ modelName }) {
       if (!response.ok) {
         throw new Error("Failed to add medicine to cart");
       }
-
+      
       const data = await response.json();
       console.log(data); // Log the response from the server
 
       alert("Medicine added to the cart successfully!");
-      
     } catch (error) {
       console.error(error);
     }
   };
 
-  const toggleViewMedicines = () => {
-    if (!showMedicineList) {
-      viewMedicineInventory();
-    } else {
-      setShowMedicineList(false);
-    }
-  };
 
 
   return (
@@ -140,31 +142,34 @@ function Medicine({ modelName }) {
           {showMedicineList ? "Hide Medicine List" : "View All Medicines"}
         </button>
         {showMedicineList && (
-        <ul className="list-group card">
-          {medicines.map((medicine, index) => (
-            <li key={index} className="list-group-item">
-              <h3>{medicine.name}</h3>
-              <p>Price: {medicine.price}</p>
-              <p>Description: {medicine.description}</p>
-              <p>Active Ingredients: {medicine.activeIngredients}</p>
-              <p>Medicinal Use: {medicine.medicinalUse}</p>
-              <p>Quantity: {medicine.quantity}</p>
-              {medicine.image.filename ? (
-                <img src={`${medicine.image.filename}`} alt="Medicine" />
-              ) : (
-                <p>No Image Available</p>
-              )}
-              {modelName === "patient" && (
-                <button
-                  className="btn btn-success"
-                  onClick={() => addMedicineToCart(medicine.name)}
-                >
-                  Add to Cart
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
+          <ul className="list-group card">
+            {medicines.map((medicine, index) => (
+              <li key={index} className="list-group-item">
+                <h3>{medicine.name}</h3>
+                <p>Price: {medicine.price}</p>
+                <p>Description: {medicine.description}</p>
+                <p>Active Ingredients: {medicine.activeIngredients}</p>
+                <p>Medicinal Use: {medicine.medicinalUse}</p>
+                <p>Quantity: {medicine.quantity}</p>
+                {modelName === "pharmacist" ? (
+                  <p>Sales: {medicine.sales}</p>
+                ) : null}
+                {medicine.image.filename ? (
+                  <img src={`${medicine.image.filename}`} alt="Medicine" />
+                ) : (
+                  <p>No Image Available</p>
+                )}
+                {modelName === "patient" && (
+                  <button
+                    className="btn btn-success"
+                    onClick={() => addMedicineToCart(medicine.name)}
+                  >
+                    Add to Cart
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
