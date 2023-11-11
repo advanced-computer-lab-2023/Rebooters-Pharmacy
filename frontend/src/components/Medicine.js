@@ -154,6 +154,7 @@ function Medicine({ modelName }) {
                 {modelName === "pharmacist" ? (
                   <p>Sales: {medicine.sales}</p>
                 ) : null}
+                <p>Prescription Needed: {medicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
                 {medicine.image.filename ? (
                   <img src={`${medicine.image.filename}`} alt="Medicine" />
                 ) : (

@@ -26,6 +26,6 @@ router.post('/addMedicine' , requireAuth, upload.single('image'),addMedicine);
 router.get('/viewMedicineInventory',viewMedicineInventory);
 router.post('/filterMedicineByMedicinalUse',requireAuth, filterMedicineByMedicinalUse);
 router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
-router.patch('/editMedicine',requireAuth, editMedicine);
+router.patch('/editMedicine',requireAuth, upload.single('image'), editMedicine);
 router.get('/viewMedicineInventoryPharmacist', requireAuth, viewMedicineInventoryPharmacist);
 module.exports = router //we need to export that router at the end so that App.js can access it

@@ -8,6 +8,7 @@ const EditMedicine = () => {
     description: "",
     medicinalUse: "",
     quantity: 0,
+    PrescriptionNeeded: false
   });
 
   const [error, setError] = useState("");
@@ -15,12 +16,20 @@ const EditMedicine = () => {
   const [medicineName, setMedicineName] = useState("");
   const [searchedMedicine, setSearchedMedicine] = useState([]); // To store the searched medicine
   const [updatedMedicine, setUpdatedMedicine] = useState(null);
+  const [image, setImage] = useState(null);
+
+  
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value , checked, type} = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
     setMedicineToUpdate({
       ...medicineToUpdate,
-      [name]: value,
+      [name]: inputValue,
     });
   };
 
@@ -61,19 +70,27 @@ const EditMedicine = () => {
       !medicineToUpdate.price ||
       !medicineToUpdate.description ||
       !medicineToUpdate.medicinalUse ||
-      !medicineToUpdate.quantity
+      !medicineToUpdate.quantity 
     ) {
       setError("Please fill in all fields.");
       return;
     }
 
     try {
+      const formData = new FormData();
+      formData.append("name", medicineToUpdate.name);
+      formData.append("activeIngredients", medicineToUpdate.activeIngredients);
+      formData.append("price", medicineToUpdate.price);
+      formData.append("description", medicineToUpdate.description);
+      formData.append("medicinalUse", medicineToUpdate.medicinalUse);
+      formData.append("quantity", medicineToUpdate.quantity);
+      formData.append("PrescriptionNeeded", medicineToUpdate.PrescriptionNeeded);
+      if(image !== null) {
+        formData.append("image", image);
+      }
       const response = await fetch("/api/pharmacist/editMedicine", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(medicineToUpdate),
+        body: formData,
       });
 
       if (response.ok) {
@@ -86,7 +103,9 @@ const EditMedicine = () => {
           description: "",
           medicinalUse: "",
           quantity: 0,
+          PrescriptionNeeded: false
         });
+        setImage(null);
         setUpdatedMedicine(updatedMedicineData);
       } else {
         const errorData = await response.json();
@@ -131,6 +150,7 @@ const EditMedicine = () => {
               <p>Description: {medicine.description}</p>
               <p>Medicinal Use: {medicine.medicinalUse}</p>
               <p>Quantity: {medicine.quantity}</p>
+              <p>Prescription Needed: {updatedMedicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
               {medicine.image.filename ? (
                 <img src={`${medicine.image.filename}`} alt="Medicine" />
               ) : (
@@ -218,6 +238,34 @@ const EditMedicine = () => {
             onChange={handleInputChange}
           />
         </div>
+        <div className="mb-3">
+          <label htmlFor="quantity" className="form-label">
+            Prescription Needed:
+          </label>
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="PrescriptionNeeded"
+            name="PrescriptionNeeded"
+            checked={medicineToUpdate.PrescriptionNeeded}
+            onChange={handleInputChange}
+          />
+          <label className="form-check-label" htmlFor="PrescriptionNeeded">
+            Prescription Needed
+          </label>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="image" className="form-label">
+            Image: (Optional)
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="image"
+            name="image"
+            onChange={handleImageChange}
+          />
+        </div>
         <button className="btn btn-primary" onClick={handleEditMedicine}>
           Edit Medicine
         </button>
@@ -230,6 +278,7 @@ const EditMedicine = () => {
           <p>Description: {updatedMedicine.description}</p>
           <p>Medicinal Use: {updatedMedicine.medicinalUse}</p>
           <p>Quantity: {updatedMedicine.quantity}</p>
+          <p>Prescription Needed: {updatedMedicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
         </div>
       )}
     </div>

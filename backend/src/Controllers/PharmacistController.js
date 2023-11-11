@@ -89,15 +89,22 @@ const viewMedicineInventoryPharmacist = async (req, res) => {
 const editMedicine = async (req, res) => {
       try {
         
-        const { name, activeIngredients, price ,medicinalUse,description,quantity} = req.body;
+        const { name, activeIngredients, price ,medicinalUse,description,quantity , PrescriptionNeeded} = req.body;
         const updatedMedicine = await Medicine.findOneAndUpdate(
           { name: name },
-          { activeIngredients, price, medicinalUse, description, quantity },
+          { activeIngredients, price, medicinalUse, description, quantity , PrescriptionNeeded},
           { new: true }
         );
         if (!updatedMedicine) {
           return res.status(404).json({ message: 'Medicine not found' });
         }
+        if (req.file) {
+          updatedMedicine.image.data = req.file.buffer;
+          updatedMedicine.image.contentType = req.file.mimetype;
+          updatedMedicine.image.filename = req.file.originalname;
+        }
+    
+        await updatedMedicine.save();
         res.status(200).json(updatedMedicine);
       } catch (error) {
         console.error(error);
