@@ -12,12 +12,12 @@ require("dotenv").config();
 
 const addAdministrator= async (req, res) => {
       try {
-        const { username, password } = req.body;
+        const { username, password,email } = req.body;
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
-        const newAdministrator = new Administrator({ username, password:hashedPassword });
+        const newAdministrator = new Administrator({ username, password:hashedPassword ,email});
         const savedAdministrator = await newAdministrator.save();
-        const token = createToken(newAdministrator._id);
+        const token = createToken(savedAdministrator._id);
         res.status(201).json({ username, token, savedAdministrator });
       } catch (error) {
         console.error(error);

@@ -8,23 +8,24 @@ function Medicine({ modelName , sharedState }) {
   const [showMedicineList, setShowMedicineList] = useState(false);
 
  
-    useEffect(() => {
-     
-      const fetchData = async () => {
-        try {
-          console.log("View Medicine Inventory button clicked");
+  const fetchData = async () => {
+    try {
+      console.log("View Medicine Inventory button clicked");
       const response = await fetch(`/api/${modelName}/viewMedicineInventory`);
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      setMedicines(data)
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-      fetchData();
-    }, [sharedState]);
+      setMedicines(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [sharedState]);
+
 
 
   const viewMedicineInventory = async () => {
@@ -40,12 +41,17 @@ function Medicine({ modelName , sharedState }) {
     if (!showMedicineList) {
       viewMedicineInventory();
     } else {
+      fetchData();
       setShowMedicineList(false);
     }
   };
 
   const searchMedicineByName = async () => {
     try {
+      if (searchTerm.trim() === "") {
+        alert("Please fill in the search field.");
+        return;
+      }
       const response = await fetch(`/api/${modelName}/searchMedicineByName`, {
         method: "POST",
         headers: {
@@ -67,8 +73,11 @@ function Medicine({ modelName , sharedState }) {
 
   const filterMedicineByMedicinalUse = async () => {
     try {
-      const response = await fetch(
-        `/api/${modelName}/filterMedicineByMedicinalUse`,
+      if (medicinalUse === "") {
+        alert("Please fill in the filter field.");
+        return;
+      }
+      const response = await fetch( `/api/${modelName}/filterMedicineByMedicinalUse`,
         {
           method: "POST",
           headers: {
@@ -98,19 +107,22 @@ function Medicine({ modelName , sharedState }) {
         },
         body: JSON.stringify({ medicineName }),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to add medicine to cart");
       }
-      
+  
       const data = await response.json();
       console.log(data); // Log the response from the server
-
+      
       alert("Medicine added to the cart successfully!");
+      
     } catch (error) {
       console.error(error);
+      alert("Prescription is needed for this medicine. Cannot add to cart.");
     }
   };
+  
 
 
 

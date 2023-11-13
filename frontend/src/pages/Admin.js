@@ -18,6 +18,9 @@ function Administrator() {
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [message, setMessage] = useState("");
   const [showPharmacistRequests, setshowPharmacistRequests] = useState(false);
+  const [showPharmacistDetails, setShowPharmacistDetails] = useState(false);
+  const [showPatientDetails, setShowPatientDetails] = useState(false);
+
 
   /*const viewAdministrators = async () => {
     try {
@@ -50,8 +53,7 @@ function Administrator() {
 
   const viewPharmacists = async () => {
     if (!pharmacistUsername) {
-      setSubmissionStatus("error");
-      setMessage("Please fill in all required fields.");
+      alert("Please fill in all required fields.");
       return;
     }
     try {
@@ -76,6 +78,7 @@ function Administrator() {
         setMessage("Pharmacist not found");
       }
       setPharmacists(data);
+      setShowPharmacistDetails(true);
     } catch (error) {
       setSubmissionStatus("error");
       setMessage("Failed to fetch pharmacists");
@@ -83,10 +86,17 @@ function Administrator() {
     }
   };
 
+  const toggleViewPharmacists = () => {
+    if (!showPharmacistDetails) {
+      viewPharmacists();
+    } else {
+      setShowPharmacistDetails(false);
+    }
+  };
+
   const viewPatients = async () => {
     if (!patientUsername) {
-      setSubmissionStatus("error");
-      setMessage("Please fill in all required fields.");
+      alert("Please fill in all required fields.");
       return;
     }
     try {
@@ -112,10 +122,19 @@ function Administrator() {
       }
 
       setPatients(data);
+      setShowPatientDetails(true);
     } catch (error) {
       setSubmissionStatus("error");
       setMessage("Failed to fetch patients");
       console.error(error);
+    }
+  };
+
+  const toggleViewPatients = () => {
+    if (!showPatientDetails) {
+      viewPatients();
+    } else {
+      setShowPatientDetails(false);
     }
   };
 
@@ -353,12 +372,13 @@ function Administrator() {
           onChange={(e) => setPharmacistUsername(e.target.value)}
           className="form-control mb-2"
         />
-        <div><button className="btn btn-primary" onClick={viewPharmacists}>
-          Search Pharmacist
-        </button></div>
+        <div><button className="btn btn-primary" onClick={toggleViewPharmacists}>
+          {showPharmacistDetails ? "Hide Pharmacist" : "Search Pharmacist"}
+        </button>
+        </div>
       </div>
       <div>
-        {pharmacists.length > 0 && (
+        {showPharmacistDetails && pharmacists.length > 0 && (
           <div>
             <h4>Search Results</h4>
             <ul>
@@ -390,12 +410,12 @@ function Administrator() {
           onChange={(e) => setPatientUsername(e.target.value)}
           className="form-control mb-2"
         />
-       <div> <button className="btn btn-primary" onClick={viewPatients}>
-          Search Patient
+       <div> <button className="btn btn-primary" onClick={toggleViewPatients}>
+          {showPatientDetails ? "Hide Patient" : "Search Patient"}
         </button></div>
       </div>
       <div>
-        {patients.length > 0 && (
+        {showPatientDetails && patients.length > 0 && (
           <div>
             <h4>Search Results</h4>
             <ul>
@@ -452,7 +472,14 @@ function Administrator() {
             onClick={removeUserFromSystem}
           >
             Remove Pharmacist/Patient
-          </button></div>
+          </button>
+          {submissionStatus === "success" && (
+              <div className="alert alert-success mt-2">{message}</div>
+            )}
+            {submissionStatus === "error" && (
+              <div className="alert alert-danger mt-2">{message}</div>
+            )}
+          </div>
         </div>
       </div>
       <div className="card mt-4">

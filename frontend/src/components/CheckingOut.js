@@ -55,6 +55,11 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
       let address = document.getElementById("dropdown").value;
       let paymentMethod = document.getElementById("paymentMethod").value;
 
+      if (!patientMobileNumber.trim()) {
+        alert("Please fill in the mobile number.");
+        return;
+      }
+
       const response = await fetch(`/api/patient/checkout`, {
         method: "POST",
         headers: {

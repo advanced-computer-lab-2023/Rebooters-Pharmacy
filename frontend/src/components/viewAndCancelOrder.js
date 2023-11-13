@@ -5,6 +5,8 @@ const ViewAndCancelOrder = () => {
   const [orders, setOrders] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
+  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+
 
   // Fetch orders for the current patient
   useEffect(() => {
@@ -63,6 +65,7 @@ const ViewAndCancelOrder = () => {
         const data = await response.json();
         setOrderDetails(data);
         setSelectedOrderId(orderId);
+        toggleDetails();
       } else {
         console.error('Error fetching order details');
       }
@@ -71,6 +74,9 @@ const ViewAndCancelOrder = () => {
     }
   };
 
+  const toggleDetails = () => {
+    setIsDetailsVisible(!isDetailsVisible);
+  };
 
   return (
     <div>
@@ -113,7 +119,7 @@ const ViewAndCancelOrder = () => {
         </tbody>
       </table>
 
-      {selectedOrderId && orderDetails && (
+      {selectedOrderId && orderDetails && isDetailsVisible &&(
         <div>
           <h3>Order Details</h3>
           <p>Order ID: {selectedOrderId}</p>
