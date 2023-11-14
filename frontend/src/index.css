@@ -31,3 +31,27 @@ header a {
   padding: 20px;
   margin: 0 auto;
 }
+.form-submit{
+  display: flex;
+  justify-content: end;
+}
+.form-submit .btn:not(:last-child){
+  margin-right: 8px;
+}
+.btn-default-width{
+  width: 150px;
+}
+/*bootstrap override*/
+.btn{
+  border-radius: 0 !important;
+  box-shadow: 3px 2px 5px #b7b1b1;
+  transition: .3s ease-in-out;
+}
+.btn:active{
+  box-shadow: none
+}
+
+.btn-primary{
+  background-color: #44bbb2 !important;
+  border: #44bbb2 !important;
+}

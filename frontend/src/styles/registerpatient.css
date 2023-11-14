@@ -1,0 +1,23 @@
+.register-body{
+    padding: 40px 20px;
+}
+.register-body input{
+    
+    border-radius: 10px;
+}
+.register-body .form-select{
+    
+    border-radius: 10px;
+}
+.register-container .line-break{
+    display: flex;
+}
+.register-container .line{
+    border-bottom: 2px #ccc dashed;
+    width: 45%;
+    margin-left: 40px;
+}
+.register-container p{
+    color: black;
+    transform:translate(20px ,25px);
+}

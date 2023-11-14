@@ -54,7 +54,8 @@ const Login = () => {
       // Handle successful login, e.g., redirect or update state
       };
     return(
-        <div className="login-card">
+      <div className='container'>
+        <div className="login-card card">
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <div className="title">
             {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -62,8 +63,9 @@ const Login = () => {
             
             </div>
             <div className='login-form'>
-            <div className='wb'>Welcome Back<br/><span className='wb-t'>To el7a2ni</span></div>
+            <div className='wb'>Welcome Back to el7a2ni</div>
             <label>Username:</label>
+            <br/>
             <input 
                 name="username" 
                 placeholder='your username'
@@ -72,10 +74,11 @@ const Login = () => {
             />
             <br/>
             <label>Password:</label>
+            <br/>
             <input 
                 name="password" 
                 type='password' 
-                placeholder='*****'
+                placeholder='*********'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
@@ -83,13 +86,15 @@ const Login = () => {
 
             <a className='forgot' href='/forgotpassword'>forgot password?</a>
             <br/>
+            
 
-            <button onClick={handleLogin}>Login</button>
+            <button className='btn btn-primary btn-default-width' onClick={handleLogin}>Login</button>
             <br/>
 
-            <a className='forgot center' href='/guest'>CREATE ACCOUNT!</a>
+            <a className='center' href='/guest'>CREATE ACCOUNT!</a>
             
             </div>
+        </div>
         </div>
     )
 }

@@ -1,3 +1,4 @@
+import '../styles/otp.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const OTP = () => {
@@ -45,13 +46,13 @@ const OTP = () => {
     resetPasswordWithOTP();
   };
   return (
-    <div className="otp">
+    <div className="container card m-5 p-5">
       <div className="otp-card">
         <div className="title">
-          <h2>El7a2ni</h2>
+          <h2>One-Time Passcode</h2>
         </div>
         <div className="otp-container">
-          <div className="cc">Confirmation Code</div>
+          <div className="mb-2">Enter your code:</div>
           <ul className="boxes">
             {otp.map((digit, index) => (
               <li className="li-box" key={index}>
@@ -66,6 +67,8 @@ const OTP = () => {
             ))}
           </ul>
         </div>
+        <div className='row'>
+        <div className='col-6'>
         <input
           name="email"
           className="form-control"
@@ -73,6 +76,8 @@ const OTP = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        </div>
+        <div className='col-6'>
                 <input
           name="newpassword"
           className="form-control"
@@ -80,10 +85,15 @@ const OTP = () => {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
+        </div>
+        </div>
+
         <br />
-        <button className="login-btn sbmt-btn" onClick={handleSubmit}>
+        <div className='form-submit'>
+        <button className="btn-primary btn btn-default-width" onClick={handleSubmit}>
           Submit
         </button>
+        </div>
       </div>
     </div>
   );  

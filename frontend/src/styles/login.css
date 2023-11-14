@@ -1,36 +1,38 @@
 .login-card{
     width: 40%;
     height: auto;
-    padding-top: 20px;
+    padding: 30px 10px 30px 50px;
     border-radius: 15px;
-    /* background-color: white; */
-    margin-left: auto;
-    margin-right: 100px;
-    margin-top: auto;
-    margin-bottom: auto;
-    padding-bottom: 50px;
-    /* color: #444; */
+    background-color: rgb(241, 233, 233); 
+    margin: 100px; 
 }
-.forgot{
-    height: auto;
-    text-align: right;
-    font-size: 14px;
+/* .title h2{ to style login word
+    
+} */
+.login-form .wb {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.login-form input{
+    border-radius: 10px;
+    border-style: solid;
+    margin-bottom: 7px;
+}
+
+.login-form a{
     color: #6E6E6E;
     font-weight: 600;
 }
-.center{
-    text-align: center;
-    font-size: 18px;
-    height: auto;
-}
-.login-btn{
-    
-    width: 150px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    align-self: center;
+.login-form .center {
+    margin-left: 70px;
     font-size: 18px;
 }
+.login-form button{
+    margin-top: 10px;
+    width: 100px;
+    margin-bottom: 10px 
+}   
 .login-btn:hover{
     cursor: pointer;
 }

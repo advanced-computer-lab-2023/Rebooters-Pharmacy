@@ -1,3 +1,4 @@
+import '../styles/forgotpassword.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const ForgotPassword = () => {
@@ -27,13 +28,14 @@ const ForgotPassword = () => {
     }
   };
   return (
+    <div className='forgot-container'>
     <div className="card mt-4">
-      <div className="card-body">
+      <div className="body card-body">
         <div className="title">
           <h2>El7a2ni</h2>
         </div>
-        <div className="otp-container">
-          <div className="cc">Forgot Password</div>
+        <div className="email-container">
+          <div className="cc">Write your email:</div>
         </div>
         <input
           name="email"
@@ -49,6 +51,7 @@ const ForgotPassword = () => {
 
         <br />
       </div>
+    </div>
     </div>
   );
 };

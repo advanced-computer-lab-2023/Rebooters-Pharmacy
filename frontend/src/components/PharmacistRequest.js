@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import '../styles/pharmacistrequest.css';
+import { useNavigate } from "react-router-dom";
 const PharmReq = () => {
   const [newPharmacist, setNewPharmacist] = useState({
     username: "",
@@ -17,7 +18,10 @@ const PharmReq = () => {
   });
   const [submissionStatus, setSubmissionStatus] = useState(null); 
   const [message, setMessage] = useState("");
-
+  const navigate = useNavigate();
+  const onCancel = () => {
+    navigate('/')
+  }
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -92,16 +96,17 @@ const PharmReq = () => {
   };
 
   return (
-    <div className="card container mt-4">
-      <div className="card-body">
-        <h2>Request to register as a Pharmacist</h2>
+    <div className="request-form-container card container mt-4">
+      <div className="request-form card-body">
+        <h4>Please fill in these details:</h4>
         {submissionStatus === "success" && (
           <div className="alert alert-success">{message}</div>
         )}
         {submissionStatus === "error" && (
           <div className="alert alert-danger">{message}</div>
         )}
-        <div className="mb-3">
+        <div className='row'>
+        <div className="col-4 mb-3">
           <label htmlFor="username" className="form-label">
             Username:
           </label>
@@ -115,7 +120,7 @@ const PharmReq = () => {
           />
         </div>
        
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="name" className="form-label">
             Name:
           </label>
@@ -128,7 +133,7 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="email" className="form-label">
             Email:
           </label>
@@ -141,7 +146,9 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        </div>
+        <div className="row">
+        <div className="col-4 mb-3">
           <label htmlFor="password" className="form-label">
             Password:
           </label>
@@ -154,7 +161,7 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="dateOfBirth" className="form-label">
             Date of Birth:
           </label>
@@ -167,7 +174,7 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="hourlyRate" className="form-label">
             Hourly Rate:
           </label>
@@ -180,7 +187,9 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        </div>
+        <div className="row">
+        <div className="col-4 mb-3">
           <label htmlFor="affiliation" className="form-label">
             Affiliation:
           </label>
@@ -193,7 +202,7 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="educationalBackground" className="form-label">
             Educational Background:
           </label>
@@ -206,7 +215,7 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
           </div>
-          <div className="mb-3">
+          <div className="col-4 mb-3">
           <label htmlFor="idDocument" className="form-label">
             ID Document:
           </label>
@@ -218,7 +227,9 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div> 
-        <div className="mb-3">
+        </div>
+        <div className="row">
+        <div className="col-4 mb-3">
           <label htmlFor="pharmacyDegreeDocument" className="form-label">
             Pharmacy Degree Document:
           </label>
@@ -230,7 +241,7 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="workingLicenseDocument" className="form-label">
             Working License Document:
           </label>
@@ -242,10 +253,15 @@ const PharmReq = () => {
             onChange={handleInputChange}
           />
         </div>
-        <button className="btn btn-primary" onClick={handleAddPharmacist}>
-          Request to be a Pharmacist
-          
+        </div>
+        <div className='form-submit'>
+        <button className="btn btn-primary btn-default-width" onClick={handleAddPharmacist}>
+          Send request
         </button>
+        <button className="btn btn-danger btn-default-width" onClick={onCancel}>
+          Cancel
+        </button>
+        </div>
       </div>
     </div>
   );

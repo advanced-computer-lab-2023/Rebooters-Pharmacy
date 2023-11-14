@@ -1,6 +1,7 @@
+import '../styles/registerpatient.css';
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { useNavigate } from "react-router-dom";
 const AddPatient = () => {
   const [newPatient, setNewPatient] = useState({
     username: "",
@@ -20,7 +21,10 @@ const AddPatient = () => {
   });
   const [submissionStatus, setSubmissionStatus] = useState(null); 
   const [message, setMessage] = useState("");
-
+  const navigate = useNavigate();
+  const onCancel = () => {
+    navigate('/')
+  }
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -102,20 +106,22 @@ const AddPatient = () => {
   };
 
   return (
+    <div className='register-container'>
     <div className="card container mt-4">
-      <div className="card-body">
-        <h2>Register as a Patient</h2>
+      <div className="register-body card-body">
+        <h4>Please fill in these details:</h4>
         {submissionStatus === "success" && (
           <div className="alert alert-success">{message}</div>
         )}
         {submissionStatus === "error" && (
           <div className="alert alert-danger">{message}</div>
         )}
-        <div className="mb-3">
+        <div className='row'>
+        <div className="col-4 mb-3">
           <label htmlFor="username" className="form-label">
             Username:
           </label>
-          <input
+          <input 
             type="text"
             className="form-control"
             id="username"
@@ -124,7 +130,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="name" className="form-label">
             Name:
           </label>
@@ -137,7 +143,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="mb-3 col-4">
           <label htmlFor="email" className="form-label">
             Email:
           </label>
@@ -150,7 +156,9 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        </div>
+        <div className='row'>
+        <div className="col-4 mb-3">
           <label htmlFor="password" className="form-label">
             Password:
           </label>
@@ -163,7 +171,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="dateOfBirth" className="form-label">
             Date of Birth:
           </label>
@@ -176,7 +184,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="gender" className="form-label">
             Gender:
           </label>
@@ -193,7 +201,9 @@ const AddPatient = () => {
             <option value="Other">Other</option>
           </select>
         </div>
-        <div className="mb-3">
+        </div>
+        <div className='row'>
+        <div className="col-4 mb-3">
           <label htmlFor="mobile_number" className="form-label">
             Mobile Number:
           </label>
@@ -206,7 +216,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="emergency_contact.firstName" className="form-label">
             Emergency Contact First Name:
           </label>
@@ -219,7 +229,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="col-4 mb-3">
           <label htmlFor="emergency_contact.middleName" className="form-label">
             Emergency Contact Middle Name:
           </label>
@@ -232,7 +242,9 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        </div>
+        <div className='row'>
+        <div className="mb-3 col-4">
           <label htmlFor="emergency_contact.lastName" className="form-label">
             Emergency Contact Last Name:
           </label>
@@ -245,7 +257,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="mb-3 col-4">
           <label htmlFor="emergency_contact.mobile_number" className="form-label">
             Emergency Contact Mobile Number:
           </label>
@@ -258,7 +270,7 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="mb-3 col-4">
           <label htmlFor="emergency_contact.relation" className="form-label">
             Emergency Contact Relation to Patient:
           </label>
@@ -271,10 +283,23 @@ const AddPatient = () => {
             onChange={handleInputChange}
           />
         </div>
-        <button className="btn btn-primary" onClick={handleAddPatient}>
-          Register to be a Patient
+        </div>
+        <br/>
+        <div className='form-submit'>
+        <button className="btn btn-primary btn-default-width"  onClick={handleAddPatient}>
+          Register
         </button>
+        <button className="btn btn-danger btn-default-width" onClick={onCancel}>
+          Cancel
+        </button>
+        </div>
       </div>
+    </div>
+    <div className='line-break'>
+    <div className="line"></div>
+    <p>OR</p>
+    <div className="line"></div>
+    </div>
     </div>
   );
 };
