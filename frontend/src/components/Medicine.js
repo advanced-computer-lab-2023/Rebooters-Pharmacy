@@ -60,12 +60,17 @@ function Medicine({ modelName , sharedState }) {
         body: JSON.stringify({ medicineName: searchTerm }),
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        if (response.status === 404) {
+          alert(`No medicine found with the name "${searchTerm}".`);
+        } else {
+          throw new Error("Failed to fetch data");
+        }
+      } else {
+        const data = await response.json();
+        setShowMedicineList(true);
+        setSearchTerm("");
+        setMedicines(data);
       }
-      const data = await response.json();
-      setShowMedicineList(true);
-      setSearchTerm("");
-      setMedicines(data);
     } catch (error) {
       console.error(error);
     }
@@ -87,12 +92,17 @@ function Medicine({ modelName , sharedState }) {
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        if (response.status === 404) {
+          alert(`No medical use found with the name "${medicinalUse}".`);
+        } else {
+          throw new Error("Failed to fetch data");
+        }
+      } else {
+        const data = await response.json();
+        setShowMedicineList(true);
+        setMedicinalUse("");
+        setMedicines(data);
       }
-      const data = await response.json();
-      setShowMedicineList(true);
-      setMedicinalUse("");
-      setMedicines(data);
     } catch (error) {
       console.error(error);
     }
