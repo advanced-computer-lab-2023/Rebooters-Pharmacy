@@ -150,7 +150,7 @@ const EditMedicine = () => {
               <p>Description: {medicine.description}</p>
               <p>Medicinal Use: {medicine.medicinalUse}</p>
               <p>Quantity: {medicine.quantity}</p>
-              <p>Prescription Needed: {updatedMedicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
+              <p>Prescription Needed: {medicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
               {medicine.image.filename ? (
                 <img src={`${medicine.image.filename}`} alt="Medicine" />
               ) : (
@@ -239,20 +239,17 @@ const EditMedicine = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">
+          <label htmlFor="PrescriptionNeeded" className="form-label">
             Prescription Needed:
           </label>
           <input
-            type="checkbox"
-            className="form-check-input"
+            type="text"
+            className="form-control"
             id="PrescriptionNeeded"
             name="PrescriptionNeeded"
-            checked={medicineToUpdate.PrescriptionNeeded}
+            value={medicineToUpdate.PrescriptionNeeded} // Convert boolean to string
             onChange={handleInputChange}
           />
-          <label className="form-check-label" htmlFor="PrescriptionNeeded">
-            Prescription Needed
-          </label>
         </div>
         <div className="mb-3">
           <label htmlFor="image" className="form-label">

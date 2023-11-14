@@ -39,7 +39,7 @@ const AddMedicine = () => {
       !newMedicine.price ||
       !newMedicine.description ||
       !newMedicine.medicinalUse ||
-      !newMedicine.quantity
+      !newMedicine.quantity 
     ) {
       setError("Please fill in all fields.");
       setMessage("");

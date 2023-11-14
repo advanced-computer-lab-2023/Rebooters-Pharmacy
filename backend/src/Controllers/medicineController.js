@@ -60,6 +60,7 @@ const viewMedicineInventory = async (req, res) => {
         sales: medicine.sales,
         quantity: medicine.quantity,
         activeIngredients: medicine.activeIngredients,
+        PrescriptionNeeded: medicine.PrescriptionNeeded,
         medicinalUse: medicine.medicinalUse
       }));
   
@@ -94,6 +95,7 @@ const viewMedicineInventory = async (req, res) => {
       image: medicine.image, 
       quantity: medicine.quantity,
       medicinalUse: medicine.medicinalUse,
+      PrescriptionNeeded: medicine.PrescriptionNeeded,
       image : medicine.image,
       sales: medicine.sales
       
