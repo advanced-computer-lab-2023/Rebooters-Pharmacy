@@ -268,7 +268,8 @@ const checkout = async (req, res) => {
     const orderDate = new Date();
     const patientUsername = req.cookies.username;
     const givenPatient = await Patient.findOne({ username: patientUsername });
-    
+    const outOfStockMedicines = []; // To store out of stock medicines
+
     if (!givenPatient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
