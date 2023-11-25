@@ -2,6 +2,7 @@
 const Patient = require('../Models/patientModel');
 const Medicine = require('../Models/medicineModel');
 const Order= require ('../Models/orderModel');
+const Chat = require('../Models/chatModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
 
@@ -362,8 +363,118 @@ const viewAllOrders = async (req, res) => {
   }
 };
 
+const startNewChat = async (req, res) => {
+  try {
+    const patientUsername = req.cookies.username;
+    const { messageContent } = req.body;
 
+    const patient = await Patient.findOne({ username: patientUsername });
 
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const newChat = new Chat({
+      patient: patientUsername,
+      pharmacist: '',
+      messages: [
+        {
+          username: patientUsername,
+          userType: 'patient',
+          content: messageContent,
+        },
+      ],
+    });
+
+    const savedChat = await newChat.save();
+    // Update the patient's chats array with the new chat ID
+    await patient.save();
+
+    res.status(201).json(savedChat);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error starting a new chat' });
+  }
+};
+const continueChat = async (req, res) => {
+  try {
+    const patientUsername = req.cookies.username;
+    const { chatId, messageContent } = req.body;
+
+    // Find the patient using the username
+    const patient = await Patient.findOne({ username: patientUsername });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    // Find the chat using the provided chat ID
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+
+    // Check if the patient is the owner of the chat
+    if (chat.patient !== patientUsername) {
+      return res.status(403).json({ message: 'Unauthorized to continue this chat' });
+    }
+
+    // Add the patient's message to the messages array in the chat
+    chat.messages.push({
+      username: patientUsername,
+      userType: 'patient',
+      content: messageContent,
+    });
+
+    // Save the updated chat to the database
+    const updatedChat = await chat.save();
+
+    res.status(200).json(updatedChat);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error continuing the chat' });
+  }
+};
+
+const viewMyChats = async (req, res) => {
+  try {
+    const patientUsername = req.cookies.username;
+
+    // Find all chats where the patient is the same as the logged-in patient's username
+    const chats = await Chat.find({ patient: patientUsername });
+
+    if (!chats || chats.length === 0) {
+      return res.status(404).json({ message: 'No chats found.' });
+    }
+
+    res.status(200).json(chats);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching chats' });
+  }
+};
+
+const deleteChat = async (req, res) => {
+  try {
+    const { chatId } = req.params;
+
+    // Find the chat based on the provided chat ID
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+
+    // Delete the chat from the database
+    await chat.deleteOne();
+
+    res.status(200).json({ message: 'Chat deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting chat' });
+  }
+};
 
 module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders}; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat}; 

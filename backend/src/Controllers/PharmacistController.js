@@ -1,5 +1,6 @@
 const Pharmacist = require('../Models/pharmacistModel');
 const Medicine = require('../Models/medicineModel');
+const Chat = require('../Models/chatModel');
 //const upload = require ('./uploadMiddleware');
 const {viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
@@ -111,5 +112,66 @@ const editMedicine = async (req, res) => {
         res.status(500).json({ message: 'Error editing medicine' });
       }
     };
-  
-module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword }; 
+    const viewAllChats = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username; // Get the pharmacist's username from the cookies
+    
+        // Find all chats where the pharmacist is either an empty string or matches the pharmacist's username
+        const chats = await Chat.find({
+          $or: [
+            { pharmacist: '' },
+            { pharmacist: pharmacistUsername },
+          ],
+        });
+    
+        if (!chats || chats.length === 0) {
+          return res.status(404).json({ message: 'No chats found.' });
+        }
+    
+        res.status(200).json(chats);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching chats' });
+      }
+    };
+
+    const sendMessageToChat = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username; // Get the pharmacist's username from the cookies
+        const { chatId, messageContent } = req.body;
+    
+        // Find the chat based on the provided chat ID
+        const chat = await Chat.findById(chatId);
+    
+        if (!chat) {
+          return res.status(404).json({ message: 'Chat not found' });
+        }
+    
+        // Check if the pharmacist can send a message to this chat
+        if (chat.pharmacist !== '' && chat.pharmacist !== pharmacistUsername) {
+          return res.status(403).json({ message: 'Unauthorized to send a message to this chat' });
+        }
+    
+        // If the pharmacist attribute is an empty string, set it to the pharmacist's username
+        if (chat.pharmacist === '') {
+          chat.pharmacist = pharmacistUsername;
+        }
+    
+        // Add the pharmacist's message to the messages array in the chat
+        chat.messages.push({
+          username: pharmacistUsername,
+          userType: 'pharmacist',
+          content: messageContent,
+        });
+    
+        // Save the updated chat to the database
+        const updatedChat = await chat.save();
+    
+        res.status(200).json(updatedChat);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error sending message to chat' });
+      }
+    };
+
+module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword, viewAllChats, sendMessageToChat }; 

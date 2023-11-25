@@ -6,7 +6,7 @@ const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
     removeCartItem, changeAmountOfAnItem,viewItems, 
     viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
-    viewOrderDetails, logout, changePassword , viewAllOrders } = require('../Controllers/patientController') //we're destructuring so we need curly braces
+    viewOrderDetails, logout, changePassword , viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 router.get('/logout', requireAuth, logout);
@@ -38,4 +38,8 @@ router.post('/addMedicineToCart', requireAuth, addMedicineToCart);
 router.post('/addMedicineToCart',requireAuth, addMedicineToCart);
 router.post('/viewOrderDetails',requireAuth, viewOrderDetails);
 
+router.post('/startNewChat',requireAuth, startNewChat);
+router.get('/viewMyChats',requireAuth, viewMyChats);
+router.post('/continueChat',requireAuth, continueChat);
+router.delete('/deleteChat/:chatId', requireAuth, deleteChat);
 module.exports = router //we need to export that router at the end so that App.js can access it

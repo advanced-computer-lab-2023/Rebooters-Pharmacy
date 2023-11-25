@@ -1,7 +1,7 @@
 const express = require('express') //require or import express
 const { requireAuth } = require('../Middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
-const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine, viewMedicineInventoryPharmacist, logout, changePassword} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
+const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine, viewMedicineInventoryPharmacist, logout, changePassword, viewAllChats, sendMessageToChat} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
 
 const multer = require('multer'); 
 const storage = multer.diskStorage({
@@ -28,4 +28,7 @@ router.post('/filterMedicineByMedicinalUse',requireAuth, filterMedicineByMedicin
 router.post('/searchMedicineByName', requireAuth, searchMedicineByName);
 router.patch('/editMedicine',requireAuth, upload.single('image'), editMedicine);
 router.get('/viewMedicineInventoryPharmacist', requireAuth, viewMedicineInventoryPharmacist);
+router.get('/viewAllChats', requireAuth, viewAllChats);
+router.post('/sendMessageToChat', requireAuth, sendMessageToChat);
+
 module.exports = router //we need to export that router at the end so that App.js can access it

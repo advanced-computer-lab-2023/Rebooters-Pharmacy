@@ -6,6 +6,7 @@ import Medicine from "../components/Medicine";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ChangePassword from "../components/ChangePassword";
+import PharmacistChats from "../components/PharmacistChats";
 
 
 const PharmacistHome = () => {
@@ -49,6 +50,9 @@ const handleLogout = async () => {
         <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
         <div className="card mt-4">
         <ChangePassword userType="pharmacist" />
+      </div>
+      <div className="card mt-4">
+        <PharmacistChats/>
       </div>
         <div className="mt-4">
         {<Medicine modelName="pharmacist"/>}

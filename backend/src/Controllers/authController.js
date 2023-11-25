@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const nodemailer = require('nodemailer');
+const Chat = require('../Models/chatModel');
 require("dotenv").config();
 
 
@@ -16,9 +17,25 @@ const createToken = (username) => {
 };
 
 const logout = async (req, res) => {
+  try {
+    const { userType } = req.cookies;
+
+    if (userType === 'patient') {
+      const patientUsername = req.cookies.username;
+
+      // Delete all chat models with the patient attribute matching the patient's username
+      await Chat.deleteMany({ patient: patientUsername });
+    }
+
+    // Clear the JWT cookie to log the user out
     res.cookie('jwt', '', { maxAge: 1 }); 
     res.status(200).json({ message: 'Logged out successfully' });
-  };
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error logging out' });
+  }
+};
+
   
 const changePassword = async (req, res) => {
     const { currentPassword, newPassword, confirmPassword } = req.body;
