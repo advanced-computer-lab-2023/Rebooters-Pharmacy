@@ -3,6 +3,8 @@ const Patient = require('../Models/patientModel');
 const Medicine = require('../Models/medicineModel');
 const Order= require ('../Models/orderModel');
 const Chat = require('../Models/chatModel');
+const nodemailer = require('nodemailer');
+const Pharmacist = require('../Models/pharmacistModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
 
@@ -228,41 +230,45 @@ const viewItems = async (req, res) => {
     res.status(500).json({ message: 'Error viewing cart items' });
   }
 };
-// const checkout = async (req, res) => {
-//   try {
-//     const orderDate = new Date();
-//     const patientUsername= req.cookies.username;
-//     const givenPatient = await Patient.findOne({ username: patientUsername });
-//     const patient=givenPatient._id;  
-//     const status="Pending";
-//     const { address,items,patientMobileNumber,paymentMethod,total } = req.body;
-//     for(let i=0;i<items.length;i++){
-//     const givenMedicine = await Medicine.findOne({ name:items[i].name });
-//     items[i].medicine=givenMedicine._id
-//     }
-//     const newOrder = new Order({ total,paymentMethod,address,items,orderDate,
-//       patientMobileNumber,patientUsername,status,patient });
-//     const savedOrder = await newOrder.save();
-//     let cart=[];
-//     const updatePatient = await Patient.findOneAndUpdate(
-//       { username: patientUsername },
-//       { cart},
-//       { new: true }
-//     );
-    
-//     res.status(201).json(savedOrder);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Error checkout' });
-//   }
-// };
+const sendNotificationByEmail = async (email, message) => {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      },
+      tls:{
+        rejectUnauthorized: false,
+      }
+    });
+
+    // Send notification emails to users
+    let info = await transporter.sendMail({
+      from: "Rebooters",
+      to: email,
+      subject: "Out of Stock Notification",
+      html: `<h1>Out of Stock Notification</h1>
+      <p>${message}</p>`,
+    });
+
+    console.log("Notification Email info: ", info);
+    return info;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const checkout = async (req, res) => {
-let total = 0;
+  let total = 0;
+
   try {
     const orderDate = new Date();
     const patientUsername = req.cookies.username;
     const givenPatient = await Patient.findOne({ username: patientUsername });
-
+    
     if (!givenPatient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
@@ -278,15 +284,23 @@ let total = 0;
       if (givenMedicine.quantity < items[i].quantity) {
         return res.status(400).json({ message: `Not enough stock for ${givenMedicine.name}` });
       }
+
       orderItems.push({
         medicine: givenMedicine._id,
         name: items[i].name,
         price: items[i].price,
         quantity: items[i].quantity,
       });
+
       total += items[i].price;
       givenMedicine.quantity -= items[i].quantity;
       givenMedicine.sales += items[i].quantity;
+
+      // Check if the quantity becomes 0 and add to outOfStockMedicines
+      if (givenMedicine.quantity === 0) {
+        outOfStockMedicines.push(givenMedicine.name);
+      }
+
       await givenMedicine.save();
     }
 
@@ -314,12 +328,23 @@ let total = 0;
     givenPatient.cart = [];
     await givenPatient.save();
 
+    // Send notification email for out of stock medicines
+    if (outOfStockMedicines.length > 0) {
+      const notificationMessage = `The following medicines are out of stock: ${outOfStockMedicines.join(', ')}`;
+      const pharmacistEmails = await Pharmacist.find().distinct('email');
+      pharmacistEmails.forEach(async (pharmacistEmail) => {
+        await sendNotificationByEmail(pharmacistEmail, notificationMessage);
+      });
+
+    }
+
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error checking out' });
   }
 };
+
 const viewOrderDetails = async (req, res) => {
   try {
     const patientUsername = req.cookies.username; // Get the patient's username from the request
