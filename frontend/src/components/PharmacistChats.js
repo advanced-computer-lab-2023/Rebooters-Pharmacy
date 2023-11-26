@@ -1,3 +1,5 @@
+// PharmacistChats.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -24,7 +26,6 @@ const PharmacistChats = () => {
 
     try {
       if (!content.trim()) {
-        // You can handle this case, e.g., show an error message to the pharmacist
         return;
       }
 
@@ -44,38 +45,42 @@ const PharmacistChats = () => {
   };
 
   return (
-    <div className='container'>
-      <h2>All Chats</h2>
-      <div>
-        {chats.map((chat) => (
-          <div key={chat._id}>
-            <h4>Chat ID: {chat._id}</h4>
-            <div>
-              {chat.messages.map((message, index) => (
-                <div key={index}>
-                  <strong>{message.userType}: </strong> {message.content}
-                  <span style={{ marginLeft: '10px', color: 'gray' }}>
-                    {new Date(message.timestamp).toLocaleString()}
-                  </span>
-                </div>
-              ))}
+    <div className='card'>
+      <h2 className='card-header'>All Chats</h2>
+      {chats.length === 0 ? (
+        <p>There are no chats</p>
+      ) : (
+        <div>
+          {chats.map((chat) => (
+            <div key={chat._id}>
+              <h4>Chat ID: {chat._id}</h4>
+              <div>
+                {chat.messages.map((message, index) => (
+                  <div key={index}>
+                    <strong>{message.userType}: </strong> {message.content}
+                    <span style={{ marginLeft: '10px', color: 'gray' }}>
+                      {new Date(message.timestamp).toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <textarea
+                rows="1"
+                cols="25"
+                placeholder="Type your reply here..."
+                value={messageContents[chat._id] || ''}
+                onChange={(e) =>
+                  setMessageContents({ ...messageContents, [chat._id]: e.target.value })
+                }
+              ></textarea>
+              <br />
+              <button className='btn btn-primary' onClick={() => sendMessageToChat(chat._id)}>
+                Send
+              </button>
             </div>
-            <textarea
-              rows="1"
-              cols="25"
-              placeholder="Type your reply here..."
-              value={messageContents[chat._id] || ''}
-              onChange={(e) =>
-                setMessageContents({ ...messageContents, [chat._id]: e.target.value })
-              }
-            ></textarea>
-            <br />
-            <button className='btn btn-primary' onClick={() => sendMessageToChat(chat._id)}>
-              Send
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

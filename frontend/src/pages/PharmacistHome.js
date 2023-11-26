@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ChangePassword from "../components/ChangePassword";
 import PharmacistChats from "../components/PharmacistChats";
+import Notifications from '../components/PharmacistNotifications'; // Import the Notifications component
 
 
 const PharmacistHome = () => {
@@ -53,6 +54,9 @@ const handleLogout = async () => {
       </div>
       <div className="card mt-4">
         <PharmacistChats/>
+      </div>
+      <div className="card mt-4">
+        <Notifications /> 
       </div>
         <div className="mt-4">
         {<Medicine modelName="pharmacist"/>}

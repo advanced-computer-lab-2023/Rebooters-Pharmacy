@@ -4,6 +4,7 @@ const Chat = require('../Models/chatModel');
 //const upload = require ('./uploadMiddleware');
 const {viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
+const {getOutOfStockMedicines} = require('./patientController');
 const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist for testing only
 
 // Generate a random password (you can use a library like 'crypto' for this)
@@ -174,4 +175,4 @@ const editMedicine = async (req, res) => {
       }
     };
 
-module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword, viewAllChats, sendMessageToChat }; 
+module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword, viewAllChats, sendMessageToChat, getOutOfStockMedicines }; 

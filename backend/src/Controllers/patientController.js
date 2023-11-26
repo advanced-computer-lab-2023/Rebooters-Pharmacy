@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const Pharmacist = require('../Models/pharmacistModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
+const outOfStockMedicines = []; 
 
 // const dummyOrder3 = new Order({
 //   patient: '651ff56acf374b1cacaa2cc3',
@@ -268,7 +269,6 @@ const checkout = async (req, res) => {
     const orderDate = new Date();
     const patientUsername = req.cookies.username;
     const givenPatient = await Patient.findOne({ username: patientUsername });
-    const outOfStockMedicines = []; // To store out of stock medicines
 
     if (!givenPatient) {
       return res.status(404).json({ message: 'Patient not found' });
@@ -345,7 +345,15 @@ const checkout = async (req, res) => {
     res.status(500).json({ message: 'Error checking out' });
   }
 };
-
+const getOutOfStockMedicines = (req, res) => {
+  try {
+    // Return the global outOfStockMedicines array
+    res.status(200).json({ outOfStockMedicines });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving out-of-stock medicines' });
+  }
+};
 const viewOrderDetails = async (req, res) => {
   try {
     const patientUsername = req.cookies.username; // Get the patient's username from the request
@@ -503,4 +511,4 @@ const deleteChat = async (req, res) => {
 };
 
 module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat}; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines}; 
