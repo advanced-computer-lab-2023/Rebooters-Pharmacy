@@ -8,7 +8,8 @@ const EditMedicine = () => {
     description: "",
     medicinalUse: "",
     quantity: 0,
-    PrescriptionNeeded: false
+    PrescriptionNeeded: false,
+    Archive: false
   });
 
   const [error, setError] = useState("");
@@ -85,6 +86,8 @@ const EditMedicine = () => {
       formData.append("medicinalUse", medicineToUpdate.medicinalUse);
       formData.append("quantity", medicineToUpdate.quantity);
       formData.append("PrescriptionNeeded", medicineToUpdate.PrescriptionNeeded);
+      formData.append("Archive", medicineToUpdate.Archive);
+
       if(image !== null) {
         formData.append("image", image);
       }
@@ -103,7 +106,8 @@ const EditMedicine = () => {
           description: "",
           medicinalUse: "",
           quantity: 0,
-          PrescriptionNeeded: false
+          PrescriptionNeeded: false,
+          Archive: false
         });
         setImage(null);
         setUpdatedMedicine(updatedMedicineData);
@@ -151,6 +155,8 @@ const EditMedicine = () => {
               <p>Medicinal Use: {medicine.medicinalUse}</p>
               <p>Quantity: {medicine.quantity}</p>
               <p>Prescription Needed: {medicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
+              <p>Archived: {medicine.Archive ? 'Yes' : 'No'}</p>
+
               {medicine.image.filename ? (
                 <img src={`${medicine.image.filename}`} alt="Medicine" />
               ) : (
@@ -252,6 +258,19 @@ const EditMedicine = () => {
           />
         </div>
         <div className="mb-3">
+          <label htmlFor="Archive" className="form-label">
+          Archived:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="Archive"
+            name="Archive"
+            value={medicineToUpdate.Archive} 
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
           <label htmlFor="image" className="form-label">
             Image: (Optional)
           </label>
@@ -276,6 +295,8 @@ const EditMedicine = () => {
           <p>Medicinal Use: {updatedMedicine.medicinalUse}</p>
           <p>Quantity: {updatedMedicine.quantity}</p>
           <p>Prescription Needed: {updatedMedicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
+          <p>Archived: {updatedMedicine.Archive ? 'Yes' : 'No'}</p>
+
         </div>
       )}
     </div>

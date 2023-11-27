@@ -41,7 +41,7 @@ const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist 
 // Controller functions for Pharmacist
 const addMedicine = async (req, res) => {
   try {
-    const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded } = req.body;
+    const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded, Archive } = req.body;
     const newMedicine = new Medicine({ name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded });
 
     // Check if an image file was uploaded
@@ -91,10 +91,10 @@ const viewMedicineInventoryPharmacist = async (req, res) => {
 const editMedicine = async (req, res) => {
       try {
         
-        const { name, activeIngredients, price ,medicinalUse,description,quantity , PrescriptionNeeded} = req.body;
+        const { name, activeIngredients, price ,medicinalUse,description,quantity , PrescriptionNeeded, Archive} = req.body;
         const updatedMedicine = await Medicine.findOneAndUpdate(
           { name: name },
-          { activeIngredients, price, medicinalUse, description, quantity , PrescriptionNeeded},
+          { activeIngredients, price, medicinalUse, description, quantity , PrescriptionNeeded, Archive},
           { new: true }
         );
         if (!updatedMedicine) {

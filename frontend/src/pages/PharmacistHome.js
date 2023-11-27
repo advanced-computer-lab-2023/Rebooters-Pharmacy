@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ChangePassword from "../components/ChangePassword";
 import PharmacistChats from "../components/PharmacistChats";
 import Notifications from '../components/PharmacistNotifications'; // Import the Notifications component
+import SalesReportGenerator from "../components/Repo";
 
 
 const PharmacistHome = () => {
@@ -67,6 +68,10 @@ const handleLogout = async () => {
         <div className="mt-4">
           <EditMedicine />
         </div>
+        <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
+      <div className="mt-4">
+        <SalesReportGenerator />
+      </div>
         {/* <div className="mt-4">
           <ViewMedicineQuantitySales />
         </div> */}

@@ -61,7 +61,8 @@ const viewMedicineInventory = async (req, res) => {
         quantity: medicine.quantity,
         activeIngredients: medicine.activeIngredients,
         PrescriptionNeeded: medicine.PrescriptionNeeded,
-        medicinalUse: medicine.medicinalUse
+        medicinalUse: medicine.medicinalUse,
+        Archive: medicine.archive
       }));
   
       res.status(200).json(medicinesInfo);
@@ -97,6 +98,7 @@ const viewMedicineInventory = async (req, res) => {
       medicinalUse: medicine.medicinalUse,
       PrescriptionNeeded: medicine.PrescriptionNeeded,
       image : medicine.image,
+      Archive: medicine.archive,
       sales: medicine.sales
       
     }));

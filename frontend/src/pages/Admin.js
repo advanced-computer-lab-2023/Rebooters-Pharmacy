@@ -3,6 +3,7 @@ import Medicine from "../components/Medicine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "../components/ChangePassword";
+import SalesReportGenerator from "../components/Repo";
 
 function Administrator() {
   //const [administrators, setAdministrators] = useState([]);
@@ -20,7 +21,7 @@ function Administrator() {
   const [showPharmacistRequests, setshowPharmacistRequests] = useState(false);
   const [showPharmacistDetails, setShowPharmacistDetails] = useState(false);
   const [showPatientDetails, setShowPatientDetails] = useState(false);
-
+  
 
   /*const viewAdministrators = async () => {
     try {
@@ -456,7 +457,10 @@ function Administrator() {
           </div>
         )}
       </div>
-
+      <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
+      <div className="mt-4">
+        <SalesReportGenerator />
+      </div>
       <div className="card mt-4">
         <h2>Pharmacist/Patient to remove</h2>
         <div className="mb-3">

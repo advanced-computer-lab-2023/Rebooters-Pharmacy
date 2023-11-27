@@ -4,6 +4,7 @@ const Medicine = require('../Models/medicineModel');
 const Order= require ('../Models/orderModel');
 const Chat = require('../Models/chatModel');
 const nodemailer = require('nodemailer');
+const Sales= require('../Models/salesModel');
 const Pharmacist = require('../Models/pharmacistModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
@@ -188,7 +189,7 @@ const addMedicineToCart = async (req, res) => {
     }
 
     // Check if the medicine is OTC (over the counter)
-    if (!medicine.PrescriptionNeeded) {
+    if (!medicine.PrescriptionNeeded && !medicine.Archive) {
       // Create a cart item with the medicine's details
       const cartItem = {
         medicine: medicine._id, // Store the medicine's ID
@@ -205,7 +206,7 @@ const addMedicineToCart = async (req, res) => {
 
       res.status(200).json({ message: 'Medicine added to the cart' });
     } else {
-      res.status(400).json({ message: 'Prescription is needed for this medicine' });
+      res.status(400).json({ message: 'Prescription is needed for this medicine or ARCHIVED' });
     }
   } catch (error) {
     console.error(error);
@@ -297,6 +298,12 @@ const checkout = async (req, res) => {
       givenMedicine.quantity -= items[i].quantity;
       givenMedicine.sales += items[i].quantity;
 
+      const salesEntry= new Sales ({
+        medicineName:givenMedicine.name,
+        quantitySold: items[i].quantity,
+        saleDate:orderDate,
+      })
+      await salesEntry.save();
       // Check if the quantity becomes 0 and add to outOfStockMedicines
       if (givenMedicine.quantity === 0) {
         outOfStockMedicines.push(givenMedicine.name);

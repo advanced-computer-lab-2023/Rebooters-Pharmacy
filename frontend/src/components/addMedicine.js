@@ -9,6 +9,7 @@ const AddMedicine = () => {
     medicinalUse: "",
     quantity: 0,
     prescription: false,
+    archive: false,
   });
 
   const [message, setMessage] = useState("");
@@ -55,6 +56,7 @@ const AddMedicine = () => {
       formData.append("medicinalUse", newMedicine.medicinalUse);
       formData.append("quantity", newMedicine.quantity);
       formData.append("PrescriptionNeeded", newMedicine.prescription);
+      formData.append("Archive", newMedicine.archive); // Add this line
       formData.append("image", image);
 
       const response = await fetch("/api/pharmacist/addMedicine", {
@@ -72,6 +74,7 @@ const AddMedicine = () => {
           description: "",
           medicinalUse: "",
           quantity: 0,
+          archive:false,
         });
         setImage(null);
       } else {
@@ -184,6 +187,20 @@ const AddMedicine = () => {
           <label className="form-check-label" htmlFor="prescription">
             Prescription Needed
           </label>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="archive" className="form-label">
+            Archived:
+          </label>
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="archive"
+            name="archive"
+            checked={newMedicine.archive}
+            onChange={handleInputChange}
+          />
+          
         </div>
 
         <div className="mb-3">

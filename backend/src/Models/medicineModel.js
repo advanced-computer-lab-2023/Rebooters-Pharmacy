@@ -36,6 +36,10 @@ const MedicineSchema = new Schema({
       type: Boolean,
       required: true
     },
+    Archive: {
+      type: Boolean,
+      required: true 
+    },
     image: {
         data: Buffer, // You can use Buffer to store binary image data
         contentType: String, // Store the content type (e.g., 'image/jpeg', 'image/png')

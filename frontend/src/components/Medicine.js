@@ -129,7 +129,7 @@ function Medicine({ modelName , sharedState }) {
       
     } catch (error) {
       console.error(error);
-      alert("Prescription is needed for this medicine. Cannot add to cart.");
+      alert("Prescription is needed for this medicine OR Archived Cannot add to cart.");
     }
   };
   
@@ -191,12 +191,14 @@ function Medicine({ modelName , sharedState }) {
                   <p>Sales: {medicine.sales}</p>
                 ) : null}
                 <p>Prescription Needed: {medicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
+                <p>Archived: {medicine.archive ? 'Yes' : 'No'}</p>
+
                 {medicine.image.filename ? (
                   <img src={`${medicine.image.filename}`} alt="Medicine" />
                 ) : (
                   <p>No Image Available</p>
                 )}
-                {modelName === "patient" && medicine.quantity >0 && (
+                {modelName === "patient" && medicine.quantity >0 && !medicine.archive &&(
                   <button
                     className="btn btn-success"
                     onClick={() => addMedicineToCart(medicine.name)}

@@ -1,0 +1,55 @@
+/* Add these styles to your existing CSS file or create a new one */
+
+/* Sales Report Container */
+div {
+    margin: 20px;
+  }
+  
+  /* Form Container */
+  div > div {
+    margin-bottom: 15px;
+  }
+  
+  /* Select and Button */
+  select, button {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  /* Table Styles */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Total Sales */
+  p {
+    font-size: 16px;
+    margin-top: 15px;
+  }
+  
+  /* Success and Error Messages */
+  .text-success, .text-danger {
+    font-size: 16px;
+    margin-top: 15px;
+  }
+  
+  .text-success {
+    color: green;
+  }
+  
+  .text-danger {
+    color: red;
+  }
+  
