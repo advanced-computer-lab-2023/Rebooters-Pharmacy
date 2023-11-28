@@ -13,6 +13,7 @@ const Patient = () => {
   const [sharedState, setSharedState] = useState('');
   const [activeChat, setActiveChat] = useState(null);
   const [chats, setChats] = useState([]); // Add this line
+  const [activeTab, setActiveTab] = useState("home");
 
   const navigate = useNavigate();
 
@@ -74,30 +75,103 @@ const Patient = () => {
     }
   };
 
+  
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="container">
-      <button onClick={handleLogout} className="btn btn-danger mt-2">
-        Logout
-      </button>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li>
+              <button className="nav-link btn btn-link" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+            <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("home")}
+              >
+                Home
+              </button>
+            </li>
+            <li
+              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("settings")}
+              >
+                Settings
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "medicines" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("medicines")}
+              >
+                Medicines
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "chat" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("chat")}
+              >
+                Chat
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "orders" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("orders")}
+              >
+                Orders
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <h1 className="mb-4 text-center">Patient Dashboard</h1>
+      {activeTab === "settings" && (
       <div className="card mt-4">
         <ChangePassword userType="patient" />
-      </div>
-      <div className="card mt-4"> {<Medicine sharedState={sharedState} modelName="patient" />}</div>
-      <div className="card mt-4">{<PatientActivities modelName="patient" />}</div>
+      </div>)}
+      {activeTab === "medicines" && (
+      <div className="card mt-4"> {<Medicine sharedState={sharedState} modelName="patient" />}</div>)}
+      {activeTab === "settings" && (
+      <div className="card mt-4">{<PatientActivities modelName="patient" />}</div>)}
+      {activeTab === "chat" && (
       <div className="card mt-4">
         <PatientChats setChats={setChats} chats={chats} /> {/* Pass setChats and chats to PatientChats */}
-      </div>
+      </div>)}
+      {activeTab === "orders" && (
       <div className="container card mt-4">
         <h3>Order CheckOut </h3>
         <div>
           <ViewCartItems />
         </div>
         <div >{<CheckingOut sharedState={sharedState} setSharedState={setSharedState} modelName="patient" />}</div>
-      </div>
+      </div>)}
+      {activeTab === "orders" && (
       <div className="card mt-4">
         <ViewAndCancelOrder />
-      </div>
+      </div>)}
     </div>
   );
 };

@@ -21,7 +21,7 @@ function Administrator() {
   const [showPharmacistRequests, setshowPharmacistRequests] = useState(false);
   const [showPharmacistDetails, setShowPharmacistDetails] = useState(false);
   const [showPatientDetails, setShowPatientDetails] = useState(false);
-  
+  const [activeTab, setActiveTab] = useState("home");
 
   /*const viewAdministrators = async () => {
     try {
@@ -319,15 +319,83 @@ function Administrator() {
     }
   };
 
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="container mt-4">
-      <button onClick={handleLogout} className="btn btn-danger mt-2">
-        Logout
-      </button>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li>
+              <button className="nav-link btn btn-link" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+            <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("home")}
+              >
+                Home
+              </button>
+            </li>
+            <li
+              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("settings")}
+              >
+                Settings
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "administrators" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("administrators")}
+              >
+                Administrators
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "medicines" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("medicines")}
+              >
+                Medicines
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "usermanager" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link btn btn-link"
+                onClick={() => handleTabClick("usermanager")}
+              >
+                User Manager
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <h1 className="mb-4 text-center">Administrator Dashboard</h1>
-      <div className="card mt-4">
-        <ChangePassword userType="administrator" />
-      </div>
+      {activeTab === "settings" && (
+        <div className="card mt-4">
+          <ChangePassword userType="administrator" />
+        </div>
+      )}
       {submissionStatus === "success" && (
         <div className="alert alert-success">{message}</div>
       )}
@@ -335,264 +403,299 @@ function Administrator() {
         <div className="alert alert-danger">{message}</div>
       )}
       <br />
-      <div className="card mb-3">
-        <h2>Add Administrator</h2>
-        <input
-          type="text"
-          placeholder="Administrator Username"
-          value={adminUsername}
-          onChange={(e) => setAdminUsername(e.target.value)}
-          className="form-control mb-2"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="form-control mb-2"
-        />
-        <input
-          type="text"
-          placeholder="Administrator Email"
-          value={email}
-          onChange={(e) => setAdminEmail(e.target.value)}
-          className="form-control mb-2"
-        />
-        <div>
-          <button className="btn btn-primary" onClick={addAdministrator}>
-            Add Administrator
-          </button>
-        </div>
-      </div>
-      <div className="card mb-3">
-        <h2>Search for Pharmacist</h2>
-        <input
-          type="text"
-          placeholder="Pharmacist Username"
-          value={pharmacistUsername}
-          onChange={(e) => setPharmacistUsername(e.target.value)}
-          className="form-control mb-2"
-        />
-        <div><button className="btn btn-primary" onClick={toggleViewPharmacists}>
-          {showPharmacistDetails ? "Hide Pharmacist" : "Search Pharmacist"}
-        </button>
-        </div>
-      </div>
-      <div>
-        {showPharmacistDetails && pharmacists.length > 0 && (
-          <div>
-            <h4>Search Results</h4>
-            <ul>
-              {pharmacists.map((result) => (
-                <li key={result.id}>
-                  <p>ID: {result._id}</p>
-                  <p>Name: {result.name}</p>
-                  <p>Email: {result.email}</p>
-                  <p>
-                    Date of Birth:{" "}
-                    {new Date(result.dateOfBirth).toLocaleDateString()}
-                  </p>
-                  <p>Affiliation: {result.affiliation}</p>
-                  <p>Educational Background: {result.educationalBackground}</p>
-                  <p>Hourly Rate: {result.hourlyRate}</p>
-                  <p>Status: {result.status}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-      <div className="card mb-3">
-        <h2>Search for Patient</h2>
-        <input
-          type="text"
-          placeholder="Patient Username"
-          value={patientUsername}
-          onChange={(e) => setPatientUsername(e.target.value)}
-          className="form-control mb-2"
-        />
-       <div> <button className="btn btn-primary" onClick={toggleViewPatients}>
-          {showPatientDetails ? "Hide Patient" : "Search Patient"}
-        </button></div>
-      </div>
-      <div>
-        {showPatientDetails && patients.length > 0 && (
-          <div>
-            <h4>Search Results</h4>
-            <ul>
-              {patients.map((result) => (
-                <li key={result.id}>
-                  <p>ID: {result._id}</p>
-                  <p>Name: {result.name}</p>
-                  <p>Email: {result.email}</p>
-                  <p>
-                    Date of Birth:{" "}
-                    {new Date(result.dateOfBirth).toLocaleDateString()}
-                  </p>
-                  <p>Gender: {result.gender}</p>
-                  <p>Mobile Phone: {result.mobile_number}</p>
-                  <p>
-                    Emergency Contact First Name:{" "}
-                    {result.emergency_contact.firstName}
-                  </p>
-                  <p>
-                    Emergency Contact Middle Name:{" "}
-                    {result.emergency_contact.middleName}
-                  </p>
-                  <p>
-                    Emergency Contact Last Name:{" "}
-                    {result.emergency_contact.lastName}
-                  </p>
-                  <p>
-                    Emergency Contact Mobile Phone:{" "}
-                    {result.emergency_contact.mobile_number}
-                  </p>
-                  <p>
-                    Emergency Contact Relation:{" "}
-                    {result.emergency_contact.relation}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-      <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
-      <div className="mt-4">
-        <SalesReportGenerator />
-      </div>
-      <div className="card mt-4">
-        <h2>Pharmacist/Patient to remove</h2>
-        <div className="mb-3">
+      {activeTab === "administrators" && (
+        <div className="card mb-3">
+          <h2>Add Administrator</h2>
           <input
             type="text"
-            placeholder="Username to Remove"
-            value={userToRemove}
-            onChange={(e) => setUserToRemove(e.target.value)}
-            className="form-control"
+            placeholder="Administrator Username"
+            value={adminUsername}
+            onChange={(e) => setAdminUsername(e.target.value)}
+            className="form-control mb-2"
           />
-          <div><button
-            className="btn btn-danger mt-2"
-            onClick={removeUserFromSystem}
-          >
-            Remove Pharmacist/Patient
-          </button>
-          {submissionStatus === "success" && (
-              <div className="alert alert-success mt-2">{message}</div>
-            )}
-            {submissionStatus === "error" && (
-              <div className="alert alert-danger mt-2">{message}</div>
-            )}
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form-control mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Administrator Email"
+            value={email}
+            onChange={(e) => setAdminEmail(e.target.value)}
+            className="form-control mb-2"
+          />
+          <div>
+            <button className="btn btn-primary" onClick={addAdministrator}>
+              Add Administrator
+            </button>
           </div>
         </div>
-      </div>
-      <div className="card mt-4">
-        <h2>New Pharmacist Requests</h2>
-        <div><button className="btn btn-primary" onClick={togglePharmacistRequests}>
-          {showPharmacistRequests
-            ? "Hide New Pharmacist Requests"
-            : "View New Pharmacist Requests"}
-        </button></div>
-        {showPharmacistRequests && (
-          <table className="table mt-2">
-            <thead>
-              <tr>
-                <th>Username</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date of Birth</th>
-                <th>Hourly Rate</th>
-                <th>Affiliation</th>
-                <th>Educational Background</th>
-                <th>ID Document</th>
-                <th>Pharmacy Degree</th>
-                <th>Working License</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {newPharmacistRequestData.map(
-                (request) => (
-                  console.log(request.idDocument),
-                  console.log(request.pharmacyDegreeDocument),
-                  console.log(request.workingLicenseDocument),
-                  (
-                    <tr key={request._id}>
-                      <td>{request.username}</td>
-                      <td>{request.name}</td>
-                      <td>{request.email}</td>
-                      <td>{request.dateOfBirth}</td>
-                      <td>{request.hourlyRate}</td>
-                      <td>{request.affiliation}</td>
-                      <td>{request.educationalBackground}</td>
-                      <td>
-                        {request.idDocument && (
-                          <button className="btn btn-info"
-                            onClick={() =>
-                              downloadDocument(request.idDocument.filename)
-                            }
-                          >
-                            Download ID Document
-                          </button>
-                        )}
-                      </td>
-                      <td>
-                        {request.pharmacyDegreeDocument && (
-                          <button className="btn btn-info"
-                            onClick={() =>
-                              downloadDocument(
-                                request.pharmacyDegreeDocument.filename
-                              )
-                            }
-                          >
-                            Download Pharmacy Degree Document
-                          </button>
-                        )}
-                      </td>
-                      <td>
-                        {request.workingLicenseDocument && (
-                          <button className="btn btn-info"
-                            onClick={() =>
-                              downloadDocument(
-                                request.workingLicenseDocument.filename
-                              )
-                            }
-                          >
-                            Download Working License Document
-                          </button>
-                        )}
-                      </td>
-                      <td>
-                        {request.status === "pending" ? (
-                          <div>
-                            <button className="btn btn-primary"
-                              onClick={() =>
-                                approvePharmacistRequest(request.username)
-                              }
-                            >
-                              Accept
-                            </button>
-                            <button className="btn btn-danger"
-                              onClick={() =>
-                                rejectPharmacistRequest(request.username)
-                              }
-                            >
-                              Reject
-                            </button>
-                          </div>
-                        ) : (
-                          "Request Handled"
-                        )}
-                      </td>
-                    </tr>
-                  )
-                )
+      )}
+      {activeTab === "usermanager" && (
+        <div className="card mb-3">
+          <h2>Search for Pharmacist</h2>
+          <input
+            type="text"
+            placeholder="Pharmacist Username"
+            value={pharmacistUsername}
+            onChange={(e) => setPharmacistUsername(e.target.value)}
+            className="form-control mb-2"
+          />
+          <div>
+            <button className="btn btn-primary" onClick={toggleViewPharmacists}>
+              {showPharmacistDetails ? "Hide Pharmacist" : "Search Pharmacist"}
+            </button>
+          </div>
+        </div>
+      )}
+      {activeTab === "usermanager" && (
+        <div>
+          {showPharmacistDetails && pharmacists.length > 0 && (
+            <div>
+              <h4>Search Results</h4>
+              <ul>
+                {pharmacists.map((result) => (
+                  <li key={result.id}>
+                    <p>ID: {result._id}</p>
+                    <p>Name: {result.name}</p>
+                    <p>Email: {result.email}</p>
+                    <p>
+                      Date of Birth:{" "}
+                      {new Date(result.dateOfBirth).toLocaleDateString()}
+                    </p>
+                    <p>Affiliation: {result.affiliation}</p>
+                    <p>
+                      Educational Background: {result.educationalBackground}
+                    </p>
+                    <p>Hourly Rate: {result.hourlyRate}</p>
+                    <p>Status: {result.status}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+      {activeTab === "usermanager" && (
+        <div className="card mb-3">
+          <h2>Search for Patient</h2>
+          <input
+            type="text"
+            placeholder="Patient Username"
+            value={patientUsername}
+            onChange={(e) => setPatientUsername(e.target.value)}
+            className="form-control mb-2"
+          />
+          <div>
+            {" "}
+            <button className="btn btn-primary" onClick={toggleViewPatients}>
+              {showPatientDetails ? "Hide Patient" : "Search Patient"}
+            </button>
+          </div>
+        </div>
+      )}
+      {activeTab === "usermanager" && (
+        <div>
+          {showPatientDetails && patients.length > 0 && (
+            <div>
+              <h4>Search Results</h4>
+              <ul>
+                {patients.map((result) => (
+                  <li key={result.id}>
+                    <p>ID: {result._id}</p>
+                    <p>Name: {result.name}</p>
+                    <p>Email: {result.email}</p>
+                    <p>
+                      Date of Birth:{" "}
+                      {new Date(result.dateOfBirth).toLocaleDateString()}
+                    </p>
+                    <p>Gender: {result.gender}</p>
+                    <p>Mobile Phone: {result.mobile_number}</p>
+                    <p>
+                      Emergency Contact First Name:{" "}
+                      {result.emergency_contact.firstName}
+                    </p>
+                    <p>
+                      Emergency Contact Middle Name:{" "}
+                      {result.emergency_contact.middleName}
+                    </p>
+                    <p>
+                      Emergency Contact Last Name:{" "}
+                      {result.emergency_contact.lastName}
+                    </p>
+                    <p>
+                      Emergency Contact Mobile Phone:{" "}
+                      {result.emergency_contact.mobile_number}
+                    </p>
+                    <p>
+                      Emergency Contact Relation:{" "}
+                      {result.emergency_contact.relation}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+      {activeTab === "home" && (
+        <div className="mt-4">
+          <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
+          <SalesReportGenerator />
+        </div>
+      )}
+      {activeTab === "usermanager" && (
+        <div className="card mt-4">
+          <h2>Pharmacist/Patient to remove</h2>
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Username to Remove"
+              value={userToRemove}
+              onChange={(e) => setUserToRemove(e.target.value)}
+              className="form-control"
+            />
+            <div>
+              <button
+                className="btn btn-danger mt-2"
+                onClick={removeUserFromSystem}
+              >
+                Remove Pharmacist/Patient
+              </button>
+              {submissionStatus === "success" && (
+                <div className="alert alert-success mt-2">{message}</div>
               )}
-            </tbody>
-          </table>
-        )}
-      </div>
-      <div className="mt-4">{<Medicine modelName="administrator" />}</div>
+              {submissionStatus === "error" && (
+                <div className="alert alert-danger mt-2">{message}</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {activeTab === "usermanager" && (
+        <div className="card mt-4">
+          <h2>New Pharmacist Requests</h2>
+          <div>
+            <button
+              className="btn btn-primary"
+              onClick={togglePharmacistRequests}
+            >
+              {showPharmacistRequests
+                ? "Hide New Pharmacist Requests"
+                : "View New Pharmacist Requests"}
+            </button>
+          </div>
+          {showPharmacistRequests && (
+            <table className="table mt-2">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Date of Birth</th>
+                  <th>Hourly Rate</th>
+                  <th>Affiliation</th>
+                  <th>Educational Background</th>
+                  <th>ID Document</th>
+                  <th>Pharmacy Degree</th>
+                  <th>Working License</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {newPharmacistRequestData.map(
+                  (request) => (
+                    console.log(request.idDocument),
+                    console.log(request.pharmacyDegreeDocument),
+                    console.log(request.workingLicenseDocument),
+                    (
+                      <tr key={request._id}>
+                        <td>{request.username}</td>
+                        <td>{request.name}</td>
+                        <td>{request.email}</td>
+                        <td>{request.dateOfBirth}</td>
+                        <td>{request.hourlyRate}</td>
+                        <td>{request.affiliation}</td>
+                        <td>{request.educationalBackground}</td>
+                        <td>
+                          {request.idDocument && (
+                            <button
+                              className="btn btn-info"
+                              onClick={() =>
+                                downloadDocument(request.idDocument.filename)
+                              }
+                            >
+                              Download ID Document
+                            </button>
+                          )}
+                        </td>
+                        <td>
+                          {request.pharmacyDegreeDocument && (
+                            <button
+                              className="btn btn-info"
+                              onClick={() =>
+                                downloadDocument(
+                                  request.pharmacyDegreeDocument.filename
+                                )
+                              }
+                            >
+                              Download Pharmacy Degree Document
+                            </button>
+                          )}
+                        </td>
+                        <td>
+                          {request.workingLicenseDocument && (
+                            <button
+                              className="btn btn-info"
+                              onClick={() =>
+                                downloadDocument(
+                                  request.workingLicenseDocument.filename
+                                )
+                              }
+                            >
+                              Download Working License Document
+                            </button>
+                          )}
+                        </td>
+                        <td>
+                          {request.status === "pending" ? (
+                            <div>
+                              <button
+                                className="btn btn-primary"
+                                onClick={() =>
+                                  approvePharmacistRequest(request.username)
+                                }
+                              >
+                                Accept
+                              </button>
+                              <button
+                                className="btn btn-danger"
+                                onClick={() =>
+                                  rejectPharmacistRequest(request.username)
+                                }
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          ) : (
+                            "Request Handled"
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  )
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+      {activeTab === "medicines" && (
+        <div className="mt-4">{<Medicine modelName="administrator" />}</div>
+      )}
     </div>
   );
 }
