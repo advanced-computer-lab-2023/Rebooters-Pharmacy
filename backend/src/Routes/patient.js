@@ -6,12 +6,14 @@ const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
     removeCartItem, changeAmountOfAnItem,viewItems, 
     viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
-    viewOrderDetails, logout, changePassword , viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat } = require('../Controllers/patientController') //we're destructuring so we need curly braces
+    viewOrderDetails, logout, changePassword , viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, checkWalletBalance } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 router.get('/logout', requireAuth, logout);
 
 router.get('/viewAllOrders', requireAuth, viewAllOrders);
+
+router.get('/checkWalletBalance', requireAuth, checkWalletBalance);
 
 router.post('/changePassword', requireAuth, changePassword);
 

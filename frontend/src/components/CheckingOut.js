@@ -74,7 +74,9 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to add order");
+        const data = await response.json();
+        alert(data.message);
+        return;
       }
       alert("order added");
     

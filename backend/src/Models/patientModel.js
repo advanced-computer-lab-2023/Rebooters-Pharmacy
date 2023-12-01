@@ -110,6 +110,10 @@ orders: [
       ref: 'Order',
     },
   ],
+wallet: {
+  type: Number,
+  default: 0
+}
 }, { timestamps: true });
 
 const Patient = mongoose.model('Patient', PatientSchema);

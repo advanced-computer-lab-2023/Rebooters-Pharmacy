@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import Wallet from "./Wallet";
 
 const ViewCartItems = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -9,9 +10,6 @@ const ViewCartItems = () => {
   useEffect(() => {
     const getCartItems = async () => {
       try {
-
-
-        
         const response = await fetch('/api/patient/viewCartItems', {
           method: 'POST',
           headers: {
@@ -85,6 +83,7 @@ const ViewCartItems = () => {
   return (
   
       <div>
+      <Wallet userType="patient"/>
         {error && <p className="text-danger">{error}</p>}
         <h4>Cart Items:</h4>
         <table className="table">

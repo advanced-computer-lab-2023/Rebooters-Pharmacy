@@ -3,6 +3,10 @@
 const mongoose = require('mongoose');
 
 const salesSchema = new mongoose.Schema({
+  order:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Order',
+  },
   medicineName: {
     type: String,
     required: true,

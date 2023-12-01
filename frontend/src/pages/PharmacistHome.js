@@ -9,6 +9,7 @@ import ChangePassword from "../components/ChangePassword";
 import PharmacistChats from "../components/PharmacistChats";
 import Notifications from "../components/PharmacistNotifications"; // Import the Notifications component
 import SalesReportGenerator from "../components/Repo";
+import Wallet from "../components/Wallet";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -112,6 +113,11 @@ const PharmacistHome = () => {
       {activeTab === "chat" && (
         <div className="card mt-4">
           <PharmacistChats />
+        </div>
+      )}
+      {activeTab === "home" && (
+        <div>
+          <Wallet userType="pharmacist" />
         </div>
       )}
       {activeTab === "home" && (

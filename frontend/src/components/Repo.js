@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './SalesReportGenerator.css'; // Import the CSS file
+import '../styles/SalesReportGenerator.css';
 
 const SalesReportGenerator = () => {
   const [chosenMonth, setChosenMonth] = useState('');

@@ -42,6 +42,10 @@ const pharmacistSchema = new mongoose.Schema({
     type: String,
     enum: ['accepted', 'rejected', 'pending'], // Allowed values
     default: 'pending', // Default value
+  },
+  wallet: {
+    type: Number,
+    default: 0
   }
 });
 

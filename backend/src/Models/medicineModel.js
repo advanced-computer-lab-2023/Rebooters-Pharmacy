@@ -38,7 +38,7 @@ const MedicineSchema = new Schema({
     },
     Archive: {
       type: Boolean,
-      required: true 
+      default: false,
     },
     image: {
         data: Buffer, // You can use Buffer to store binary image data

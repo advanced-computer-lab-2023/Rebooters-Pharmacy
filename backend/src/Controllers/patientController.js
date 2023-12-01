@@ -8,6 +8,7 @@ const Sales= require('../Models/salesModel');
 const Pharmacist = require('../Models/pharmacistModel');
 const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
+const {checkWalletBalance} = require('./walletController');
 const outOfStockMedicines = []; 
 
 // const dummyOrder3 = new Order({
@@ -80,26 +81,42 @@ const removeCartItem = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
   try {
-    const patientUsername = req.cookies.username; // Get the patient's username from the request
-    const orderId = req.body.orderId; // Get the order _id from the request
+    const patientUsername = req.cookies.username;
+    const orderId = req.body.orderId;
 
-    // Find the order with the given orderId
-    const order = await Order.findOne({ _id: orderId, patientUsername: patientUsername });
+    const order = await Order.findOne({ _id: orderId }).populate('items.medicine');
+    const givenPatient = await Patient.findOne({ username: patientUsername });
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
-
-    // Check if the order is currently in 'Pending' status
     if (order.status !== 'Pending') {
       return res.status(400).json({ message: 'Order cannot be canceled as it is not in Pending status' });
     }
 
-    // Update the order status to 'Canceled'
-    order.status = 'Canceled';
+    if (order.paymentMethod !== 'cash on delivery') {
+      givenPatient.wallet += order.total;
+      await givenPatient.save();
+    }
 
-    // Save the updated order information to the database
+    order.status = 'Canceled';
     await order.save();
+
+    for (const item of order.items) {
+      const medicine = item.medicine;
+
+      if (medicine) {
+        // Update the quantity and sales in the Medicine schema
+        medicine.quantity += item.quantity;
+        medicine.sales -= item.quantity;
+
+        // Save the updated medicine object
+        await medicine.save();
+      }
+    }
+
+    // Remove sales related to the canceled order
+    await Sales.deleteMany({ order: order._id });
 
     res.status(200).json({ message: 'Order canceled successfully', updatedOrder: order });
   } catch (error) {
@@ -265,6 +282,7 @@ const sendNotificationByEmail = async (email, message) => {
 
 const checkout = async (req, res) => {
   let total = 0;
+  let outOfStockMedicines = [];
 
   try {
     const orderDate = new Date();
@@ -287,6 +305,9 @@ const checkout = async (req, res) => {
         return res.status(400).json({ message: `Not enough stock for ${givenMedicine.name}` });
       }
 
+      // Adjust total based on the quantity of each medicine
+      total += items[i].price * items[i].quantity;
+
       orderItems.push({
         medicine: givenMedicine._id,
         name: items[i].name,
@@ -294,24 +315,38 @@ const checkout = async (req, res) => {
         quantity: items[i].quantity,
       });
 
-      total += items[i].price;
+      // Check if the quantity becomes 0 and add to outOfStockMedicines
+      // if (givenMedicine.quantity === 0) {
+      //   outOfStockMedicines.push(givenMedicine.name);
+      // }
+      // await givenMedicine.save();
+    }
+
+    // Check wallet balance if the paymentMethod is 'wallet'
+    if (paymentMethod === 'wallet') {
+      const walletBalance = givenPatient.wallet === undefined ? 0 : givenPatient.wallet;
+      if (walletBalance < total) {
+        return res.status(404).json({ message: 'Not enough money in the wallet' });
+      }
+    }
+
+    for (let i = 0; i < items.length; i++) {
+      const givenMedicine = await Medicine.findOne({ name: items[i].name });
       givenMedicine.quantity -= items[i].quantity;
       givenMedicine.sales += items[i].quantity;
 
-      const salesEntry= new Sales ({
-        medicineName:givenMedicine.name,
-        quantitySold: items[i].quantity,
-        saleDate:orderDate,
-      })
-      await salesEntry.save();
-      // Check if the quantity becomes 0 and add to outOfStockMedicines
       if (givenMedicine.quantity === 0) {
         outOfStockMedicines.push(givenMedicine.name);
       }
-
       await givenMedicine.save();
-    }
 
+      const salesEntry = new Sales({
+        medicineName: givenMedicine.name,
+        quantitySold: items[i].quantity,
+        saleDate: orderDate,
+      });
+      await salesEntry.save();
+    }
     // Create a new order using the Order schema
     const newOrder = new Order({
       total,
@@ -330,10 +365,16 @@ const checkout = async (req, res) => {
 
     // Update the patient's orders array with the new order
     givenPatient.orders.push(savedOrder._id);
-    await givenPatient.save();
 
     // Clear the patient's cart
     givenPatient.cart = [];
+
+    // Deduct the amount from the wallet if paymentMethod is 'wallet'
+    if (paymentMethod === 'wallet') {
+      givenPatient.wallet -= total;
+    }
+
+    // Save the updated patient data
     await givenPatient.save();
 
     // Send notification email for out of stock medicines
@@ -343,7 +384,6 @@ const checkout = async (req, res) => {
       pharmacistEmails.forEach(async (pharmacistEmail) => {
         await sendNotificationByEmail(pharmacistEmail, notificationMessage);
       });
-
     }
 
     res.status(201).json(savedOrder);
@@ -352,6 +392,8 @@ const checkout = async (req, res) => {
     res.status(500).json({ message: 'Error checking out' });
   }
 };
+
+
 const getOutOfStockMedicines = (req, res) => {
   try {
     // Return the global outOfStockMedicines array
@@ -376,6 +418,7 @@ const viewOrderDetails = async (req, res) => {
     const orderDetails = {
       orderDate: order.orderDate,
       status: order.status,
+      paymentMethod: order.paymentMethod,
       total: order.total,
       items: order.items,
     };
@@ -517,5 +560,5 @@ const deleteChat = async (req, res) => {
   }
 };
 
-module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, 
+module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, checkWalletBalance,
   viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines}; 
