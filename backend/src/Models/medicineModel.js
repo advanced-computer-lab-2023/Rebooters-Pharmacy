@@ -34,7 +34,7 @@ const MedicineSchema = new Schema({
     },
     PrescriptionNeeded: {
       type: Boolean,
-      required: true
+      default: false,
     },
     Archive: {
       type: Boolean,

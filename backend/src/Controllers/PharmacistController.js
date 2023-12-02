@@ -7,6 +7,9 @@ const {logout, changePassword} = require('./authController');
 const {getOutOfStockMedicines} = require('./patientController');
 const {checkWalletBalance} = require('./walletController');
 const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist for testing only
+const { generateSalesReport } = require('./commonController');
+const Sales= require('../Models/salesModel');
+
 
 // Generate a random password (you can use a library like 'crypto' for this)
 // const randomPassword = 'randompassword123'; // Replace with your random password generation logic
@@ -40,6 +43,89 @@ const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist 
 //     }
 // });
 // Controller functions for Pharmacist
+
+
+const filterSalesReport = async (req, res) => {
+  try {
+    const { medicineName, saleDate } = req.body;
+
+    if (medicineName && saleDate) {
+
+      const startOfDay = new Date(saleDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(saleDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      let filterCriteria = await Sales.find({
+        medicineName: { $regex: new RegExp(medicineName, "i") },
+        saleDate: { $gte: startOfDay, $lte: endOfDay },
+      }).exec();
+
+      console.log("Filter Criteria:", filterCriteria);
+
+      const result = filterCriteria.map((sale) => {
+        return {
+          medicineName: sale.medicineName,
+          quantitySold: sale.quantitySold,
+          saleDate: sale.saleDate,
+        };
+      });
+
+      return res.status(200).json(result);
+    } else if (!medicineName && saleDate) {
+
+      const startOfDay = new Date(saleDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(saleDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      let filterCriteria = await Sales.find({saleDate: { $gte: startOfDay, $lte: endOfDay }}).exec();
+
+      const result = filterCriteria.map((sale) => {
+        return {
+          medicineName: sale.medicineName,
+          quantitySold: sale.quantitySold,
+          saleDate: sale.saleDate,
+        };
+      });
+
+      return res.status(200).json(result);
+    }
+    else if (medicineName && !saleDate) {
+
+
+      let filterCriteria = await Sales.find({
+        medicineName: { $regex: new RegExp(medicineName, "i") } }).exec();
+
+      const result = filterCriteria.map((sale) => {
+        return {
+          medicineName: sale.medicineName,
+          quantitySold: sale.quantitySold,
+          saleDate: sale.saleDate,
+        };
+      });
+
+      return res.status(200).json(result);
+    } 
+    else {
+      return res.status(400).json({
+        error:
+          "Please provide at least search parameters (medicineName or saleDate).",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while filtering sales.",
+    });
+  }
+};
+
+
+
+
 const addMedicine = async (req, res) => {
   try {
     const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded, Archive } = req.body;
@@ -175,5 +261,24 @@ const editMedicine = async (req, res) => {
         res.status(500).json({ message: 'Error sending message to chat' });
       }
     };
+    
+    module.exports = {
+      generateSalesReport,
+      filterSalesReport,
 
-module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword, viewAllChats, sendMessageToChat, getOutOfStockMedicines, checkWalletBalance }; 
+      viewMedicineInventoryPharmacist,
+      addMedicine,
+      filterMedicineByMedicinalUse,
+      viewMedicineInventory,
+      searchMedicineByName,
+      editMedicine,
+      logout,
+      changePassword,
+      viewAllChats,
+      sendMessageToChat,
+      getOutOfStockMedicines,
+      checkWalletBalance,
+    };
+    
+
+    
