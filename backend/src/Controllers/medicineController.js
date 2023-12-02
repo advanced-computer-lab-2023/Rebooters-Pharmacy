@@ -104,7 +104,7 @@ const viewMedicineInventory = async (req, res) => {
       medicinalUse: medicine.medicinalUse,
       PrescriptionNeeded: medicine.PrescriptionNeeded,
       image : medicine.image,
-      Archive: medicine.archive,
+      Archive: medicine.Archive,
       sales: medicine.sales
       
     }));
