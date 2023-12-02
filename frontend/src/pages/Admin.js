@@ -544,7 +544,7 @@ function Administrator() {
       {activeTab === "home" && (
         <div className="mt-4">
           <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
-          <SalesReportGenerator />
+          <SalesReportGenerator userType="administrator"/>
         </div>
       )}
       {activeTab === "usermanager" && (

@@ -1,7 +1,14 @@
 const express = require('express') //require or import express
 const { requireAuth } = require('../Middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
-const {addMedicine, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,editMedicine, viewMedicineInventoryPharmacist, logout, changePassword, viewAllChats, sendMessageToChat, getOutOfStockMedicines, checkWalletBalance,unarchiveMedicine,archiveMedicine} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
+const {generateSalesReport, filterSalesReport,
+  addMedicine, 
+  viewMedicineInventory,
+   filterMedicineByMedicinalUse,
+    searchMedicineByName,editMedicine,
+     viewMedicineInventoryPharmacist, logout, changePassword,
+      viewAllChats, sendMessageToChat, getOutOfStockMedicines, 
+      checkWalletBalance,unarchiveMedicine,archiveMedicine} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
 
 const multer = require('multer'); 
 const storage = multer.diskStorage({
@@ -36,6 +43,11 @@ router.get('/checkWalletBalance', requireAuth, checkWalletBalance);
 router.post('/unarchiveMedicine', unarchiveMedicine);
 
 router.post('/archiveMedicine', archiveMedicine);
+
+
+router.post('/generateSalesReport' , requireAuth, generateSalesReport);
+// Add a new route to handle fetching all medicines
+router.post('/filterSalesReport',requireAuth, filterSalesReport);
 
 
 

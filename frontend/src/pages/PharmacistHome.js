@@ -10,6 +10,7 @@ import PharmacistChats from "../components/PharmacistChats";
 import Notifications from "../components/PharmacistNotifications"; // Import the Notifications component
 import SalesReportGenerator from "../components/Repo";
 import Wallet from "../components/Wallet";
+import MedicineDropdown from "../components/filterRepo";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -47,6 +48,11 @@ const PharmacistHome = () => {
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+  };
+  const handleFilter = (medicine) => {
+    // Handle the filter logic here
+    console.log('Filtering by medicine:', medicine);
+    // You can add more logic or state updates based on the selected medicine
   };
 
   return (
@@ -142,7 +148,13 @@ const PharmacistHome = () => {
       {activeTab === "home" && (
         <div className="mt-4">
           <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
-          <SalesReportGenerator />
+          <SalesReportGenerator userType="pharmacist"/>
+        </div>
+      )}
+      {activeTab === "home" && (
+        <div className="mt-4">
+          <h2 className="mb-4 mt-4 text-center">Filtered Repo </h2>
+          <MedicineDropdown handleFilter={handleFilter} />
         </div>
       )}
       {/* <div className="mt-4">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/SalesReportGenerator.css';
 
-const SalesReportGenerator = () => {
+const SalesReportGenerator = ({userType}) => {
   const [chosenMonth, setChosenMonth] = useState('');
   const [salesData, setSalesData] = useState([]);
   const [totalSales, setTotalSales] = useState(null);
@@ -19,7 +19,7 @@ const SalesReportGenerator = () => {
 
   const handleGenerateReport = async () => {
     try {
-      const response = await fetch('/api/administrator/generateSalesReport', {
+      const response = await fetch(`/api/${userType}/generateSalesReport`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

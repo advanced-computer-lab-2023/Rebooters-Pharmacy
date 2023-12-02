@@ -1,38 +1,45 @@
-.login-card{
-    width: 40%;
-    height: auto;
-    padding: 30px 10px 30px 50px;
-    border-radius: 15px;
-    background-color: rgb(241, 233, 233); 
-    margin: 100px; 
-}
-/* .title h2{ to style login word
-    
-} */
-.login-form .wb {
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.login-form input{
-    border-radius: 10px;
-    border-style: solid;
-    margin-bottom: 7px;
-}
-
-.login-form a{
-    color: #6E6E6E;
-    font-weight: 600;
-}
-.login-form .center {
-    margin-left: 70px;
-    font-size: 18px;
-}
-.login-form button{
-    margin-top: 10px;
-    width: 100px;
-    margin-bottom: 10px 
-}   
-.login-btn:hover{
-    cursor: pointer;
-}
+body {
+    background-image: url('./Screenshot\ \(65\).png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .login-card{
+      width: 40%;
+      height: auto;
+      padding: 30px 10px 30px 50px;
+      border-radius: 15px;
+      background-color: rgb(241, 233, 233); 
+      margin: 100px; 
+  }
+  /* .title h2{ to style login word
+      
+  } */
+  .login-form .wb {
+      margin-bottom: 10px;
+      font-weight: bold;
+  }
+  
+  .login-form input{
+      border-radius: 10px;
+      border-style: solid;
+      margin-bottom: 7px;
+  }
+  
+  .login-form a{
+      color: #6E6E6E;
+      font-weight: 600;
+  }
+  .login-form .center {
+      margin-left: 70px;
+      font-size: 18px;
+  }
+  .login-form button{
+      margin-top: 10px;
+      width: 100px;
+      margin-bottom: 10px 
+  }   
+  .login-btn:hover{
+      cursor: pointer;
+  }
