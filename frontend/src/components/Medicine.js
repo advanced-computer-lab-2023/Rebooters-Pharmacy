@@ -10,7 +10,6 @@ function Medicine({ modelName , sharedState }) {
  
   const fetchData = async () => {
     try {
-      console.log("View Medicine Inventory button clicked");
       const response = await fetch(`/api/${modelName}/viewMedicineInventory`);
       if (!response.ok) {
         throw new Error("Failed to fetch data");
@@ -47,34 +46,43 @@ function Medicine({ modelName , sharedState }) {
   };
 
   const searchMedicineByName = async () => {
-    try {
-      if (searchTerm.trim() === "") {
-        alert("Please fill in the search field.");
-        return;
-      }
-      const response = await fetch(`/api/${modelName}/searchMedicineByName`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ medicineName: searchTerm }),
-      });
-      if (!response.ok) {
-        if (response.status === 404) {
-          alert(`No medicine found with the name "${searchTerm}".`);
+  try {
+    if (searchTerm.trim() === "") {
+      alert("Please fill in the search field.");
+      return;
+    }
+
+    const response = await fetch(`/api/${modelName}/searchMedicineByName`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ medicineName: searchTerm }),
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        const data = await response.json();
+        if (data.message === 'Medicine is not available.') {
+          alert("Medicine is not available.");
         } else {
-          throw new Error("Failed to fetch data");
+          alert(`No medicine found with the name "${searchTerm}".`);
         }
       } else {
-        const data = await response.json();
-        setShowMedicineList(true);
-        setSearchTerm("");
-        setMedicines(data);
+        throw new Error("Failed to fetch data");
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      const data = await response.json();
+      setShowMedicineList(true);
+      setSearchTerm("");
+
+      setMedicines(data);
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   const filterMedicineByMedicinalUse = async () => {
     try {
@@ -129,12 +137,66 @@ function Medicine({ modelName , sharedState }) {
       
     } catch (error) {
       console.error(error);
-      alert("Prescription is needed for this medicine OR Archived Cannot add to cart.");
+      alert("Prescription is needed for this medicine.");
     }
   };
   
 
+  // Function to archive a medicine
+const archiveMedicine = async (medicineName) => {
+  try {
+    const response = await fetch(`/api/pharmacist/archiveMedicine`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ medicineName }),
+    });
 
+    if (!response.ok) {
+      throw new Error("Failed to archive medicine");
+    }
+
+    // Update the local state with the updated medicine list
+    fetchData();
+    alert("Medicine archived successfully!");
+  } catch (error) {
+    console.error(error);
+    alert("Error archiving medicine");
+  }
+};
+
+// Function to unarchive a medicine
+const unarchiveMedicine = async (medicineName) => {
+  try {
+    const response = await fetch(`/api/pharmacist/unarchiveMedicine`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ medicineName }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to unarchive medicine");
+    }
+
+    // Update the local state with the updated medicine list
+    fetchData();
+    alert("Medicine unarchived successfully!");
+  } catch (error) {
+    console.error(error);
+    alert("Error unarchiving medicine");
+  }
+};
+
+const toggleArchive = async (medicineName, isArchived) => {
+  if (isArchived) {
+    await unarchiveMedicine(medicineName);
+  } else {
+    await archiveMedicine(medicineName);
+  }
+};
 
   return (
     <div className="container mt-4">
@@ -186,19 +248,28 @@ function Medicine({ modelName , sharedState }) {
                 <p>Description: {medicine.description}</p>
                 <p>Active Ingredients: {medicine.activeIngredients}</p>
                 <p>Medicinal Use: {medicine.medicinalUse}</p>
-                <p>Quantity: {medicine.quantity}</p>
-                {modelName === "pharmacist" ? (
-                  <p>Sales: {medicine.sales}</p>
-                ) : null}
                 <p>Prescription Needed: {medicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
-                <p>Archived: {medicine.archive ? 'Yes' : 'No'}</p>
-
+                {modelName === "pharmacist" || modelName ==="administrator" ? (
+                  <div>
+                  <p>Quantity: {medicine.quantity}</p>
+                  <p>Sales: {medicine.sales}</p>
+                  <p>Archived: {medicine.Archive ? 'Yes' : 'No'}</p>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => toggleArchive(medicine.name, medicine.Archive)}
+                  >
+                    {medicine.Archive ? 'Unarchive' : 'Archive'}
+                  </button>
+                  </div>
+                  
+                ) : null}
+                
                 {medicine.image.filename ? (
                   <img src={`${medicine.image.filename}`} alt="Medicine" />
                 ) : (
                   <p>No Image Available</p>
                 )}
-                {modelName === "patient" && medicine.quantity >0 && !medicine.archive &&(
+                {modelName === "patient" && medicine.quantity >0 &&(
                   <button
                     className="btn btn-success"
                     onClick={() => addMedicineToCart(medicine.name)}

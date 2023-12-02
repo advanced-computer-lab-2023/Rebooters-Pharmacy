@@ -42,7 +42,7 @@ const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist 
 // Controller functions for Pharmacist
 const addMedicine = async (req, res) => {
   try {
-    const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded, Archive } = req.body;
+    const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded} = req.body;
     const newMedicine = new Medicine({ name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded });
 
     // Check if an image file was uploaded
@@ -176,4 +176,61 @@ const editMedicine = async (req, res) => {
       }
     };
 
-module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword, viewAllChats, sendMessageToChat, getOutOfStockMedicines, checkWalletBalance }; 
+    const archiveMedicine = async (req,res) => {
+      try {
+        const pharmacistUsername = req.cookies.username; // Get the pharmacist's username from the cookies
+        const { medicineName } = req.body;
+    
+        // Find the medicine by name
+        const medicine = await Medicine.findOne({ name: medicineName });
+    
+        if (!medicine) {
+          return res.status(404).json({ message: 'Medicine not found' });
+          
+        }
+    
+        // Archive the medicine
+        medicine.Archive = true;
+    
+        // Save the updated medicine
+        await medicine.save();
+    
+        
+        res.status(200).json({ message: 'Medicine archived successfully' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error archiving medicine' })
+      }
+    };
+    
+    const unarchiveMedicine = async (req,res) => {
+      try {
+        const pharmacistUsername = req.cookies.username; // Get the pharmacist's username from the cookies
+        const { medicineName } = req.body;
+    
+        // Find the medicine by name
+        const medicine = await Medicine.findOne({ name: medicineName });
+    
+        if (!medicine) {
+          return res.status(404).json({ message: 'Medicine not found' });
+          
+        }
+    
+        // Archive the medicine
+        medicine.Archive = false;
+    
+        // Save the updated medicine
+        await medicine.save();
+    
+        
+        res.status(200).json({ message: 'Medicine unarchived successfully' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error unarchiving medicine' })
+      }
+    };
+
+    
+    
+    
+      module.exports = { viewMedicineInventoryPharmacist, addMedicine, filterMedicineByMedicinalUse, viewMedicineInventory, searchMedicineByName,editMedicine, logout, changePassword, viewAllChats, sendMessageToChat, getOutOfStockMedicines, checkWalletBalance, archiveMedicine, unarchiveMedicine}; 

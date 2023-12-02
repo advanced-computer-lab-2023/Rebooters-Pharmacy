@@ -14,7 +14,7 @@ const filterMedicineByMedicinalUse = async (req, res) => {
     const { medicinalUse } = req.body; // Assuming medicinal use is provided as a query parameter
 
     if (!medicinalUse || medicinalUse.trim() === "") {
-      return res.status(400).json({ message: "Invalid medicinal use query." });
+      return res.status(400).json({ message: "Invalid medicinal use." });
     }
 
     // Use a case-insensitive regular expression to find medicines with matching medicinal use
@@ -31,6 +31,12 @@ const filterMedicineByMedicinalUse = async (req, res) => {
       name: medicine.name,
       price: medicine.price,
       description: medicine.description,
+      activeIngredients: medicine.activeIngredients,
+      medicinalUse: medicine.medicinalUse,
+      PrescriptionNeeded: medicine.PrescriptionNeeded,
+      quantity: medicine.quantity,
+      sales : medicine.sales,
+      archived: medicine.Archive,
       image: medicine.image, // You can include the image data if it's stored in your database
     }));
 
@@ -62,7 +68,7 @@ const viewMedicineInventory = async (req, res) => {
         activeIngredients: medicine.activeIngredients,
         PrescriptionNeeded: medicine.PrescriptionNeeded,
         medicinalUse: medicine.medicinalUse,
-        Archive: medicine.archive
+        Archive: medicine.Archive,
       }));
   
       res.status(200).json(medicinesInfo);
@@ -98,7 +104,7 @@ const viewMedicineInventory = async (req, res) => {
       medicinalUse: medicine.medicinalUse,
       PrescriptionNeeded: medicine.PrescriptionNeeded,
       image : medicine.image,
-      Archive: medicine.archive,
+      Archive: medicine.Archive,
       sales: medicine.sales
       
     }));
