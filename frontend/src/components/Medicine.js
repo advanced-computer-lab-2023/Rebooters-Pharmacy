@@ -118,29 +118,67 @@ function Medicine({ modelName , sharedState }) {
 
   const addMedicineToCart = async (medicineName) => {
     try {
-      const response = await fetch(`/api/${modelName}/addMedicineToCart`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ medicineName }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to add medicine to cart");
-      }
-  
-      const data = await response.json();
-      console.log(data); // Log the response from the server
-      
-      alert("Medicine added to the cart successfully!");
-      
+        const response = await fetch(`/api/${modelName}/addMedicineToCart`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: medicineName }), // Make sure the key matches what the backend expects
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to add medicine to cart`);
+        }
+
+        const data = await response.json();
+
+        if (data.message === 'Prescription is needed for this medicine or the prescription is not recent') {
+            alert('Prescription is needed for this medicine or the prescription is not recent. Cannot add to cart.');
+        } else if (data.message === 'Medicine added to the cart') {
+            alert('Medicine added to the cart successfully!');
+        } else {
+            console.error('Unexpected response from the server:', data);
+            alert('Failed to add medicine to cart. Unexpected response from the server.');
+        }
     } catch (error) {
-      console.error(error);
-      alert("Prescription is needed for this medicine.");
+        console.error(error);
+        alert('Failed to add medicine to cart');
     }
-  };
-  
+};
+
+const viewMedicineAlternatives = async (medicineName) => {
+  try {
+      const response = await fetch(`/api/${modelName}/viewMedicineAlternatives`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: medicineName }),
+      });
+
+      if (!response.ok) {
+          throw new Error("Failed to fetch alternatives");
+      }
+
+      const data = await response.json();
+
+      if (data.message === 'No stock available, alternatives suggested') {
+          // Display alternatives
+          setShowMedicineList(true);
+          setMedicines(data.alternatives);
+      } else if (data.message === 'No alternatives available') {
+          // Handle the case when there are no alternatives
+          setShowMedicineList(false);
+          alert("No alternatives available");
+      } else {
+          console.error('Unexpected response from the server:', data);
+          alert('Failed to fetch alternatives. Unexpected response from the server.');
+      }
+  } catch (error) {
+      console.error(error);
+      alert("Error fetching alternatives");
+  }
+};
 
   // Function to archive a medicine
 const archiveMedicine = async (medicineName) => {
@@ -270,6 +308,17 @@ const toggleArchive = async (medicineName, isArchived) => {
                   >
                     {medicine.Archive ? 'Unarchive' : 'Archive'}
                   </button>
+                )}
+                {medicine.quantity === 0 && (
+                  <div>
+                    <button
+                      className="btn btn-info"
+                      onClick={() => viewMedicineAlternatives(medicine.name)}
+                    >
+                      View Alternatives
+                    </button>
+                    <p>Medicine is out of stock. Click "View Alternatives" to see alternatives.</p>
+                  </div>
                 )}
                 {modelName === "patient" && medicine.quantity >0 &&(
                   <button

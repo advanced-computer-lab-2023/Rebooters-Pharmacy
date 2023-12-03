@@ -4,16 +4,24 @@ const Schema = mongoose.Schema;
 const chatSchema = new Schema({
   patient: {
      type: String, 
-     required: true,
+     default: false,
      },
   pharmacist: { 
      type: String, 
      default: "",
     },
+    doctor: { 
+      type: String, 
+      default: "",
+     },
+     closed: {
+      type: Boolean,
+      default: false,
+    },
   messages: [
     {
       username: String,
-      userType: { type: String, enum: ['patient', 'pharmacist'] },
+      userType: { type: String, enum: ['patient', 'pharmacist','doctor'] },
       content: String,
       timestamp: { type: Date, default: Date.now },
     },

@@ -1,7 +1,4 @@
-// PharmacistChats.js
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const PharmacistChats = () => {
   const [chats, setChats] = useState([]);
@@ -11,8 +8,16 @@ const PharmacistChats = () => {
     // Fetch all chats when the component mounts
     const fetchChats = async () => {
       try {
-        const response = await axios.get('/api/pharmacist/viewAllChats');
-        setChats(response.data);
+        const response = await fetch("/api/pharmacist/viewAllChats", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          const json = await response.json();
+          setChats(json);
+        }
       } catch (error) {
         console.error('Error fetching chats:', error);
       }
@@ -29,14 +34,17 @@ const PharmacistChats = () => {
         return;
       }
 
-      const response = await axios.post('/api/pharmacist/sendMessageToChat', {
-        chatId,
-        messageContent: content,
+      const response = await fetch("/api/pharmacist/sendMessageToChat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatId, messageContent: content }),
       });
-      console.log('Message sent:', response.data);
+      const json = await response.json();
 
       // Refresh the chat list
-      setChats(chats.map((chat) => (chat._id === chatId ? response.data : chat)));
+      setChats(chats.map((chat) => (chat._id === chatId ? json : chat)));
       // Clear the content for the specific chatId
       setMessageContents({ ...messageContents, [chatId]: '' });
     } catch (error) {
@@ -46,7 +54,7 @@ const PharmacistChats = () => {
 
   return (
     <div className='card'>
-      <h2 className='card-header'>All Chats</h2>
+      <h2 className='card-header'>Chats with Patients</h2>
       {chats.length === 0 ? (
         <p>There are no chats</p>
       ) : (

@@ -11,15 +11,23 @@ import Notifications from "../components/PharmacistNotifications"; // Import the
 import SalesReportGenerator from "../components/Repo";
 import Wallet from "../components/Wallet";
 import MedicineDropdown from "../components/filterRepo";
+import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
+import axios from 'axios';
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
+  const [activeChat, setActiveChat] = useState(null);
+  const [chats, setChats] = useState([]);
   const [activeTab, setActiveTab] = useState("home");
+
   useEffect(() => {
     const checkUserType = async () => {
       try {
         const response = await fetch("/pharmacist");
         if (response.status === 401 || response.status === 403) {
+          if (activeChat) {
+            await closeActiveChat(activeChat);
+          }
           navigate("/", { state: { errorMessage: "Access Denied" } });
         }
       } catch (error) {
@@ -27,11 +35,18 @@ const PharmacistHome = () => {
       }
     };
 
-    checkUserType();
-  }, []);
-
+    return () => {
+      // Clean up: Close the active chat if the component is unmounted
+      if (activeChat) {
+        closeActiveChat(activeChat);
+      }
+    };
+  }, [navigate, activeChat]);
   const handleLogout = async () => {
     try {
+      if (activeChat) {
+        await closeActiveChat(activeChat);
+      }
       const response = await fetch("/api/pharmacist/logout", {
         method: "GET",
       });
@@ -45,6 +60,19 @@ const PharmacistHome = () => {
       console.error("Error during logout:", error);
     }
   };
+
+  const closeActiveChat = async (chatId) => {
+    try {
+      await axios.delete(`/api/pharmacist/deleteChat/${chatId}`);
+      console.log('Chat closed:', chatId);
+      setActiveChat(null);
+      // Refresh the chat list by filtering out the closed chat
+      setChats(chats.filter((chat) => chat._id !== chatId));
+    } catch (error) {
+      console.error('Error closing chat:', error);
+    }
+  };
+  
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -131,6 +159,10 @@ const PharmacistHome = () => {
           <Notifications />
         </div>
       )}
+      {activeTab === "chat" && (
+      <div className="card mt-4">
+        <Pharmacist_DoctorChats setChats={setChats} chats={chats} /> {/* Pass setChats and chats to PatientChats */}
+      </div>)}
       {activeTab === "medicines" && (
         <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
       )}

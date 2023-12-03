@@ -10,6 +10,7 @@ const { viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByNam
 const {logout, changePassword} = require('./authController');
 const {checkWalletBalance} = require('./walletController');
 const outOfStockMedicines = []; 
+const mongoose = require('mongoose');
 
 // const dummyOrder3 = new Order({
 //   patient: '651ff56acf374b1cacaa2cc3',
@@ -189,45 +190,56 @@ const changeAmountOfAnItem = async (req, res) => {
 
 const addMedicineToCart = async (req, res) => {
   try {
-    const username = req.cookies.username; // Get the patient's username from the request
-
+    const username = req.cookies.username;
     const patient = await Patient.findOne({ username: username });
 
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    const name = req.body.medicineName; // Assuming you receive the OTC medicine's name in the request body
-
-    const medicine = await Medicine.findOne({ name: name });
+    const Medicinename = req.body.name;
+    const medicine = await Medicine.findOne({ name: Medicinename });
 
     if (!medicine) {
       return res.status(404).json({ message: 'Medicine not found' });
     }
 
-    // Check if the medicine is OTC (over the counter)
-    if (!medicine.PrescriptionNeeded && !medicine.Archive) {
-      // Create a cart item with the medicine's details
+    if (!medicine.PrescriptionNeeded) {
+      // OTC medicine
       const cartItem = {
-        medicine: medicine._id, // Store the medicine's ID
+        medicine: medicine._id,
         name: medicine.name,
         price: medicine.price,
-        quantity: 1, // You can set an initial quantity
+        quantity: 1,
       };
-
-      // Add the cart item to the patient's cart
       patient.cart.push(cartItem);
-
-      // Save the updated patient information to the database
       await patient.save();
+      return res.status(200).json({ message: 'Medicine added to the cart' });
+    }
 
-      res.status(200).json({ message: 'Medicine added to the cart' });
+    // Prescription needed
+    const recentPrescription = await mongoose.connection.db.collection('prescriptions').findOne({
+      patientName: patient.username,
+      'medicationInfo.medicine': medicine.name,
+      date: { $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) } // Within the last week
+    });
+
+    if (recentPrescription) {
+      const cartItem = {
+        medicine: medicine._id,
+        name: medicine.name,
+        price: medicine.price,
+        quantity: 1,
+      };
+      patient.cart.push(cartItem);
+      await patient.save();
+      return res.status(200).json({ message: 'Medicine added to the cart' });
     } else {
-      res.status(400).json({ message: 'Prescription is needed for this medicine or ARCHIVED' });
+      return res.status(200).json({ message: 'Prescription is needed for this medicine or the prescription is not recent' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error adding medicine to the cart' });
+    return res.status(500).json({ message: 'Error adding medicine to the cart', error: error.message });
   }
 };
 
@@ -480,6 +492,7 @@ const startNewChat = async (req, res) => {
     res.status(500).json({ message: 'Error starting a new chat' });
   }
 };
+
 const continueChat = async (req, res) => {
   try {
     const patientUsername = req.cookies.username;
@@ -560,5 +573,57 @@ const deleteChat = async (req, res) => {
   }
 };
 
+const viewMedicineAlternatives = async (req, res) => {
+  try {
+    const username = req.cookies.username;
+
+    const patient = await Patient.findOne({ username: username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const name = req.body.name; 
+
+    const medicine = await Medicine.findOne({ name: name });
+
+    if (!medicine) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    if (medicine.quantity === 0) {
+      // Quantity is 0, find alternatives based on main active ingredient
+      const alternatives = await Medicine.find({
+        activeIngredients: medicine.activeIngredients,
+        quantity: { $gt: 0 }, // Find medicines with quantity greater than 0
+      });
+
+      if (alternatives.length > 0) {
+        const alternativeDetails = alternatives.map(alternative => {
+          return {
+            name: alternative.name,
+            activeIngredients: alternative.activeIngredients,
+            price: alternative.price,
+            description: alternative.description,
+            medicinalUse: alternative.medicinalUse,
+            PrescriptionNeeded: alternative.PrescriptionNeeded,
+            image: alternative.image,
+          };
+        });
+        return res.status(200).json({ message: 'No stock available, alternatives suggested', alternatives: alternativeDetails });
+      } else {
+        return res.status(200).json({ message: 'No alternatives available' });
+      }
+    } else {
+      // Quantity is not 0, indicate that the medicine is not out of stock
+      return res.status(200).json({ message: 'Medicine is not out of stock' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error viewing alternative medicine ' });
+  }
+};
+
 module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, checkWalletBalance,
-  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines}; 
+  viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, 
+startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines,viewMedicineAlternatives}; 

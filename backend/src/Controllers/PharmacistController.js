@@ -206,9 +206,14 @@ const editMedicine = async (req, res) => {
     
         // Find all chats where the pharmacist is either an empty string or matches the pharmacist's username
         const chats = await Chat.find({
-          $or: [
-            { pharmacist: '' },
-            { pharmacist: pharmacistUsername },
+          $and: [
+            {
+              $or: [
+                { pharmacist: '' },
+                { pharmacist: pharmacistUsername },
+              ],
+            },
+            { doctor: "" }, 
           ],
         });
     
@@ -316,13 +321,190 @@ const editMedicine = async (req, res) => {
       }
     };
 
+     const startNewChat = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username;
+        const { messageContent, selectedDoctor } = req.body;
+    
+        console.log('pharmacistUsername:', pharmacistUsername);
+        console.log('messageContent:', messageContent);
+        console.log('selectedDoctor:', selectedDoctor);
+    
+        const pharmacist = await Pharmacist.findOne({ username: pharmacistUsername });
+    
+        if (!pharmacist) {
+          return res.status(404).json({ message: 'Pharmacist not found' });
+        }
+    
+        const newChat = new Chat({
+          pharmacist: pharmacistUsername,
+          doctor: selectedDoctor,
+          messages: [
+            {
+              username: pharmacistUsername,
+              userType: 'pharmacist',
+              content: messageContent,
+            },
+          ],
+        });
+    
+        const savedChat = await newChat.save();
+        // Update the patient's chats array with the new chat ID
+        await pharmacist.save();
+    
+        console.log('savedChat:', savedChat);
+    
+        res.status(201).json({ savedChat });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error starting a new chat' });
+      }
+    };
+    
+
+    const continueChat = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username;
+        const { chatId, messageContent } = req.body;
+    
+        // Fetch the chat from the database
+        const chat = await Chat.findById(chatId);
+    
+        if (!chat) {
+          console.error('Chat not found');
+          return res.status(404).json({ message: 'Chat not found' });
+        }
+    
+        // Check if the pharmacist is the owner of the chat
+        if (chat.pharmacist !== pharmacistUsername) {
+          console.error('Unauthorized to continue this chat');
+          return res.status(403).json({ message: 'Unauthorized to continue this chat' });
+        }
+    
+        // Add the pharmacist's message to the messages array in the chat
+        chat.messages.push({
+          username: pharmacistUsername,
+          userType: 'pharmacist',
+          content: messageContent,
+        });
+    
+        // Save the updated chat to the database
+        const updatedChat = await chat.save();
+    
+        // Notify the clinic about the new message
+        const clinicApiUrl = 'http://localhost:9000'; // Replace with the actual backend URL
+        const clinicEndpoint = '/api/sendMessageToPharmacist';
+        const clinicResponse = await fetch(`${clinicApiUrl}${clinicEndpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chatId: chatId,
+            messageContent: messageContent,
+            pharmacistUsername: pharmacistUsername,
+          }),
+        });
+    
+        if (!clinicResponse.ok) {
+          console.error('Failed to send message to the clinic:', clinicResponse.status, clinicResponse.statusText);
+          throw new Error('Failed to send message to the clinic');
+        }
+    
+        // Respond with the updated chat
+        res.status(200).json(updatedChat);
+      } catch (error) {
+        console.error('Error continuing the chat:', error);
+        res.status(500).json({ message: 'Error continuing the chat' });
+      }
+    };
     
     
+    /*const continueChat = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username;
+        const { chatId, messageContent } = req.body;
     
-          module.exports = {
+        // Find the patient using the username
+        const pharmacist = await Pharmacist.findOne({ username: patientUsername });
+    
+        if (!pharmacist) {
+          return res.status(404).json({ message: 'Pharmacist not found' });
+        }
+    
+        // Find the chat using the provided chat ID
+        const chat = await Chat.findById(chatId);
+    
+        if (!chat) {
+          return res.status(404).json({ message: 'Chat not found' });
+        }
+    
+        // Check if the patient is the owner of the chat
+        if (chat.pharmacist !== pharmacistUsername) {
+          return res.status(403).json({ message: 'Unauthorized to continue this chat' });
+        }
+    
+        // Add the patient's message to the messages array in the chat
+        chat.messages.push({
+          username: pharmacistUsername,
+          userType: 'pharmacist',
+          content: messageContent,
+        });
+    
+        // Save the updated chat to the database
+        const updatedChat = await chat.save();
+    
+        res.status(200).json(updatedChat);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error continuing the chat' });
+      }
+    };*/
+
+    const viewMyChats = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username;
+    
+        // Find all chats where the patient is the same as the logged-in patient's username
+        const chats = await Chat.find({ pharmacist: pharmacistUsername });
+    
+        if (!chats || chats.length === 0) {
+          return res.status(404).json({ message: 'No chats found.' });
+        }
+    
+        res.status(200).json(chats);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching chats' });
+      }
+    };
+
+    const deleteChat = async (req, res) => {
+      try {
+        const { chatId } = req.params;
+    
+        // Find the chat based on the provided chat ID
+        const chat = await Chat.findById(chatId);
+    
+        if (!chat) {
+          return res.status(404).json({ message: 'Chat not found' });
+        }
+    
+        // Update the chat to mark it as closed
+        chat.closed = true;
+        await chat.save();
+    
+        res.status(200).json({ message: 'Chat closed successfully' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error closing chat' });
+      }
+    };
+    
+    
+     module.exports = {
       generateSalesReport,
       filterSalesReport,
-
       viewMedicineInventoryPharmacist,
       addMedicine,
       filterMedicineByMedicinalUse,
@@ -335,7 +517,8 @@ const editMedicine = async (req, res) => {
       sendMessageToChat,
       getOutOfStockMedicines,
       checkWalletBalance,
-      archiveMedicine, unarchiveMedicine};
+      archiveMedicine, unarchiveMedicine
+,startNewChat,continueChat,viewMyChats,deleteChat};
     
 
     

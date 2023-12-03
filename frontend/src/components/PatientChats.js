@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const PatientChats = () => {
   const [newChatContent, setNewChatContent] = useState('');
@@ -12,8 +11,16 @@ const PatientChats = () => {
     // Fetch existing chats when the component mounts
     const fetchChats = async () => {
       try {
-        const response = await axios.get('/api/patient/viewMyChats');
-        setChats(response.data);
+        const response = await fetch("/api/patient/viewMyChats", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          const json = await response.json();
+          setChats(json);
+        }
       } catch (error) {
         console.error('Error fetching chats:', error);
       }
@@ -29,14 +36,18 @@ const PatientChats = () => {
         return;
       }
 
-      const response = await axios.post('/api/patient/startNewChat', {
-        messageContent: newChatContent,
+      const response = await fetch("/api/patient/startNewChat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messageContent: newChatContent }),
       });
-      console.log('New chat created:', response.data);
+      const json = await response.json();
       // Set the active chat to the newly created chat
-      setActiveChat(response.data._id);
+      setActiveChat(json._id);
       // Refresh the chat list
-      setChats([...chats, response.data]);
+      setChats([...chats, json]);
       // Clear the newChatContent and error message
       setNewChatContent('');
       setErrorMessage('');
@@ -52,14 +63,17 @@ const PatientChats = () => {
         setErrorMessage('You have to type something');
         return;
       }
-
-      const response = await axios.post('/api/patient/continueChat', {
-        chatId,
-        messageContent: content,
+      const response = await fetch("/api/patient/continueChat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chatId, messageContent: content}),
       });
-      console.log('Chat continued:', response.data);
+      const json = await response.json();
+
       // Refresh the chat list
-      setChats(chats.map((chat) => (chat._id === chatId ? response.data : chat)));
+      setChats(chats.map((chat) => (chat._id === chatId ? json : chat)));
       // Clear the content for the specific chatId and error message
       setMessageContents({ ...messageContents, [chatId]: '' });
       setErrorMessage('');
@@ -70,8 +84,11 @@ const PatientChats = () => {
 
   const deleteChat = async (chatId) => {
     try {
-      await axios.delete(`/api/patient/deleteChat/${chatId}`);
-      console.log('Chat deleted:', chatId);
+      const response = await fetch(`/api/patient/deleteChat/${chatId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        }, });
       // Reset the active chat to null
       setActiveChat(null);
       // Refresh the chat list by filtering out the deleted chat
