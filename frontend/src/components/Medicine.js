@@ -254,12 +254,6 @@ const toggleArchive = async (medicineName, isArchived) => {
                   <p>Quantity: {medicine.quantity}</p>
                   <p>Sales: {medicine.sales}</p>
                   <p>Archived: {medicine.Archive ? 'Yes' : 'No'}</p>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => toggleArchive(medicine.name, medicine.Archive)}
-                  >
-                    {medicine.Archive ? 'Unarchive' : 'Archive'}
-                  </button>
                   </div>
                   
                 ) : null}
@@ -268,6 +262,14 @@ const toggleArchive = async (medicineName, isArchived) => {
                   <img src={`${medicine.image.filename}`} alt="Medicine" />
                 ) : (
                   <p>No Image Available</p>
+                )}
+                {modelName === "pharmacist" &&(
+                <button
+                    className="btn btn-primary"
+                    onClick={() => toggleArchive(medicine.name, medicine.Archive)}
+                  >
+                    {medicine.Archive ? 'Unarchive' : 'Archive'}
+                  </button>
                 )}
                 {modelName === "patient" && medicine.quantity >0 &&(
                   <button

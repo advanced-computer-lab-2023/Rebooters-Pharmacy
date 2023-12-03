@@ -107,7 +107,7 @@ const AddPatient = () => {
 
   return (
     <div className='register-container'>
-    <div className="card container mt-4">
+    <div className="register-form card container mt-4">
       <div className="register-body card-body">
         <h4>Please fill in these details:</h4>
         {submissionStatus === "success" && (

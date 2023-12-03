@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //import { useHistory } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
+import Image from "../content/images/login-cover.png";
+
 const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -55,6 +57,8 @@ const Login = () => {
       };
     return(
       <div className='container'>
+      <div className='login-cover'>
+      </div>
         <div className="login-card card">
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <div className="title">

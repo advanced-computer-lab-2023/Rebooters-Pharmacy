@@ -41,6 +41,8 @@ header a {
 .btn-default-width{
   width: 150px;
 }
+
+
 /*bootstrap override*/
 .btn{
   border-radius: 0 !important;
@@ -55,3 +57,4 @@ header a {
   background-color: #44bbb2 !important;
   border: #44bbb2 !important;
 }
+

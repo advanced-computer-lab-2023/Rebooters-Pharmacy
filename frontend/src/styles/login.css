@@ -1,17 +1,25 @@
-body {
-    background-image: url('./Screenshot\ \(65\).png');
+
+  .login-cover {
+    background: url('../content/images/login-cover.png') no-repeat center center fixed;
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
   }
-  
+  .container {
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
   .login-card{
       width: 40%;
       height: auto;
       padding: 30px 10px 30px 50px;
       border-radius: 15px;
       background-color: rgb(241, 233, 233); 
-      margin: 100px; 
+      transform: translate(50%, 50%);
   }
   /* .title h2{ to style login word
       

@@ -1,20 +1,20 @@
 /* Add these styles to your existing CSS file or create a new one */
 
 /* Sales Report Container */
-div {
+/* div {
   margin: 20px;
 }
 
 /* Form Container */
-div > div {
+/* div > div {
   margin-bottom: 15px;
 }
 
-/* Select and Button */
+/* Select and Button 
 select, button {
   padding: 8px;
   font-size: 14px;
-}
+} 
 
 /* Table Styles */
 table {
@@ -35,11 +35,11 @@ th {
   background-color: #f2f2f2;
 }
 
-/* Total Sales */
+/* Total Sales
 p {
   font-size: 16px;
   margin-top: 15px;
-}
+} */
 
 /* Success and Error Messages */
 .text-success, .text-danger {
