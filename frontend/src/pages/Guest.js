@@ -1,10 +1,12 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 import PharmacistRegistrationRequest from "../components/PharmacistRequest";
 import PatientRegistrationRequest from "../components/RegisterPatient";
 
 const Guest = () => {
   return (
     <div> 
+    <Navbar/>
       <h2 className="mb-4 mt-4 text-center">Register as a Patient</h2>
       <div className="mt-4">
         <PatientRegistrationRequest />

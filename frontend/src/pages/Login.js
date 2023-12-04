@@ -54,8 +54,9 @@ const Login = () => {
       // Handle successful login, e.g., redirect or update state
       };
     return(
-      <div className='container'>
+     <div>
       <Navbar/>
+       <div className='container'>
       <div className='login-cover'>
       </div>
         <div className="login-card card">
@@ -97,6 +98,7 @@ const Login = () => {
             <a className='center' href='/guest'>CREATE ACCOUNT!</a>
             
             </div>
+        </div>
         </div>
         </div>
     )

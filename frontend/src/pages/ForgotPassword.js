@@ -1,6 +1,8 @@
 import '../styles/forgotpassword.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from '../components/Navbar';
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -28,6 +30,8 @@ const ForgotPassword = () => {
     }
   };
   return (
+    <div>
+      <Navbar/>
     <div className='forgot-container'>
     <div className="card mt-4">
       <div className="body card-body">
@@ -53,6 +57,7 @@ const ForgotPassword = () => {
       </div>
     </div>
     </div>
+      </div>
   );
 };
 export default ForgotPassword;

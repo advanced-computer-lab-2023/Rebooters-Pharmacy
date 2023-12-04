@@ -1,6 +1,8 @@
 import '../styles/otp.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from '../components/Navbar';
+
 const OTP = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -46,6 +48,8 @@ const OTP = () => {
     resetPasswordWithOTP();
   };
   return (
+    <div>
+    <Navbar/>
     <div className="container card m-5 p-5">
       <div className="otp-card">
         <div className="title">
@@ -95,6 +99,7 @@ const OTP = () => {
         </button>
         </div>
       </div>
+    </div>
     </div>
   );  
 };

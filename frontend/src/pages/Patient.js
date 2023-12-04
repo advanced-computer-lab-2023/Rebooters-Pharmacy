@@ -83,87 +83,89 @@ const Patient = () => {
   };
 
   return (
-    <div className="container">
+    <div>
       <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-      <div className="container">
-      <img src={Image} width="60"/>
-        <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+  
+  <img src={Image} width="60"/>
+    <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
+    <button
+      className="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span className="navbar-toggler-icon"></span>
+    </button>
+    <div className="collapse navbar-collapse" id="navbarNav">
+      <ul className="navbar-nav">
+        <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+          <button
+            className="nav-link"
+            onClick={() => handleTabClick("home")}
+          >
+            Home
+          </button>
+        </li>
+        <li
+          className={`nav-item ${
+            activeTab === "medicines" ? "active" : ""
+          }`}
         >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
-              <button
-                className="nav-link"
-                onClick={() => handleTabClick("home")}
-              >
-                Home
-              </button>
-            </li>
-            <li
-              className={`nav-item ${
-                activeTab === "medicines" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-link"
-                onClick={() => handleTabClick("medicines")}
-              >
-                Medicines
-              </button>
-            </li>
-            <li
-              className={`nav-item ${
-                activeTab === "orders" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-link"
-                onClick={() => handleTabClick("orders")}
-              >
-                Orders
-              </button>
-            </li>
-            <li
-              className={`nav-item ${
-                activeTab === "chat" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-link"
-                onClick={() => handleTabClick("chat")}
-              >
-                Chat
-              </button>
-            </li>
-            <li
-              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
-            >
-              <button
-                className="nav-link"
-                onClick={() => handleTabClick("settings")}
-              >
-                Settings
-              </button>
-            </li>
-            <li className="nav-item">
-              <button className="nav-link" onClick={handleLogout}>
-                Logout
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+          <button
+            className="nav-link"
+            onClick={() => handleTabClick("medicines")}
+          >
+            Medicines
+          </button>
+        </li>
+        <li
+          className={`nav-item ${
+            activeTab === "orders" ? "active" : ""
+          }`}
+        >
+          <button
+            className="nav-link"
+            onClick={() => handleTabClick("orders")}
+          >
+            Orders
+          </button>
+        </li>
+        <li
+          className={`nav-item ${
+            activeTab === "chat" ? "active" : ""
+          }`}
+        >
+          <button
+            className="nav-link"
+            onClick={() => handleTabClick("chat")}
+          >
+            Chat
+          </button>
+        </li>
+        <li
+          className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+        >
+          <button
+            className="nav-link"
+            onClick={() => handleTabClick("settings")}
+          >
+            Settings
+          </button>
+        </li>
+        <li className="nav-item">
+          <button className="nav-link" onClick={handleLogout}>
+            Logout
+          </button>
+        </li>
+      </ul>
+    </div>
+  
+</nav>
+    <div className="container">
+      
       <h1 className="mb-4 text-center">Patient Dashboard</h1>
       {activeTab === "settings" && (
       <div className="card mt-4">
@@ -189,6 +191,7 @@ const Patient = () => {
       <div className="card mt-4">
         <ViewAndCancelOrder />
       </div>)}
+    </div>
     </div>
   );
 };

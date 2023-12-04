@@ -50,7 +50,7 @@ function Administrator() {
         console.error(error);
       }
     };
-
+console.log(checkUserType());
     checkUserType();
   }, []);
 
@@ -326,21 +326,8 @@ function Administrator() {
   };
 
   return (
-    <div className="container mt-4">
-      {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-           
-            
-           
-            
-           
-            
-          </ul>
-        </div>
-      </nav> */}
-      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-      <div className="container">
+    <div>
+          <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
       <img src={Image} width="60"/>
         <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
         <button
@@ -417,8 +404,8 @@ function Administrator() {
             </li>
           </ul>
         </div>
-      </div>
     </nav>
+    <div className="container mt-4">
       <h1 className="mb-4 text-center">Administrator Dashboard</h1>
       {activeTab === "settings" && (
         <div className="card mt-4">
@@ -725,6 +712,7 @@ function Administrator() {
       {activeTab === "medicines" && (
         <div className="mt-4">{<Medicine modelName="administrator" />}</div>
       )}
+    </div>
     </div>
   );
 }

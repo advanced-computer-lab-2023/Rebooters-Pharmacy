@@ -86,9 +86,8 @@ const PharmacistHome = () => {
   };
 
   return (
-    <div className="container">
-      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-      <div className="container">
+    <div>
+         <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
       <img src={Image} width="60"/>
         <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
         <button
@@ -153,8 +152,8 @@ const PharmacistHome = () => {
             </li>
           </ul>
         </div>
-      </div>
     </nav>
+    <div className="container">
       <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
       {activeTab === "settings" && (
         <div className="card mt-4">
@@ -178,7 +177,7 @@ const PharmacistHome = () => {
       )}
       {activeTab === "chat" && (
       <div className="card mt-4">
-        <Pharmacist_DoctorChats setChats={setChats} chats={chats} /> {/* Pass setChats and chats to PatientChats */}
+        <Pharmacist_DoctorChats setChats={setChats} chats={chats} /> 
       </div>)}
       {activeTab === "medicines" && (
         <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
@@ -206,9 +205,7 @@ const PharmacistHome = () => {
           <MedicineDropdown handleFilter={handleFilter} />
         </div>
       )}
-      {/* <div className="mt-4">
-          <ViewMedicineQuantitySales />
-        </div> */}
+    </div>
     </div>
   );
 };

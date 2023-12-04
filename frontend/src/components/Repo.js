@@ -29,23 +29,17 @@ const SalesReportGenerator = ({userType}) => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.salesData.length === 0) {
-          // No sales data for the chosen month
-          setSalesData([]);
-          setTotalSales(null);
-          setMessage('No sales data available for the specified month');
-          setError('');
-        } else {
-          // Sales data is available
           setSalesData(data.salesData);
           setTotalSales(data.totalSales);
           setMessage('');
           setError('');
         }
-      } else {
+      else {
         const errorData = await response.json();
-        setError(errorData.error);
+        setError('No sales data available for the specified month.');
         setMessage('');
+        setSalesData([]);
+        setTotalSales(null);
       }
     } catch (error) {
       setError('An error occurred while generating the sales report');
@@ -64,7 +58,7 @@ const SalesReportGenerator = ({userType}) => {
             <option key={index} value={month}>{month}</option>
           ))}
         </select>
-        <button onClick={handleGenerateReport}>Generate Report</button>
+        <button className='btn btn-primary' onClick={handleGenerateReport}>Generate Report</button>
       </div>
       {message && <p className="text-success">{message}</p>}
       {error && <p className="text-danger">{error}</p>}

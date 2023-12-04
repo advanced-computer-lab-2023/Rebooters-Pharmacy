@@ -6,7 +6,6 @@ import Image from "../content/images/ELHANNY-LOGO.png";
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-      <div className="container">
       <img src={Image} width="60"/>
         <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
         <button
@@ -36,7 +35,6 @@ const Navbar = () => {
             </li> */}
           </ul>
         </div>
-      </div>
     </nav>
   );
 };

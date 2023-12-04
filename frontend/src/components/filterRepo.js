@@ -68,7 +68,7 @@ const MedicineDropdown = ({ handleFilter }) => {
 
       <br />
 
-      <button onClick={handleFilterButtonClick}>Filter</button>
+      <button className='btn btn-primary' onClick={handleFilterButtonClick}>Filter</button>
 
       {error && <div style={{ color: 'red' }}>{error}</div>}
 
