@@ -13,6 +13,7 @@ function Medicine({ modelName , sharedState }) {
   const [selectedAlternativeMedicine, setSelectedAlternativeMedicine] = useState(null);
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [medicineAlerts, setMedicineAlerts] = useState({});
+  const [currentMedicine, setCurrentMedicine] = useState(null);
 
 
  
@@ -174,9 +175,9 @@ const viewMedicineAlternatives = async (medicineName) => {
     if (data.message === 'No stock available, alternatives suggested') {
       setAlternativeMedicines(data.alternatives);
       setSelectedAlternativeMedicine(null);
+      setCurrentMedicine(medicineName); 
     } else if (data.message === 'No alternatives available') {
       setMedicineAlerts({
-        ...medicineAlerts,
         [medicineName]: (
           <Alert key={medicineName} variant="danger">
             No alternatives available for {medicineName}.
@@ -186,10 +187,9 @@ const viewMedicineAlternatives = async (medicineName) => {
     } else {
       console.error('Unexpected response from the server:', data);
       setMedicineAlerts({
-        ...medicineAlerts,
         [medicineName]: (
           <Alert key={medicineName} variant="danger">
-            Failed to fetch alternatives. Unexpected response from the server.
+            No alternatives available for {medicineName}.
           </Alert>
         ),
       });
@@ -197,7 +197,6 @@ const viewMedicineAlternatives = async (medicineName) => {
   } catch (error) {
     console.error(error);
     setMedicineAlerts({
-      ...medicineAlerts,
       [medicineName]: (
         <Alert key={medicineName} variant="danger">
           Error fetching alternatives
@@ -332,6 +331,7 @@ const toggleAlternatives = () => {
         <button className="btn btn-primary" onClick={toggleViewMedicines}>
           {showMedicineList ? "Hide Medicine List" : "View All Medicines"}
         </button>
+        
         {showMedicineList && (
           <ul className="list-group card">
             {medicines.map(
@@ -366,7 +366,9 @@ const toggleAlternatives = () => {
                       <p>No Image Available</p>
                     )}
                     {/* Display the Bootstrap Alert */}
-        
+                    <div className="mb-3">
+                              {medicineAlerts[medicine.name]}
+                            </div>
                     
                     {modelName === "pharmacist" && (
                       <button
@@ -390,40 +392,51 @@ const toggleAlternatives = () => {
                           Medicine is out of stock. Click "View Alternatives" to
                           see alternatives.
                         </p>
-                         {Object.values(medicineAlerts).map((alert) => (
-                        <div key={alert.key} className="mb-3">
-                          {alert}
-                        </div>
-                      ))}
-                        {alternativeMedicines.length > 0 && (
-                    <div>
-                      <p>Select alternative medicine to add to cart:</p>
-                      <ul>
-                        {alternativeMedicines.map((alternative, index) => (
-                          <li key={index}>
-                            {alternative.name}{" "}
-                            <button
-                              className="btn btn-success"
-                              onClick={() => setSelectedAlternativeMedicine(alternative)}
-                            >
-                              Add to Cart
-                            </button>
-                          </li>
-                        ))}
-                        </ul>
-                        {selectedAlternativeMedicine && (
-                          <button
-                            className="btn btn-success"
-                            onClick={addAlternativeToCart}
-                          >
-                            Add {selectedAlternativeMedicine.name} to Cart
-                          </button>
-                        )}
+                        {currentMedicine === medicine.name &&
+                          
+                            <div className="mb-3">
+                              {medicineAlerts[medicine.name]}
+                            </div>
+                          }
+                        {currentMedicine === medicine.name &&
+                          alternativeMedicines.length === 0 && (
+                            <div>
+                              <p>No alternatives available for {medicine.name}.</p>
+                            </div>
+                          )}
+                        {currentMedicine === medicine.name &&
+                          alternativeMedicines.length > 0 && (
+                            <div>
+                              <p>Select alternative medicine to add to cart:</p>
+                              <ul>
+                                {alternativeMedicines.map((alternative, index) => (
+                                  <li key={index}>
+                                    {alternative.name}{" "}
+                                    <button
+                                      className="btn btn-success"
+                                      onClick={() =>
+                                        setSelectedAlternativeMedicine(alternative)
+                                      }
+                                    >
+                                      Add to Cart
+                                    </button>
+                                  </li>
+                                ))}
+                              </ul>
+                              {selectedAlternativeMedicine && (
+                                <button
+                                  className="btn btn-success"
+                                  onClick={addAlternativeToCart}
+                                >
+                                  Add {selectedAlternativeMedicine.name} to Cart
+                                </button>
+                              )}
+                            </div>
+                          )}
                       </div>
                     )}
- 
-                      </div>
-                    )}
+
+
                     { modelName === "patient" && medicine.quantity>0 && (
                       <button
                         className="btn btn-success"
