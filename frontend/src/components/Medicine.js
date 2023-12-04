@@ -14,6 +14,8 @@ function Medicine({ modelName , sharedState }) {
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [medicineAlerts, setMedicineAlerts] = useState({});
   const [currentMedicine, setCurrentMedicine] = useState(null);
+  const [medicineCartMessages, setMedicineCartMessages] = useState({});
+  const [cartMessage, setCartMessage] = useState(null);
 
 
  
@@ -141,18 +143,40 @@ function Medicine({ modelName , sharedState }) {
         }
 
         const data = await response.json();
+        setMedicineCartMessages({
+          ...medicineCartMessages,
+          [medicineName]: {
+            variant: data.message === 'Medicine added to the cart' ? 'success' : 'danger',
+            message: data.message,
+          },
+        });
 
         if (data.message === 'Prescription is needed for this medicine or the prescription is not recent') {
-            alert('Prescription is needed for this medicine or the prescription is not recent. Cannot add to cart.');
+          setCartMessage({
+            variant: 'danger',
+            message: 'Prescription is needed for this medicine or the prescription is not recent. Cannot add to cart.',
+          });
         } else if (data.message === 'Medicine added to the cart') {
-            alert('Medicine added to the cart successfully!');
+          setCartMessage({
+            variant: 'success',
+            message: `Medicine ${medicineName} added to the cart successfully!`,
+          });
         } else {
             console.error('Unexpected response from the server:', data);
-            alert('Failed to add medicine to cart. Unexpected response from the server.');
+            setCartMessage({
+              variant: 'danger',
+              message: `Failed to add ${medicineName} to cart. Unexpected response from the server.`,
+            });
         }
     } catch (error) {
         console.error(error);
-        alert('Failed to add medicine to cart');
+        setMedicineCartMessages({
+          ...medicineCartMessages,
+          [medicineName]: {
+            variant: 'danger',
+            message: 'Failed to add medicine to cart',
+          },
+        });
     }
 };
 
@@ -326,7 +350,7 @@ const toggleAlternatives = () => {
           </div>
         )}
         
-        
+     
         <h2>Medicine List</h2>
         <button className="btn btn-primary" onClick={toggleViewMedicines}>
           {showMedicineList ? "Hide Medicine List" : "View All Medicines"}
@@ -436,7 +460,13 @@ const toggleAlternatives = () => {
                       </div>
                     )}
 
-
+                {medicineCartMessages[medicine.name] && (
+                              <div className="mb-3">
+                                <Alert variant={medicineCartMessages[medicine.name].variant}>
+                                  {medicineCartMessages[medicine.name].message}
+                                </Alert>
+                              </div>
+                            )}
                     { modelName === "patient" && medicine.quantity>0 && (
                       <button
                         className="btn btn-success"
@@ -444,6 +474,7 @@ const toggleAlternatives = () => {
                       >
                         Add to Cart
                       </button>
+                      
                     )}
                   </li>
                 )
