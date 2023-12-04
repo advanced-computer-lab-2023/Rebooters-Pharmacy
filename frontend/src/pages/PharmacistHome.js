@@ -37,6 +37,8 @@ const PharmacistHome = () => {
       }
     };
 
+    checkUserType();
+
     return () => {
       // Clean up: Close the active chat if the component is unmounted
       if (activeChat) {

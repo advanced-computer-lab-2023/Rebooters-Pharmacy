@@ -17,7 +17,7 @@ router.get('/checkWalletBalance', requireAuth, checkWalletBalance);
 
 router.post('/changePassword', requireAuth, changePassword);
 
-router.get('/viewMedicineInventory', requireAuth, async (req, res) => {
+/*router.get('/viewMedicineInventory', requireAuth, async (req, res) => {
   try {
     // Fetch medicines with quantity greater than 0 and Archive is false
     const medicines = await Medicine.find({ quantity: { $gt: 0 }, Archive: false });
@@ -45,7 +45,9 @@ router.get('/viewMedicineInventory', requireAuth, async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'Error fetching available medicine inventory' });
   }
-});
+});*/
+
+router.get('/viewMedicineInventory', requireAuth, viewMedicineInventory);
 
 router.post('/searchMedicineByName', requireAuth, async (req, res) => {
   try {
