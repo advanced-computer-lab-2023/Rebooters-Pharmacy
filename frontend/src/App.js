@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import OTP from "./pages/OTP";
 import ForgotPassword from "./pages/ForgotPassword";
 
+
 function App() {
   return (
     <div className="App">

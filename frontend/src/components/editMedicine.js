@@ -13,11 +13,13 @@ const EditMedicine = () => {
   });
 
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const [medicineName, setMedicineName] = useState("");
   const [searchedMedicine, setSearchedMedicine] = useState([]); // To store the searched medicine
   const [updatedMedicine, setUpdatedMedicine] = useState(null);
   const [image, setImage] = useState(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   
   const handleImageChange = (e) => {
@@ -34,8 +36,16 @@ const EditMedicine = () => {
     });
   };
 
+  const toggleSearchResults = () => {
+    setShowSearchResults((prevShowSearchResults) => !prevShowSearchResults);
+  };
+
   const handleSearchMedicine = async () => {
     try {
+      if (!medicineName) {
+        setError("Please fill in the Medicine Name field.");
+        return;
+      }
       const response = await fetch(`/api/pharmacist/searchMedicineByName`, {
         method: "POST",
         headers: {
@@ -50,11 +60,16 @@ const EditMedicine = () => {
           const foundMedicine = data;
           setSearchedMedicine(foundMedicine); // Store the searched medicine
           setMedicineToUpdate(foundMedicine); // Populate the form fields
+          toggleSearchResults();
         } else {
-          console.error("Medicine not found");
+          setError("Medicine not found");
+          setSearchedMedicine([]); 
+          toggleSearchResults();
         }
       } else {
-        console.error("Error searching for medicine");
+        setError("Medicine not found");
+          setSearchedMedicine([]); 
+          toggleSearchResults();
       }
     } catch (error) {
       console.error(
@@ -65,15 +80,38 @@ const EditMedicine = () => {
   };
 
   const handleEditMedicine = async () => {
+    let errorMessage = "";
     if (
       !medicineToUpdate.name ||
       !medicineToUpdate.activeIngredients ||
-      !medicineToUpdate.price ||
+      medicineToUpdate.price < 0 ||
       !medicineToUpdate.description ||
       !medicineToUpdate.medicinalUse ||
-      !medicineToUpdate.quantity 
+      medicineToUpdate.quantity < 0 // Check for negative quantity
     ) {
-      setError("Please fill in all fields.");
+      setError("Please fill in all fields and ensure that price and quantity are not negative.");
+      setMessage("");
+      return;
+    }
+    else if (!medicineToUpdate.name ) {
+      errorMessage = "Please fill the name field.";
+    }else if (!medicineToUpdate.activeIngredients){
+      errorMessage = "Please fill the active ingredient field.";
+    }
+     else if (medicineToUpdate.price <= 0 || !medicineToUpdate.price) {
+      errorMessage = "Please fill the price field and ensure Price cannot be a negative number and cannot be zero.";
+    } else if (!medicineToUpdate.description || !medicineToUpdate.medicinalUse) {
+      errorMessage = "Please fill the description field.";
+    } else if ( !medicineToUpdate.medicinalUse){
+      errorMessage = "Please fill the medical use field.";
+    }
+    else if (medicineToUpdate.quantity <= 0 || !medicineToUpdate.quantity) {
+      errorMessage = "Quantity cannot be a negative number and cannot be zero.";
+    }
+    
+    if (errorMessage) {
+      setError(errorMessage);
+      setMessage("");
       return;
     }
 
@@ -136,16 +174,17 @@ const EditMedicine = () => {
             name="name"
             value={medicineName}
             onChange={(e) => setMedicineName(e.target.value)}
+            placeholder="Type a Name"
           />
           <button
             className="btn btn-primary mt-2"
-            onClick={handleSearchMedicine}
+            onClick={toggleSearchResults}
           >
             Search Medicine
           </button>
         </div>
         {/* Display searched medicine details */}
-        {searchedMedicine &&
+        {showSearchResults &&searchedMedicine &&
           searchedMedicine.map((medicine) => (
             <div>
               <p>Name: {medicine.name}</p>
@@ -176,6 +215,7 @@ const EditMedicine = () => {
             name="name"
             value={medicineToUpdate.name}
             onChange={handleInputChange}
+            placeholder="Type a Name"
           />
         </div>
         <div className="mb-3">
@@ -189,6 +229,8 @@ const EditMedicine = () => {
             name="activeIngredients"
             value={medicineToUpdate.activeIngredients}
             onChange={handleInputChange}
+            placeholder="Type an Active Ingredient"
+
           />
         </div>
 
@@ -201,13 +243,15 @@ const EditMedicine = () => {
             className="form-control"
             id="price"
             name="price"
-            value={medicineToUpdate.price}
+            value={medicineToUpdate.price === 0 ? '' : medicineToUpdate.price}
             onChange={handleInputChange}
+            placeholder="Type a price"
+
           />
         </div>
         <div className="mb-3">
           <label htmlFor="medicinalUse" className="form-label">
-            Medicinal Use:
+            Medical Use:
           </label>
           <input
             type="text"
@@ -216,6 +260,8 @@ const EditMedicine = () => {
             name="medicinalUse"
             value={medicineToUpdate.medicinalUse}
             onChange={handleInputChange}
+            placeholder="Type a medical use"
+
           />
         </div>
         <div className="mb-3">
@@ -229,6 +275,8 @@ const EditMedicine = () => {
             name="description"
             value={medicineToUpdate.description}
             onChange={handleInputChange}
+            placeholder="Type a description"
+
           />
         </div>
         <div className="mb-3">
@@ -240,8 +288,10 @@ const EditMedicine = () => {
             className="form-control"
             id="quantity"
             name="quantity"
-            value={medicineToUpdate.quantity}
+            value={medicineToUpdate.quantity === 0 ? '' : medicineToUpdate.quantity}
             onChange={handleInputChange}
+            placeholder="Type a number"
+
           />
         </div>
         <div className="mb-3">
@@ -255,6 +305,7 @@ const EditMedicine = () => {
             name="PrescriptionNeeded"
             value={medicineToUpdate.PrescriptionNeeded} // Convert boolean to string
             onChange={handleInputChange}
+            placeholder="Type True or False"
           />
         </div>
         <div className="mb-3">
@@ -268,6 +319,8 @@ const EditMedicine = () => {
             name="Archive"
             value={medicineToUpdate.Archive} 
             onChange={handleInputChange}
+            placeholder="Type True or False"
+
           />
         </div>
         <div className="mb-3">

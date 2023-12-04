@@ -4,26 +4,36 @@ const PharmacistChats = () => {
   const [chats, setChats] = useState([]);
   const [messageContents, setMessageContents] = useState({});
 
-  useEffect(() => {
-    // Fetch all chats when the component mounts
-    const fetchChats = async () => {
-      try {
-        const response = await fetch("/api/pharmacist/viewAllChats", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.ok) {
-          const json = await response.json();
-          setChats(json);
-        }
-      } catch (error) {
-        console.error('Error fetching chats:', error);
+  const fetchChats = async () => {
+    try {
+      const response = await fetch("/api/pharmacist/viewAllChats", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const json = await response.json();
+        setChats(json);
       }
-    };
+      else{
+        setChats([]);
+      }
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchChats();
+
+    // Poll for new messages every 2 seconds
+    const intervalId = setInterval(fetchChats, 2000);
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   const sendMessageToChat = async (chatId) => {
@@ -82,7 +92,10 @@ const PharmacistChats = () => {
                 }
               ></textarea>
               <br />
-              <button className='btn btn-primary' onClick={() => sendMessageToChat(chat._id)}>
+              <button
+                className='btn btn-primary'
+                onClick={() => sendMessageToChat(chat._id)}
+              >
                 Send
               </button>
             </div>

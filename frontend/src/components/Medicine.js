@@ -1,11 +1,15 @@
 import React, { useState,useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Alert } from "react-bootstrap";
 
 function Medicine({ modelName , sharedState }) {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [medicinalUse, setMedicinalUse] = useState("");
   const [showMedicineList, setShowMedicineList] = useState(false);
+  const [alternativeMessage, setAlternativeMessage] = useState(null);
+  const [archiveMessages, setArchiveMessages] = useState({});
+
 
  
   const fetchData = async () => {
@@ -46,62 +50,64 @@ function Medicine({ modelName , sharedState }) {
   };
 
   const searchMedicineByName = async () => {
-  try {
-    if (searchTerm.trim() === "") {
-      alert("Please fill in the search field.");
-      return;
-    }
-
-    const response = await fetch(`/api/${modelName}/searchMedicineByName`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ medicineName: searchTerm }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        const data = await response.json();
-        if (data.message === 'Medicine is not available.') {
-          alert("Medicine is not available.");
+    try {
+      if (searchTerm.trim() === "") {
+        // Use Bootstrap Alert for displaying the message
+        setAlternativeMessage(<Alert variant="danger">Please fill in the search field.</Alert>);
+        return;
+      }
+  
+      const response = await fetch(`/api/${modelName}/searchMedicineByName`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ medicineName: searchTerm }),
+      });
+  
+      if (!response.ok) {
+        if (response.status === 404) {
+          const data = await response.json();
+          if (data.message === 'Medicine is not available.') {
+            // Use Bootstrap Alert for displaying the message
+            setAlternativeMessage(<Alert variant="danger">Medicine is not available.</Alert>);
+          } else {
+            // Use Bootstrap Alert for displaying the message
+            setAlternativeMessage(<Alert variant="danger">{`No medicine found with the name "${searchTerm}".`}</Alert>);
+          }
         } else {
-          alert(`No medicine found with the name "${searchTerm}".`);
+          throw new Error("Failed to fetch data");
         }
       } else {
-        throw new Error("Failed to fetch data");
+        const data = await response.json();
+        setShowMedicineList(true);
+        setSearchTerm("");
+        setMedicines(data);
       }
-    } else {
-      const data = await response.json();
-      setShowMedicineList(true);
-      setSearchTerm("");
-
-      setMedicines(data);
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+  };
 
 
   const filterMedicineByMedicinalUse = async () => {
     try {
       if (medicinalUse === "") {
-        alert("Please fill in the filter field.");
+        // Use Bootstrap Alert for displaying the message
+        setAlternativeMessage(<Alert variant="danger">Please fill in the filter field.</Alert>);
         return;
       }
-      const response = await fetch( `/api/${modelName}/filterMedicineByMedicinalUse`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ medicinalUse }),
-        }
-      );
+      const response = await fetch(`/api/${modelName}/filterMedicineByMedicinalUse`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ medicinalUse }),
+      });
       if (!response.ok) {
         if (response.status === 404) {
-          alert(`No medical use found with the name "${medicinalUse}".`);
+          // Use Bootstrap Alert for displaying the message
+          setAlternativeMessage(<Alert variant="danger">{`No medical use found with the name "${medicinalUse}".`}</Alert>);
         } else {
           throw new Error("Failed to fetch data");
         }
@@ -115,7 +121,6 @@ function Medicine({ modelName , sharedState }) {
       console.error(error);
     }
   };
-
   const addMedicineToCart = async (medicineName) => {
     try {
         const response = await fetch(`/api/${modelName}/addMedicineToCart`, {
@@ -197,10 +202,10 @@ const archiveMedicine = async (medicineName) => {
 
     // Update the local state with the updated medicine list
     fetchData();
-    alert("Medicine archived successfully!");
+    setArchiveMessages({ ...archiveMessages, [medicineName]: { variant: "success", message: "Medicine archived successfully!" } });
   } catch (error) {
     console.error(error);
-    alert("Error archiving medicine");
+    setArchiveMessages({ ...archiveMessages, [medicineName]: { variant: "danger", message: "Error archiving medicine" } });
   }
 };
 
@@ -221,10 +226,10 @@ const unarchiveMedicine = async (medicineName) => {
 
     // Update the local state with the updated medicine list
     fetchData();
-    alert("Medicine unarchived successfully!");
+    setArchiveMessages({ ...archiveMessages, [medicineName]: { variant: "success", message: "Medicine unarchived successfully!" } });
   } catch (error) {
     console.error(error);
-    alert("Error unarchiving medicine");
+    setArchiveMessages({ ...archiveMessages, [medicineName]: { variant: "danger", message: "Error unarchiving medicine" } });
   }
 };
 
@@ -236,7 +241,7 @@ const toggleArchive = async (medicineName, isArchived) => {
   }
 };
 
-  return (
+   return (
     <div className="container mt-4">
       <div className="card">
         <h1 className="mb-4">Medicine Inventory</h1>
@@ -245,7 +250,11 @@ const toggleArchive = async (medicineName, isArchived) => {
             type="text"
             placeholder="Search by Name"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              // Reset alternativeMessage when the user types in the search field
+              setAlternativeMessage(null);
+              setSearchTerm(e.target.value);
+            }}
             className="form-control d-inline w-50"
           />
           <button
@@ -258,9 +267,13 @@ const toggleArchive = async (medicineName, isArchived) => {
         <div className="mb-3">
           <input
             type="text"
-            placeholder="Filter by Medicinal Use"
+            placeholder="Filter by Medical Use"
             value={medicinalUse}
-            onChange={(e) => setMedicinalUse(e.target.value)}
+            onChange={(e) => {
+              // Reset alternativeMessage when the user types in the filter field
+              setAlternativeMessage(null);
+              setMedicinalUse(e.target.value);
+            }}
             className="form-control d-inline w-50"
           />
           <button
@@ -273,65 +286,90 @@ const toggleArchive = async (medicineName, isArchived) => {
       </div>
       <hr />
       <div>
+        {/* Display the Bootstrap Alert */}
+        {alternativeMessage && (
+          <div className="mb-3">
+            {alternativeMessage}
+          </div>
+        )}
+        
         <h2>Medicine List</h2>
         <button className="btn btn-primary" onClick={toggleViewMedicines}>
           {showMedicineList ? "Hide Medicine List" : "View All Medicines"}
         </button>
         {showMedicineList && (
           <ul className="list-group card">
-            {medicines.map((medicine, index) => (
-              <li key={index} className="list-group-item">
-                <h3>{medicine.name}</h3>
-                <p>Price: {medicine.price}</p>
-                <p>Description: {medicine.description}</p>
-                <p>Active Ingredients: {medicine.activeIngredients}</p>
-                <p>Medicinal Use: {medicine.medicinalUse}</p>
-                <p>Prescription Needed: {medicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
-                {modelName === "pharmacist" || modelName ==="administrator" ? (
-                  <div>
-                  <p>Quantity: {medicine.quantity}</p>
-                  <p>Sales: {medicine.sales}</p>
-                  <p>Archived: {medicine.Archive ? 'Yes' : 'No'}</p>
-                  </div>
-                  
-                ) : null}
-                
-                {medicine.image.filename ? (
-                  <img src={`${medicine.image.filename}`} alt="Medicine" />
-                ) : (
-                  <p>No Image Available</p>
-                )}
-                {modelName === "pharmacist" &&(
-                <button
-                    className="btn btn-primary"
-                    onClick={() => toggleArchive(medicine.name, medicine.Archive)}
-                  >
-                    {medicine.Archive ? 'Unarchive' : 'Archive'}
-                  </button>
-                )}
-                {medicine.quantity === 0 && (
-                  <div>
-                    <button
-                      className="btn btn-info"
-                      onClick={() => viewMedicineAlternatives(medicine.name)}
-                    >
-                      View Alternatives
-                    </button>
-                    <p>Medicine is out of stock. Click "View Alternatives" to see alternatives.</p>
-                  </div>
-                )}
-                {modelName === "patient" && medicine.quantity >0 &&(
-                  <button
-                    className="btn btn-success"
-                    onClick={() => addMedicineToCart(medicine.name)}
-                  >
-                    Add to Cart
-                  </button>
-                )}
-              </li>
-            ))}
+            {medicines.map(
+              (medicine, index) =>
+                // Add the condition to skip rendering archived medicines for patients
+                !(modelName === "patient" && medicine.Archive) && (
+                  <li key={index} className="list-group-item">
+                    <h3>{medicine.name}</h3>
+                    <p>Price: {medicine.price}</p>
+                    <p>Description: {medicine.description}</p>
+                    <p>Active Ingredients: {medicine.activeIngredients}</p>
+                    <p>Medicinal Use: {medicine.medicinalUse}</p>
+                    <p>
+                      Prescription Needed:{" "}
+                      {medicine.PrescriptionNeeded ? "Yes" : "No"}
+                    </p>
+                    {modelName === "pharmacist" ||
+                    modelName === "administrator" ? (
+                      <div>
+                        <p>Quantity: {medicine.quantity}</p>
+                        <p>Sales: {medicine.sales}</p>
+                        <p>Archived: {medicine.Archive ? "Yes" : "No"}</p>
+                      </div>
+                    ) : null}
+
+                    {medicine.image.filename ? (
+                      <img
+                        src={`${medicine.image.filename}`}
+                        alt="Medicine"
+                      />
+                    ) : (
+                      <p>No Image Available</p>
+                    )}
+                    {modelName === "pharmacist" && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          toggleArchive(medicine.name, medicine.Archive)
+                        }
+                      >
+                        {medicine.Archive ? "Unarchive" : "Archive"}
+                      </button>
+                    )}
+                    {modelName === "patient" && medicine.quantity === 0 && (
+                      <div>
+                        <button
+                          className="btn btn-info"
+                          onClick={() =>
+                            viewMedicineAlternatives(medicine.name)
+                          }
+                        >
+                          View Alternatives
+                        </button>
+                        <p>
+                          Medicine is out of stock. Click "View Alternatives" to
+                          see alternatives.
+                        </p>
+                      </div>
+                    )}
+                    {modelName === "patient" && medicine.quantity>0 && (
+                      <button
+                        className="btn btn-success"
+                        onClick={() => addMedicineToCart(medicine.name)}
+                      >
+                        Add to Cart
+                      </button>
+                    )}
+                  </li>
+                )
+            )}
           </ul>
         )}
+        
       </div>
     </div>
   );

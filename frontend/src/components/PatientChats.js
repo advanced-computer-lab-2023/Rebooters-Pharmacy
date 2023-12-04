@@ -1,32 +1,42 @@
 import React, { useState, useEffect } from 'react';
 
+
 const PatientChats = () => {
   const [newChatContent, setNewChatContent] = useState('');
   const [messageContents, setMessageContents] = useState({});
   const [chats, setChats] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [pollingInterval, setPollingInterval] = useState(null); 
+
+  const fetchChats = async () => {
+    try {
+      const response = await fetch("/api/patient/viewMyChats", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const json = await response.json();
+        setChats(json);
+      }
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+    }
+  };
 
   useEffect(() => {
-    // Fetch existing chats when the component mounts
-    const fetchChats = async () => {
-      try {
-        const response = await fetch("/api/patient/viewMyChats", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.ok) {
-          const json = await response.json();
-          setChats(json);
-        }
-      } catch (error) {
-        console.error('Error fetching chats:', error);
-      }
-    };
 
     fetchChats();
+
+    // Poll for new messages every 2 seconds
+    const pollingInterval = setInterval(fetchChats, 2000);
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(pollingInterval);
+    };
   }, []);
 
   const startNewChat = async () => {
@@ -83,20 +93,28 @@ const PatientChats = () => {
   };
 
   const deleteChat = async (chatId) => {
-    try {
-      const response = await fetch(`/api/patient/deleteChat/${chatId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        }, });
+  try {
+    const response = await fetch(`/api/patient/deleteChat/${chatId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
       // Reset the active chat to null
       setActiveChat(null);
-      // Refresh the chat list by filtering out the deleted chat
-      setChats(chats.filter((chat) => chat._id !== chatId));
-    } catch (error) {
-      console.error('Error deleting chat:', error);
+
+      // Remove the closed chat from the frontend
+      setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
+    } else {
+      console.error('Error deleting chat:', response.statusText);
     }
-  };
+  } catch (error) {
+    console.error('Error deleting chat:', error);
+  }
+};
+
 
   return (
     <div className='container'>
