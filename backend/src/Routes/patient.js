@@ -58,7 +58,7 @@ router.post('/searchMedicineByName', requireAuth, async (req, res) => {
     }
 
     const query = {
-      name: { $regex: new RegExp(`^${medicineName}$`, 'i') },
+      name: { $regex: new RegExp(`^${medicineName}`, "i") },
       Archive: false, // Filter by Archive = false
     };
 
@@ -113,7 +113,7 @@ router.post('/filterMedicineByMedicinalUse', requireAuth, async (req, res) => {
     }
 
     const query = {
-      medicinalUse: { $regex: new RegExp(`^${medicinalUse}$`, 'i') },
+      medicinalUse: { $regex: new RegExp(`${medicinalUse}`, "i") },
       Archive: false,
     };
 

@@ -9,6 +9,10 @@ function Medicine({ modelName , sharedState }) {
   const [showMedicineList, setShowMedicineList] = useState(false);
   const [alternativeMessage, setAlternativeMessage] = useState(null);
   const [archiveMessages, setArchiveMessages] = useState({});
+  const [alternativeMedicines, setAlternativeMedicines] = useState([]);
+  const [selectedAlternativeMedicine, setSelectedAlternativeMedicine] = useState(null);
+  const [showAlternatives, setShowAlternatives] = useState(false);
+  const [medicineAlerts, setMedicineAlerts] = useState({});
 
 
  
@@ -153,37 +157,63 @@ function Medicine({ modelName , sharedState }) {
 
 const viewMedicineAlternatives = async (medicineName) => {
   try {
-      const response = await fetch(`/api/${modelName}/viewMedicineAlternatives`, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name: medicineName }),
+    const response = await fetch(`/api/${modelName}/viewMedicineAlternatives`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: medicineName }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch alternatives");
+    }
+
+    const data = await response.json();
+
+    if (data.message === 'No stock available, alternatives suggested') {
+      setAlternativeMedicines(data.alternatives);
+      setSelectedAlternativeMedicine(null);
+    } else if (data.message === 'No alternatives available') {
+      setMedicineAlerts({
+        ...medicineAlerts,
+        [medicineName]: (
+          <Alert key={medicineName} variant="danger">
+            No alternatives available for {medicineName}.
+          </Alert>
+        ),
       });
-
-      if (!response.ok) {
-          throw new Error("Failed to fetch alternatives");
-      }
-
-      const data = await response.json();
-
-      if (data.message === 'No stock available, alternatives suggested') {
-          // Display alternatives
-          setShowMedicineList(true);
-          setMedicines(data.alternatives);
-      } else if (data.message === 'No alternatives available') {
-          // Handle the case when there are no alternatives
-          setShowMedicineList(false);
-          alert("No alternatives available");
-      } else {
-          console.error('Unexpected response from the server:', data);
-          alert('Failed to fetch alternatives. Unexpected response from the server.');
-      }
+    } else {
+      console.error('Unexpected response from the server:', data);
+      setMedicineAlerts({
+        ...medicineAlerts,
+        [medicineName]: (
+          <Alert key={medicineName} variant="danger">
+            Failed to fetch alternatives. Unexpected response from the server.
+          </Alert>
+        ),
+      });
+    }
   } catch (error) {
-      console.error(error);
-      alert("Error fetching alternatives");
+    console.error(error);
+    setMedicineAlerts({
+      ...medicineAlerts,
+      [medicineName]: (
+        <Alert key={medicineName} variant="danger">
+          Error fetching alternatives
+        </Alert>
+      ),
+    });
   }
 };
+
+const addAlternativeToCart = async () => {
+  if (selectedAlternativeMedicine) {
+    await addMedicineToCart(selectedAlternativeMedicine.name);
+    setSelectedAlternativeMedicine(null); // Reset selected alternative medicine after adding to cart
+  }
+};
+
 
   // Function to archive a medicine
 const archiveMedicine = async (medicineName) => {
@@ -241,6 +271,10 @@ const toggleArchive = async (medicineName, isArchived) => {
   }
 };
 
+const toggleAlternatives = () => {
+  setShowAlternatives(!showAlternatives);
+};
+
    return (
     <div className="container mt-4">
       <div className="card">
@@ -293,6 +327,7 @@ const toggleArchive = async (medicineName, isArchived) => {
           </div>
         )}
         
+        
         <h2>Medicine List</h2>
         <button className="btn btn-primary" onClick={toggleViewMedicines}>
           {showMedicineList ? "Hide Medicine List" : "View All Medicines"}
@@ -330,6 +365,9 @@ const toggleArchive = async (medicineName, isArchived) => {
                     ) : (
                       <p>No Image Available</p>
                     )}
+                    {/* Display the Bootstrap Alert */}
+        
+                    
                     {modelName === "pharmacist" && (
                       <button
                         className="btn btn-primary"
@@ -344,9 +382,7 @@ const toggleArchive = async (medicineName, isArchived) => {
                       <div>
                         <button
                           className="btn btn-info"
-                          onClick={() =>
-                            viewMedicineAlternatives(medicine.name)
-                          }
+                          onClick={() => viewMedicineAlternatives(medicine.name)}
                         >
                           View Alternatives
                         </button>
@@ -354,9 +390,41 @@ const toggleArchive = async (medicineName, isArchived) => {
                           Medicine is out of stock. Click "View Alternatives" to
                           see alternatives.
                         </p>
+                         {Object.values(medicineAlerts).map((alert) => (
+                        <div key={alert.key} className="mb-3">
+                          {alert}
+                        </div>
+                      ))}
+                        {alternativeMedicines.length > 0 && (
+                    <div>
+                      <p>Select alternative medicine to add to cart:</p>
+                      <ul>
+                        {alternativeMedicines.map((alternative, index) => (
+                          <li key={index}>
+                            {alternative.name}{" "}
+                            <button
+                              className="btn btn-success"
+                              onClick={() => setSelectedAlternativeMedicine(alternative)}
+                            >
+                              Add to Cart
+                            </button>
+                          </li>
+                        ))}
+                        </ul>
+                        {selectedAlternativeMedicine && (
+                          <button
+                            className="btn btn-success"
+                            onClick={addAlternativeToCart}
+                          >
+                            Add {selectedAlternativeMedicine.name} to Cart
+                          </button>
+                        )}
                       </div>
                     )}
-                    {modelName === "patient" && medicine.quantity>0 && (
+ 
+                      </div>
+                    )}
+                    { modelName === "patient" && medicine.quantity>0 && (
                       <button
                         className="btn btn-success"
                         onClick={() => addMedicineToCart(medicine.name)}
