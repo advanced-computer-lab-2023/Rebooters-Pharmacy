@@ -173,7 +173,7 @@ const AddMedicine = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">
+          <label htmlFor="prescription" className="form-label">
             Prescription Needed:
           </label>
           <input
@@ -184,23 +184,7 @@ const AddMedicine = () => {
             checked={newMedicine.prescription}
             onChange={handleInputChange}
           />
-          <label className="form-check-label" htmlFor="prescription">
-            Prescription Needed
-          </label>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="archive" className="form-label">
-            Archived:
-          </label>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            id="archive"
-            name="archive"
-            checked={newMedicine.archive}
-            onChange={handleInputChange}
-          />
-          
+         
         </div>
 
         <div className="mb-3">

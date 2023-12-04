@@ -8,7 +8,9 @@ import ViewAndCancelOrder from "../components/viewAndCancelOrder";
 import CheckingOut from "../components/CheckingOut";
 import ChangePassword from "../components/ChangePassword";
 import PatientChats from "../components/PatientChats";
-
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import Image from "../content/images/ELHANNY-LOGO.png";
+import { Link } from 'react-router-dom';
 const Patient = () => {
   const [sharedState, setSharedState] = useState('');
   const [activeChat, setActiveChat] = useState(null);
@@ -82,30 +84,29 @@ const Patient = () => {
 
   return (
     <div className="container">
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
+      <div className="container">
+      <img src={Image} width="60"/>
+        <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
-            <li>
-              <button className="nav-link btn btn-link" onClick={handleLogout}>
-                Logout
-              </button>
-            </li>
             <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("home")}
               >
                 Home
-              </button>
-            </li>
-            <li
-              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
-            >
-              <button
-                className="nav-link btn btn-link"
-                onClick={() => handleTabClick("settings")}
-              >
-                Settings
               </button>
             </li>
             <li
@@ -114,22 +115,10 @@ const Patient = () => {
               }`}
             >
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("medicines")}
               >
                 Medicines
-              </button>
-            </li>
-            <li
-              className={`nav-item ${
-                activeTab === "chat" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-link btn btn-link"
-                onClick={() => handleTabClick("chat")}
-              >
-                Chat
               </button>
             </li>
             <li
@@ -138,15 +127,43 @@ const Patient = () => {
               }`}
             >
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("orders")}
               >
                 Orders
               </button>
             </li>
+            <li
+              className={`nav-item ${
+                activeTab === "chat" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link"
+                onClick={() => handleTabClick("chat")}
+              >
+                Chat
+              </button>
+            </li>
+            <li
+              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            >
+              <button
+                className="nav-link"
+                onClick={() => handleTabClick("settings")}
+              >
+                Settings
+              </button>
+            </li>
+            <li className="nav-item">
+              <button className="nav-link" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
-      </nav>
+      </div>
+    </nav>
       <h1 className="mb-4 text-center">Patient Dashboard</h1>
       {activeTab === "settings" && (
       <div className="card mt-4">

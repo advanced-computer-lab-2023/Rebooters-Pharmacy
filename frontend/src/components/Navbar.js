@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from "../content/images/ELHANNY-LOGO.png";
 
 const Navbar = () => {
@@ -23,17 +23,17 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link to="/guest" className="nav-link">Guest</Link>
+              <Link to="" className="nav-link">About Us</Link>
             </li>
             <li className="nav-item">
-              <Link to="/pharmacist" className="nav-link">Pharmacist</Link>
+              <Link to="" className="nav-link">Contact Us</Link>
             </li>
             <li className="nav-item">
-              <Link to="/patient" className="nav-link">Patient</Link>
+              <Link to="" className="nav-link">Help</Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link to="/admin" className="nav-link">Admin</Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

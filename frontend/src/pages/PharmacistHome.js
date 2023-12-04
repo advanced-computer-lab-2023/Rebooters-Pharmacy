@@ -13,6 +13,8 @@ import Wallet from "../components/Wallet";
 import MedicineDropdown from "../components/filterRepo";
 import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Image from "../content/images/ELHANNY-LOGO.png";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -85,30 +87,29 @@ const PharmacistHome = () => {
 
   return (
     <div className="container">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
+      <div className="container">
+      <img src={Image} width="60"/>
+        <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
-            <li>
-              <button className="nav-link btn btn-link" onClick={handleLogout}>
-                Logout
-              </button>
-            </li>
-            <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+          <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("home")}
               >
                 Home
-              </button>
-            </li>
-            <li
-              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
-            >
-              <button
-                className="nav-link btn btn-link"
-                onClick={() => handleTabClick("settings")}
-              >
-                Settings
               </button>
             </li>
             <li
@@ -117,7 +118,7 @@ const PharmacistHome = () => {
               }`}
             >
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("medicines")}
               >
                 Medicines
@@ -129,15 +130,31 @@ const PharmacistHome = () => {
               }`}
             >
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("chat")}
               >
                 Chat
               </button>
             </li>
+            <li
+              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            >
+              <button
+                className="nav-link"
+                onClick={() => handleTabClick("settings")}
+              >
+                Settings
+              </button>
+            </li>
+            <li className="nav-item">
+              <button className="nav-link" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
-      </nav>
+      </div>
+    </nav>
       <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
       {activeTab === "settings" && (
         <div className="card mt-4">

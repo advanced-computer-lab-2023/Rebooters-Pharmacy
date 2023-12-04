@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "../components/ChangePassword";
 import SalesReportGenerator from "../components/Repo";
+import { Link } from 'react-router-dom';
+import Image from "../content/images/ELHANNY-LOGO.png";
 
 function Administrator() {
   //const [administrators, setAdministrators] = useState([]);
@@ -325,42 +327,41 @@ function Administrator() {
 
   return (
     <div className="container mt-4">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
-            <li>
-              <button className="nav-link btn btn-link" onClick={handleLogout}>
-                Logout
-              </button>
-            </li>
-            <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+           
+            
+           
+            
+           
+            
+          </ul>
+        </div>
+      </nav> */}
+      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
+      <div className="container">
+      <img src={Image} width="60"/>
+        <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+          <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("home")}
               >
                 Home
-              </button>
-            </li>
-            <li
-              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
-            >
-              <button
-                className="nav-link btn btn-link"
-                onClick={() => handleTabClick("settings")}
-              >
-                Settings
-              </button>
-            </li>
-            <li
-              className={`nav-item ${
-                activeTab === "administrators" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-link btn btn-link"
-                onClick={() => handleTabClick("administrators")}
-              >
-                Administrators
               </button>
             </li>
             <li
@@ -369,10 +370,22 @@ function Administrator() {
               }`}
             >
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("medicines")}
               >
                 Medicines
+              </button>
+            </li>
+            <li
+              className={`nav-item ${
+                activeTab === "administrators" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-link"
+                onClick={() => handleTabClick("administrators")}
+              >
+                Administrators
               </button>
             </li>
             <li
@@ -381,15 +394,31 @@ function Administrator() {
               }`}
             >
               <button
-                className="nav-link btn btn-link"
+                className="nav-link"
                 onClick={() => handleTabClick("usermanager")}
               >
                 User Manager
               </button>
             </li>
+            <li
+              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            >
+              <button
+                className="nav-link"
+                onClick={() => handleTabClick("settings")}
+              >
+                Settings
+              </button>
+            </li>
+            <li>
+              <button className="nav-link" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
-      </nav>
+      </div>
+    </nav>
       <h1 className="mb-4 text-center">Administrator Dashboard</h1>
       {activeTab === "settings" && (
         <div className="card mt-4">

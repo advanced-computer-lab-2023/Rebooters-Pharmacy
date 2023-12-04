@@ -1,14 +1,12 @@
 import '../styles/login.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import { useHistory } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
-import Image from "../content/images/login-cover.png";
+import Navbar from '../components/Navbar';
 
 const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    //const history = useHistory();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const location = useLocation();
@@ -57,6 +55,7 @@ const Login = () => {
       };
     return(
       <div className='container'>
+      <Navbar/>
       <div className='login-cover'>
       </div>
         <div className="login-card card">
