@@ -21,6 +21,11 @@ const EditMedicine = () => {
   const [image, setImage] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
+  const handleSearchInputChange = (e) => {
+    setMedicineName(e.target.value);
+    setError(""); // Clear the error when the search input changes
+  };
+
   
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -36,11 +41,13 @@ const EditMedicine = () => {
     });
   };
 
+
   const toggleSearchResults = () => {
     setShowSearchResults((prevShowSearchResults) => !prevShowSearchResults);
   };
 
   const handleSearchMedicine = async () => {
+    
     try {
       if (!medicineName) {
         setError("Please fill in the Medicine Name field.");
@@ -67,7 +74,7 @@ const EditMedicine = () => {
           toggleSearchResults();
         }
       } else {
-        setError("Medicine not found");
+          setError("Medicine not found");
           setSearchedMedicine([]); 
           toggleSearchResults();
       }
@@ -173,12 +180,12 @@ const EditMedicine = () => {
             id="name"
             name="name"
             value={medicineName}
-            onChange={(e) => setMedicineName(e.target.value)}
+            onChange={handleSearchInputChange}
             placeholder="Type a Name"
           />
           <button
             className="btn btn-primary mt-2"
-            onClick={toggleSearchResults}
+            onClick={handleSearchMedicine}
           >
             Search Medicine
           </button>
