@@ -24,6 +24,11 @@ function Administrator() {
   const [showPharmacistDetails, setShowPharmacistDetails] = useState(false);
   const [showPatientDetails, setShowPatientDetails] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
+  const [submissionStatusRequest, setSubmissionStatusRequest] = useState(null);  
+  const [submissionStatusviewPharmacists, setSubmissionviewPharmacists] = useState(null);     
+  const [SubmissionStatusViewPatient, setSubmissionStatusViewPatient] = useState(null); 
+  const [submissionStatusRemove, setSubmissionStatusRemove] = useState(null);
+
 
   /*const viewAdministrators = async () => {
     try {
@@ -37,6 +42,7 @@ function Administrator() {
       console.error(error);
     }
   };*/
+
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -54,9 +60,33 @@ console.log(checkUserType());
     checkUserType();
   }, []);
 
+
+  const handlePharmacistUsernameChange = (e) => {
+    // Clear the error message when the user starts typing
+    setSubmissionviewPharmacists(null);
+    setMessage("");
+    setPharmacistUsername(e.target.value);
+  };
+
+  const handlePatientUsernameChange = (e) => {
+    // Clear the error message when the user starts typing
+    setSubmissionStatusViewPatient(null);
+    setMessage("");
+    setPatientUsername(e.target.value);
+  };
+
+  const handleRemoveChange = (e) => {
+    // Clear the error message when the user starts typing
+    setSubmissionStatusRemove(null);
+    setMessage("");
+    setUserToRemove(e.target.value);
+  };
+
+
   const viewPharmacists = async () => {
     if (!pharmacistUsername) {
-      alert("Please fill in all required fields.");
+      setSubmissionviewPharmacists("error");
+      setMessage("Please fill the field.");
       return;
     }
     try {
@@ -71,19 +101,20 @@ console.log(checkUserType());
         }
       );
       if (!response.ok) {
-        setSubmissionStatus("error");
+        setSubmissionviewPharmacists("error");
         setMessage("Failed to fetch pharmacists");
         throw new Error("Failed to fetch pharmacists");
       }
       const data = await response.json();
-      if (!data) {
-        setSubmissionStatus("error");
+      if (!data || data.length === 0) {
+        setSubmissionviewPharmacists("error");
         setMessage("Pharmacist not found");
+        return;
       }
       setPharmacists(data);
       setShowPharmacistDetails(true);
     } catch (error) {
-      setSubmissionStatus("error");
+      setSubmissionviewPharmacists("error");
       setMessage("Failed to fetch pharmacists");
       console.error(error);
     }
@@ -99,7 +130,8 @@ console.log(checkUserType());
 
   const viewPatients = async () => {
     if (!patientUsername) {
-      alert("Please fill in all required fields.");
+      setSubmissionStatusViewPatient("error");
+      setMessage("Please fill the field.");
       return;
     }
     try {
@@ -114,20 +146,20 @@ console.log(checkUserType());
         }
       );
       if (!response.ok) {
-        setSubmissionStatus("error");
+        setSubmissionStatusViewPatient("error");
         setMessage("Failed to fetch patients");
         throw new Error("Failed to fetch patients");
       }
       const data = await response.json();
-      if (!data) {
-        setSubmissionStatus("error");
+      if (!data || data.length===0) {
+        setSubmissionStatusViewPatient("error");
         setMessage("Patient not found");
       }
 
       setPatients(data);
       setShowPatientDetails(true);
     } catch (error) {
-      setSubmissionStatus("error");
+      setSubmissionStatusViewPatient("error");
       setMessage("Failed to fetch patients");
       console.error(error);
     }
@@ -176,7 +208,7 @@ console.log(checkUserType());
 
   const removeUserFromSystem = async () => {
     if (!userToRemove) {
-      setSubmissionStatus("error");
+      setSubmissionStatusRemove("error");
       setMessage("Please fill in all required fields.");
       return;
     }
@@ -189,18 +221,18 @@ console.log(checkUserType());
         body: JSON.stringify({ username: userToRemove }),
       });
       if (!response.ok) {
-        setSubmissionStatus("error");
+        setSubmissionStatusRemove("error");
         setMessage("Failed to remove pharmacist/patient");
         throw new Error("Failed to remove pharmacist/patient");
       }
       console.log("Pharmacist/patient removed successfully");
       setUserToRemove("");
-      setSubmissionStatus("success");
+      setSubmissionStatusRemove("success");
       setMessage("Pharmacist/patient removed successfully");
     } catch (error) {
       console.error(error);
-      setSubmissionStatus("error");
-      setMessage("Failed to remove pharmacist/patient");
+      setSubmissionStatusRemove("error");
+      setMessage("User not found");
     }
   };
 
@@ -210,19 +242,22 @@ console.log(checkUserType());
         "/api/administrator/viewPharmacistApplication"
       );
       if (!response.ok) {
-        setSubmissionStatus("error");
+        setSubmissionStatusRequest("error");
         setMessage("Failed to fetch new pharmacist requests");
         throw new Error("Failed to fetch new pharmacist requests");
       }
       const data = await response.json();
       if (data.length == 0) {
-        setSubmissionStatus("error");
+        setSubmissionStatusRequest("error");
         setMessage("There are no pharmacist requests");
       }
-      setNewPharmacistRequestData(data);
-      setshowPharmacistRequests(true);
+      else{
+        setNewPharmacistRequestData(data);
+        setshowPharmacistRequests(true);
+      }
+      
     } catch (error) {
-      setSubmissionStatus("error");
+      setSubmissionStatusRequest("error");
       setMessage("Failed to fetch new pharmacist requests");
       console.error(error);
     }
@@ -298,6 +333,7 @@ console.log(checkUserType());
   };
 
   const togglePharmacistRequests = () => {
+    
     if (!showPharmacistRequests) {
       viewNewPharmacistRequests();
     } else {
@@ -324,6 +360,8 @@ console.log(checkUserType());
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
+  
 
   return (
     <div>
@@ -453,11 +491,14 @@ console.log(checkUserType());
       {activeTab === "usermanager" && (
         <div className="card mb-3">
           <h2>Search for Pharmacist</h2>
+          {submissionStatusviewPharmacists === "error" && (
+          <div className="alert alert-danger">{message}</div>
+        )}
           <input
             type="text"
             placeholder="Pharmacist Username"
             value={pharmacistUsername}
-            onChange={(e) => setPharmacistUsername(e.target.value)}
+            onChange={handlePharmacistUsernameChange}
             className="form-control mb-2"
           />
           <div>
@@ -498,11 +539,14 @@ console.log(checkUserType());
       {activeTab === "usermanager" && (
         <div className="card mb-3">
           <h2>Search for Patient</h2>
+          {SubmissionStatusViewPatient === "error" && (
+          <div className="alert alert-danger">{message}</div>
+        )}
           <input
             type="text"
             placeholder="Patient Username"
             value={patientUsername}
-            onChange={(e) => setPatientUsername(e.target.value)}
+            onChange={handlePatientUsernameChange}
             className="form-control mb-2"
           />
           <div>
@@ -566,12 +610,18 @@ console.log(checkUserType());
       {activeTab === "usermanager" && (
         <div className="card mt-4">
           <h2>Pharmacist/Patient to remove</h2>
+          {submissionStatusRemove === "error"  && (
+          <div className="alert alert-danger">{message}</div>
+        )}
+        {submissionStatusRemove === "success"  && (
+          <div className="alert alert-success">{message}</div>
+        )}
           <div className="mb-3">
             <input
               type="text"
               placeholder="Username to Remove"
               value={userToRemove}
-              onChange={(e) => setUserToRemove(e.target.value)}
+              onChange={handleRemoveChange}
               className="form-control"
             />
             <div>
@@ -594,6 +644,9 @@ console.log(checkUserType());
       {activeTab === "usermanager" && (
         <div className="card mt-4">
           <h2>New Pharmacist Requests</h2>
+          {submissionStatusRequest === "error" && (
+          <div className="alert alert-danger">{message}</div>
+        )}
           <div>
             <button
               className="btn btn-primary"
@@ -604,7 +657,7 @@ console.log(checkUserType());
                 : "View New Pharmacist Requests"}
             </button>
           </div>
-          {showPharmacistRequests && (
+          {showPharmacistRequests && newPharmacistRequestData.length > 0 &&(
             <table className="table mt-2">
               <thead>
                 <tr>
@@ -704,6 +757,7 @@ console.log(checkUserType());
                     )
                   )
                 )}
+                
               </tbody>
             </table>
           )}
