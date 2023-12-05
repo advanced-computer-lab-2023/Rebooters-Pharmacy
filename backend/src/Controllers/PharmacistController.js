@@ -509,6 +509,79 @@ const editMedicine = async (req, res) => {
         res.status(500).json({ message: 'Error closing chat' });
       }
     };
+
+    const sendMessageToDoctor = async (req, res) => {
+
+      try {
+        const pharmacistUsername = req.cookies.username;
+        const { chatId, messageContent } = req.body;
+    
+        // Find the chat based on the provided chat ID
+        const chat = await Chat.findById(chatId);
+    
+        if (!chat) {
+          return res.status(404).json({ message: 'Chat not found' });
+        }
+    
+        // Check if the doctor is assigned to the chat
+        if (chat.pharmacist !== '' && chat.pharmacist !== pharmacistUsername) {
+          return res.status(403).json({ message: 'There is another Pharmacist already assigned to this chat' });
+        } 
+        
+        if (chat.pharmacist === '') {
+          chat.pharmacist = pharmacistUsername;
+        }
+    
+        // Add the doctor's message to the messages array in the chat
+        chat.messages.push({
+          username: pharmacistUsername,
+          userType: 'pharmacist',
+          content: messageContent,
+        });
+    
+        // Save the updated chat to the database
+        const updatedChat = await chat.save();
+    
+        res.status(200).json(updatedChat);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error sending message to the doctor' });
+      }
+    };
+
+    const viewAllChatsToDoctor= async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username; // Get the doctor's username from the cookies
+    
+        // Find all chats where the doctor is either an empty string or matches the doctor's username
+        const chats = await Chat.find({
+          $or: [
+            { pharmacist: '' },
+            { pharmacist: pharmacistUsername },
+          ],
+        });
+    
+        if (!chats || chats.length === 0) {
+          return res.status(404).json({ message: 'No chats found.' });
+        }
+    
+        // Check the status of each chat and update the doctor's ability to send messages
+        const updatedChats = chats.map(chat => {
+          const isClosed = chat.closed || false; // If 'closed' is not defined, default to false
+          const canSendMessages = !isClosed; // If the chat is closed, the doctor can't send messages
+    
+          return {
+            ...chat.toObject(), // Convert Mongoose document to plain JavaScript object
+            canSendMessages,
+          };
+        });
+    
+        res.status(200).json(updatedChats);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching chats' });
+      }
+    };
     
     
      module.exports = {
@@ -527,7 +600,7 @@ const editMedicine = async (req, res) => {
       getOutOfStockMedicines,
       checkWalletBalance,
       archiveMedicine, unarchiveMedicine
-,startNewChat,continueChat,viewMyChats,deleteChat};
+,startNewChat,continueChat,viewMyChats,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor};
     
 
     

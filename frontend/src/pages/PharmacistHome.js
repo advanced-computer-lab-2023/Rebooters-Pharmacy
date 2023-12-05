@@ -12,6 +12,7 @@ import SalesReportGenerator from "../components/Repo";
 import Wallet from "../components/Wallet";
 import MedicineDropdown from "../components/filterRepo";
 import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
+import PharmacistRespondToDoc from "../components/PharmacistRespondToDoc";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Image from "../content/images/ELHANNY-LOGO.png";
@@ -165,6 +166,7 @@ const PharmacistHome = () => {
       {activeTab === "chat" && (
         <div className="card mt-4">
           <PharmacistChats />
+          <PharmacistRespondToDoc/>
         </div>
       )}
       {activeTab === "home" && (
