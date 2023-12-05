@@ -27,7 +27,8 @@ function Administrator() {
   const [submissionStatusRequest, setSubmissionStatusRequest] = useState(null);  
   const [submissionStatusviewPharmacists, setSubmissionviewPharmacists] = useState(null);     
   const [SubmissionStatusViewPatient, setSubmissionStatusViewPatient] = useState(null); 
-  const [submissionStatusRemove, setSubmissionStatusRemove] = useState(null);
+  const [submissionStatusRemove, setSubmissionStatusRemove] = useState(null);    
+  const [submissionStatusAdmin, setSubmissionStatusAdmin] = useState(null);
 
 
   /*const viewAdministrators = async () => {
@@ -174,9 +175,24 @@ console.log(checkUserType());
   };
 
   const addAdministrator = async () => {
-    if (!adminUsername || !password || !email) {
-      setSubmissionStatus("error");
+    if (!adminUsername && !password && !email) {
+      setSubmissionStatusAdmin("error");
       setMessage("Please fill in all required fields.");
+      return;
+    }
+    else if(!adminUsername){
+      setSubmissionStatusAdmin("error");
+      setMessage("Please fill the admin username field.");
+      return;
+    }
+    else if(!password){
+      setSubmissionStatusAdmin("error");
+      setMessage("Please fill the password field.");
+      return;
+    }
+    else if(!email){
+      setSubmissionStatusAdmin("error");
+      setMessage("Please fill the email field.");
       return;
     }
     try {
@@ -188,19 +204,19 @@ console.log(checkUserType());
         body: JSON.stringify({ username: adminUsername, password, email }),
       });
       if (!response.ok) {
-        setSubmissionStatus("error");
+        setSubmissionStatusAdmin("error");
         setMessage("Failed to add administrator");
         throw new Error("Failed to add administrator");
       }
       //const data = await response.json();
-      setSubmissionStatus("success");
+      setSubmissionStatusAdmin("success");
       setMessage("Administrator added successfully");
       console.log("Administrator added successfully");
       setAdminUsername("");
       setPassword("");
       setAdminEmail("");
     } catch (error) {
-      setSubmissionStatus("error");
+      setSubmissionStatusAdmin("error");
       setMessage("Failed to add administrator");
       console.error(error);
     }
@@ -460,6 +476,12 @@ console.log(checkUserType());
       {activeTab === "administrators" && (
         <div className="card mb-3">
           <h2>Add Administrator</h2>
+          {submissionStatusAdmin === "error"  && (
+          <div className="alert alert-danger">{message}</div>
+        )}
+        {submissionStatusAdmin === "success"  && (
+          <div className="alert alert-success">{message}</div>
+        )}
           <input
             type="text"
             placeholder="Administrator Username"
