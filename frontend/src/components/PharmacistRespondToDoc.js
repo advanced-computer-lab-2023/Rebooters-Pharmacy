@@ -4,6 +4,8 @@ const PharmacistRespondToDoc = () => {
   const [chats, setChats] = useState([]);
   const [messageContents, setMessageContents] = useState({});
   const [pollingInterval, setPollingInterval] = useState(null);
+  const [showChats, setShowChats] = useState(false);
+
 
 
   const fetchChats = async () => {
@@ -66,15 +68,26 @@ const PharmacistRespondToDoc = () => {
       console.error("Error sending message to chat:", error);
     }
   };
+  
 
   return (
     <div className="card">
-      <h2 className="card-header">All Chats</h2>
-      {chats.length === 0 ? (
+      <h2 className="card-header">
+        All Chats{" "}
+        <div>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowChats(!showChats)}
+          >
+            Toggle Chats
+          </button>
+        </div>
+      </h2>
+      {showChats && chats.length === 0 ? (
         <p>There are no chats</p>
       ) : (
         <div>
-          {chats.map((chat) => (
+          {showChats && chats.map((chat) => (
             <div key={chat._id}>
               <h4>Chat ID: {chat._id}</h4>
               <div>
