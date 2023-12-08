@@ -16,12 +16,14 @@ import PharmacistRespondToDoc from "../components/PharmacistRespondToDoc";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Image from "../content/images/ELHANNY-LOGO.png";
+import PharmacistProfile from "../components/pharmaProfile"; // Import the new component
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
   const [activeChat, setActiveChat] = useState(null);
   const [chats, setChats] = useState([]);
   const [activeTab, setActiveTab] = useState("home");
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
 
   useEffect(() => {
     const checkUserType = async () => {
@@ -87,7 +89,9 @@ const PharmacistHome = () => {
     console.log('Filtering by medicine:', medicine);
     // You can add more logic or state updates based on the selected medicine
   };
-
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
+  };
   return (
     <div>
          <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
@@ -160,8 +164,15 @@ const PharmacistHome = () => {
       <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
       {activeTab === "settings" && (
         <div className="card mt-4">
-          <ChangePassword userType="pharmacist" />
-        </div>
+          <PharmacistProfile/>
+          <button className="btn btn-primary mt-2 d-inline-block w-auto" onClick={togglePasswordPopup}>
+          {showPasswordPopup ? "Hide" : "Change Password"}
+          </button>
+          {showPasswordPopup && (
+            <div className="popup">
+              <ChangePassword userType="pharmacist" />
+            </div>
+          )}        </div>
       )}
       {activeTab === "chat" && (
         <div className="card mt-4">
@@ -199,7 +210,7 @@ const PharmacistHome = () => {
 
       {activeTab === "home" && (
         <div className="mt-4">
-          <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
+          <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
           <SalesReportGenerator userType="pharmacist"/>
         </div>
       )}

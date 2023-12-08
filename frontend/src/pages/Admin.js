@@ -6,6 +6,7 @@ import ChangePassword from "../components/ChangePassword";
 import SalesReportGenerator from "../components/Repo";
 import { Link } from 'react-router-dom';
 import Image from "../content/images/ELHANNY-LOGO.png";
+import AdminProfile from "../components/AdminProfile";
 
 function Administrator() {
   //const [administrators, setAdministrators] = useState([]);
@@ -29,6 +30,7 @@ function Administrator() {
   const [SubmissionStatusViewPatient, setSubmissionStatusViewPatient] = useState(null); 
   const [submissionStatusRemove, setSubmissionStatusRemove] = useState(null);    
   const [submissionStatusAdmin, setSubmissionStatusAdmin] = useState(null);
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
 
 
   /*const viewAdministrators = async () => {
@@ -377,7 +379,9 @@ console.log(checkUserType());
     setActiveTab(tab);
   };
 
-  
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
+  };
 
   return (
     <div>
@@ -463,8 +467,15 @@ console.log(checkUserType());
       <h1 className="mb-4 text-center">Administrator Dashboard</h1>
       {activeTab === "settings" && (
         <div className="card mt-4">
-          <ChangePassword userType="administrator" />
-        </div>
+          <AdminProfile/>
+          <button className="btn btn-primary mt-2 d-inline-block w-auto" onClick={togglePasswordPopup}>
+          {showPasswordPopup ? "Hide" : "Change Password"}
+          </button>
+          {showPasswordPopup && (
+            <div className="popup">
+              <ChangePassword userType="pharmacist" />
+            </div>
+          )}           </div>
       )}
       {submissionStatus === "success" && (
         <div className="alert alert-success">{message}</div>
@@ -625,7 +636,7 @@ console.log(checkUserType());
       )}
       {activeTab === "home" && (
         <div className="mt-4">
-          <h2 className="mb-4 mt-4 text-center">Request to view REPO</h2>
+          <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
           <SalesReportGenerator userType="administrator"/>
         </div>
       )}

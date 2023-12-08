@@ -13,7 +13,30 @@ const { generateSalesReport } = require('./commonController');
 
 require("dotenv").config();
 
+const getAdminProfile = async (req, res) => {
+  try {
+    const adminUsername = req.cookies.username; // Assuming the username is stored in cookies
 
+    // Fetch admin data based on the username
+    const admin = await Administrator.findOne({ username: adminUsername });
+
+    if (!admin) {
+      return res.status(404).json({ message: 'Administrator not found' });
+    }
+
+    // Return relevant admin data
+    const adminData = {
+      username: admin.username,
+      email: admin.email,
+      // Add more fields as needed
+    };
+
+    res.status(200).json(adminData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching administrator profile' });
+  }
+};
 const addAdministrator= async (req, res) => {
       try {
         const { username, password,email } = req.body;
@@ -226,5 +249,5 @@ module.exports = {
   approvePharmacistRequest,
   rejectPharmacistRequest,
   logout, changePassword, createToken, sendApprovalEmail, sendRejectionEmail,sendEmail
-,generateSalesReport 
+,generateSalesReport , getAdminProfile
 }; 

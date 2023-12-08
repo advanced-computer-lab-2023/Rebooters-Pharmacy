@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const {addAdministrator,
     removeUserFromSystem,
     viewPharmacistApplication,
-    viewPharmacistInformation,
+    viewPharmacistInformation,getAdminProfile,
     viewPatientInformation, generateSalesReport, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,approvePharmacistRequest,rejectPharmacistRequest, logout, changePassword} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
@@ -39,6 +39,7 @@ router.post('/rejectPharmacistRequest' , requireAuth, rejectPharmacistRequest);
 
 router.post('/generateSalesReport' , requireAuth, generateSalesReport);
 
+router.get('/profile', requireAuth, getAdminProfile);
 
 module.exports = router //we need to export that router at the end so that App.js can access it
 
