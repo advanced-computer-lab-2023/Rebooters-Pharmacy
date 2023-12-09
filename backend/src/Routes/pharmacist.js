@@ -8,7 +8,7 @@ const {generateSalesReport, filterSalesReport,
     searchMedicineByName,editMedicine,getPharmacistProfile,
      viewMedicineInventoryPharmacist, logout, changePassword,
       viewAllChats, sendMessageToChat, getOutOfStockMedicines, 
-      checkWalletBalance,unarchiveMedicine,archiveMedicine,startNewChat,viewMyChats,continueChat,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
+      checkWalletBalance,unarchiveMedicine,archiveMedicine,startNewChat,viewMyChats,continueChat,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor,ChatsToDoctor,removeOutOfStockMedicine} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
 
 const multer = require('multer'); 
 const storage = multer.diskStorage({
@@ -55,10 +55,12 @@ router.post('/generateSalesReport' , requireAuth, generateSalesReport);
 router.post('/filterSalesReport',requireAuth, filterSalesReport);   
 
 router.post('/sendMessageToDoctor', requireAuth, sendMessageToDoctor); 
-router.get('/viewAllChatsToDoctor', requireAuth, viewAllChatsToDoctor);
-
+router.get('/viewAllChatsToDoctor', requireAuth, viewAllChatsToDoctor);  
+router.get('/ChatsToDoctor', requireAuth, ChatsToDoctor); 
 
 router.get('/profile', requireAuth, getPharmacistProfile);
+
+router.post('/removeOutOfStockMedicine',requireAuth,removeOutOfStockMedicine);
 
 
 

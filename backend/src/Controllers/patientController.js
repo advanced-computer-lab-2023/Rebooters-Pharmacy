@@ -344,7 +344,7 @@ const sendNotificationByEmail = async (email, message) => {
 
 const checkout = async (req, res) => {
   let total = 0;
-  let outOfStockMedicines = [];
+  //let outOfStockMedicines = [];
 
   try {
     const orderDate = new Date();
@@ -391,6 +391,7 @@ const checkout = async (req, res) => {
         return res.status(404).json({ message: 'Not enough money in the wallet' });
       }
     }
+
 
     for (let i = 0; i < items.length; i++) {
       const givenMedicine = await Medicine.findOne({ name: items[i].name });
@@ -465,6 +466,14 @@ const getOutOfStockMedicines = (req, res) => {
     res.status(500).json({ message: 'Error retrieving out-of-stock medicines' });
   }
 };
+
+const removeNotification = (medicineName) => {
+  const index = outOfStockMedicines.indexOf(medicineName);
+  if (index !== -1) {
+    outOfStockMedicines.splice(index, 1);
+  }
+};
+
 const viewOrderDetails = async (req, res) => {
   try {
     const patientUsername = req.cookies.username; // Get the patient's username from the request
@@ -677,4 +686,4 @@ const viewMedicineAlternatives = async (req, res) => {
 
 module.exports = {  getPatientProfile,checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, checkWalletBalance,
   viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, 
-startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines,viewMedicineAlternatives}; 
+startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines,viewMedicineAlternatives,removeNotification}; 

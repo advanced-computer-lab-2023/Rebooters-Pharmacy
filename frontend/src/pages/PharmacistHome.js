@@ -18,6 +18,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Image from "../content/images/ELHANNY-LOGO.png";
 import PharmacistProfile from "../components/pharmaProfile"; // Import the new component
+import ChatWithDoctor from "../components/ChatWithDoctor";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -179,7 +180,6 @@ const PharmacistHome = () => {
       {activeTab === "chat" && (
         <div className="card mt-4">
           <PharmacistChats />
-          <PharmacistRespondToDoc/>
         </div>
       )}
       {activeTab === "home" && (
@@ -196,6 +196,18 @@ const PharmacistHome = () => {
       <div className="card mt-4">
         <Pharmacist_DoctorChats setChats={setChats} chats={chats} /> 
       </div>)}
+
+      {activeTab === "chat" && (
+        <div className="card mt-4">
+          <ChatWithDoctor />
+        </div>
+      )}
+      {activeTab === "chat" && (
+        <div className="card mt-4">
+          <PharmacistRespondToDoc/>
+        </div>
+      )}
+
       {activeTab === "medicines" && (
         <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
       )}
