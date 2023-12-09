@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import '../styles/background.css';
 import Medicine from "../components/Medicine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -384,6 +385,7 @@ console.log(checkUserType());
   };
 
   return (
+  
     <div>
           <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
       <img src={Image} width="60"/>

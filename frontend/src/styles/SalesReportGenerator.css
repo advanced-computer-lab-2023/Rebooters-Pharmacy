@@ -5,12 +5,10 @@
 }
 
 .left-container {
-  flex: 1;
   padding: 20px;
 }
 
 .right-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,0 +1,9 @@
+.background-cover {
+    background: url('../content/images/background-pharmacy.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }

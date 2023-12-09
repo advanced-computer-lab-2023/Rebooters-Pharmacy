@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import '../styles/background.css';
 import AddMedicine from "../components/addMedicine";
 import EditMedicine from "../components/editMedicine";
 import ViewMedicineQuantitySales from "../components/ViewMedicineQuantitySales";
@@ -94,6 +95,7 @@ const PharmacistHome = () => {
   };
   return (
     <div>
+      
          <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
       <img src={Image} width="60"/>
         <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
@@ -214,12 +216,7 @@ const PharmacistHome = () => {
           <SalesReportGenerator userType="pharmacist"/>
         </div>
       )}
-      {activeTab === "home" && (
-        <div className="mt-4">
-          <h2 className="mb-4 mt-4 text-center">Filtered Repo </h2>
-          <MedicineDropdown handleFilter={handleFilter} />
-        </div>
-      )}
+      
     </div>
     </div>
   );

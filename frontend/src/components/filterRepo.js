@@ -49,7 +49,7 @@ const MedicineDropdown = ({ handleFilter }) => {
         onChange={(e) => setSelectedMedicine(e.target.value)}
       >
         <option value="">Select a medicine</option>
-        {medicineNames.length>0 && medicineNames.map((medicine) => (
+        {medicineNames.length > 0 && medicineNames.map((medicine) => (
           <option key={medicine.name} value={medicine.name}>
             {medicine.name}
           </option>
