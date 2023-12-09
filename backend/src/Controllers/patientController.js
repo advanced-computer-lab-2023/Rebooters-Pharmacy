@@ -28,6 +28,56 @@ const mongoose = require('mongoose');
 //     }], 
 // });
 // dummyOrder3.save();
+const getPatientProfile = async (req, res) => {
+  try {
+    const patientUsername = req.cookies.username; // Assuming the username is stored in cookies
+
+    // Fetch patient data based on the username
+    const patient = await Patient.findOne({ username: patientUsername });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+    const emergencyContactArray = patient.emergency_contact
+      ? [
+          {
+            firstName: patient.emergency_contact.firstName,
+            lastName: patient.emergency_contact.lastName,
+            mobile: patient.emergency_contact.mobile_number,
+          },
+        ]
+      : [];
+
+    // Return relevant patient data
+    const patientData = {
+      username: patient.username,
+      name: patient.name,
+      email: patient.email,
+      dateOfBirth: patient.dateOfBirth,
+      gender: patient.gender,
+      mobileNumber: patient.mobile_number,
+      emergencyContact: emergencyContactArray,
+      deliveryAddresses: patient.deliveryAddresses,
+      selectedDoctors: patient.selectedDoctors,
+      healthPackage: patient.healthPackage,
+      familyMembers: patient.familyMembers,
+      cart: patient.cart,
+      orders: patient.orders,
+      wallet: patient.wallet,
+      medicalHistory: patient.medicalHistory,
+      healthRecords: patient.healthRecords,
+      statusOfHealthPackage: patient.statusOfHealthPackage,
+      healthPackageCreatedAt: patient.healthPackageCreatedAt,
+      OTP: patient.OTP,
+      // Add more fields as needed
+    };
+
+    res.status(200).json(patientData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching patient profile' });
+  }
+};
 
 const viewCartItems = async (req, res) => {
   try {
@@ -625,6 +675,6 @@ const viewMedicineAlternatives = async (req, res) => {
   }
 };
 
-module.exports = {  checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, checkWalletBalance,
+module.exports = {  getPatientProfile,checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, checkWalletBalance,
   viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, 
 startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines,viewMedicineAlternatives}; 

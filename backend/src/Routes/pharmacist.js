@@ -5,7 +5,7 @@ const {generateSalesReport, filterSalesReport,
   addMedicine, 
   viewMedicineInventory,
    filterMedicineByMedicinalUse,
-    searchMedicineByName,editMedicine,
+    searchMedicineByName,editMedicine,getPharmacistProfile,
      viewMedicineInventoryPharmacist, logout, changePassword,
       viewAllChats, sendMessageToChat, getOutOfStockMedicines, 
       checkWalletBalance,unarchiveMedicine,archiveMedicine,startNewChat,viewMyChats,continueChat,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
@@ -58,6 +58,7 @@ router.post('/sendMessageToDoctor', requireAuth, sendMessageToDoctor);
 router.get('/viewAllChatsToDoctor', requireAuth, viewAllChatsToDoctor);
 
 
+router.get('/profile', requireAuth, getPharmacistProfile);
 
 
 

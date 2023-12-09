@@ -6,7 +6,7 @@ const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
     removeCartItem, changeAmountOfAnItem,viewItems, 
     viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
-    viewOrderDetails, logout, changePassword , viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, checkWalletBalance,viewMedicineAlternatives } = require('../Controllers/patientController') //we're destructuring so we need curly braces
+    viewOrderDetails, logout, changePassword ,getPatientProfile, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, checkWalletBalance,viewMedicineAlternatives } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 router.get('/logout', requireAuth, logout);
@@ -16,6 +16,7 @@ router.get('/viewAllOrders', requireAuth, viewAllOrders);
 router.get('/checkWalletBalance', requireAuth, checkWalletBalance);
 
 router.post('/changePassword', requireAuth, changePassword);
+router.get('/profile', requireAuth, getPatientProfile);
 
 /*router.get('/viewMedicineInventory', requireAuth, async (req, res) => {
   try {

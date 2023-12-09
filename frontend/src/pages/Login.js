@@ -26,6 +26,8 @@ const Login = () => {
             
             const data = await response.json();
             console.log(data);
+            setUsername(data.username); // Store the username in state
+
             switch (data.type) {
               case 'patient':
                 navigate('/patient');

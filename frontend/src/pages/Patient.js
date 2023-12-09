@@ -11,11 +11,14 @@ import PatientChats from "../components/PatientChats";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import Image from "../content/images/ELHANNY-LOGO.png";
 import { Link } from 'react-router-dom';
+import PatientProfile from "../components/patientProfile";
+
 const Patient = () => {
   const [sharedState, setSharedState] = useState('');
   const [activeChat, setActiveChat] = useState(null);
   const [chats, setChats] = useState([]); // Add this line
   const [activeTab, setActiveTab] = useState("home");
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
 
   const navigate = useNavigate();
 
@@ -83,7 +86,9 @@ const Patient = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
+  };
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
@@ -171,8 +176,15 @@ const Patient = () => {
       <h1 className="mb-4 text-center">Patient Dashboard</h1>
       {activeTab === "settings" && (
       <div className="card mt-4">
-        <ChangePassword userType="patient" />
-      </div>)}
+        <PatientProfile/>
+        <button className="btn btn-primary mt-2 d-inline-block w-auto" onClick={togglePasswordPopup}>
+          {showPasswordPopup ? "Hide" : "Change Password"}
+          </button>
+          {showPasswordPopup && (
+            <div className="popup">
+              <ChangePassword userType="pharmacist" />
+            </div>
+          )}      </div>)}
       {activeTab === "medicines" && (
       <div className="card mt-4"> {<Medicine sharedState={sharedState} modelName="patient" />}</div>)}
       {activeTab === "settings" && (

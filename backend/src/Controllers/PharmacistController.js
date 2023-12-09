@@ -43,7 +43,37 @@ const Sales= require('../Models/salesModel');
 //     }
 // });
 // Controller functions for Pharmacist
+const getPharmacistProfile = async (req, res) => {
+  try {
+    const pharmacistUsername = req.cookies.username; // Assuming the username is stored in cookies
 
+    // Fetch pharmacist data based on the username
+    const pharmacist = await Pharmacist.findOne({ username: pharmacistUsername });
+
+    if (!pharmacist) {
+      return res.status(404).json({ message: 'Pharmacist not found' });
+    }
+
+    // Return relevant pharmacist data
+    const pharmacistData = {
+      username: pharmacist.username,
+      name: pharmacist.name,
+      email: pharmacist.email,
+      dateOfBirth: pharmacist.dateOfBirth,
+      hourlyRate: pharmacist.hourlyRate,
+      affiliation: pharmacist.affiliation,
+      educationalBackground: pharmacist.educationalBackground,
+      status: pharmacist.status,
+      wallet: pharmacist.wallet,
+      // Add more fields as needed
+    };
+
+    res.status(200).json(pharmacistData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching pharmacist profile' });
+  }
+};
 
 const filterSalesReport = async (req, res) => {
   try {
@@ -599,7 +629,7 @@ const editMedicine = async (req, res) => {
       sendMessageToChat,
       getOutOfStockMedicines,
       checkWalletBalance,
-      archiveMedicine, unarchiveMedicine
+      archiveMedicine, unarchiveMedicine,getPharmacistProfile
 ,startNewChat,continueChat,viewMyChats,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor};
     
 
