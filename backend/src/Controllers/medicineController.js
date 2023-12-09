@@ -9,6 +9,8 @@ const Medicine = require("../Models/medicineModel");
   quantity: 100,
 });
 dummyMedicines.save();*/
+
+
 const filterMedicineByMedicinalUse = async (req, res) => {
   try {
     const { medicinalUse } = req.body;

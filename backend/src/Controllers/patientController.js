@@ -608,6 +608,7 @@ const viewMedicineAlternatives = async (req, res) => {
             medicinalUse: alternative.medicinalUse,
             PrescriptionNeeded: alternative.PrescriptionNeeded,
             image: alternative.image,
+            quantity: alternative.quantity,
           };
         });
         return res.status(200).json({ message: 'No stock available, alternatives suggested', alternatives: alternativeDetails });

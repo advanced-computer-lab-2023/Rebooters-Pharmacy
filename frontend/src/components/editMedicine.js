@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-const EditMedicine = () => {
+const EditMedicine = ({medicine}) => {
   const [medicineToUpdate, setMedicineToUpdate] = useState({
-    name: "",
     activeIngredients: "",
     price: 0,
     description: "",
@@ -15,16 +14,12 @@ const EditMedicine = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  const [medicineName, setMedicineName] = useState("");
+  //const [medicineName, setMedicineName] = useState("");
   const [searchedMedicine, setSearchedMedicine] = useState([]); // To store the searched medicine
   const [updatedMedicine, setUpdatedMedicine] = useState(null);
   const [image, setImage] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-  const handleSearchInputChange = (e) => {
-    setMedicineName(e.target.value);
-    setError(""); // Clear the error when the search input changes
-  };
 
   
   const handleImageChange = (e) => {
@@ -46,50 +41,49 @@ const EditMedicine = () => {
     setShowSearchResults((prevShowSearchResults) => !prevShowSearchResults);
   };
 
-  const handleSearchMedicine = async () => {
+  // const handleSearchMedicine = async () => {
     
-    try {
-      if (!medicineName) {
-        setError("Please fill in the Medicine Name field.");
-        return;
-      }
-      const response = await fetch(`/api/pharmacist/searchMedicineByName`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ medicineName: medicineName }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data) {
-          // If medicine is found, populate the form fields with its details
-          const foundMedicine = data;
-          setSearchedMedicine(foundMedicine); // Store the searched medicine
-          setMedicineToUpdate(foundMedicine); // Populate the form fields
-          toggleSearchResults();
-        } else {
-          setError("Medicine not found");
-          setSearchedMedicine([]); 
-          toggleSearchResults();
-        }
-      } else {
-          setError("Medicine not found");
-          setSearchedMedicine([]); 
-          toggleSearchResults();
-      }
-    } catch (error) {
-      console.error(
-        "An error occurred while searching for the medicine:",
-        error
-      );
-    }
-  };
+  //   try {
+  //     if (!medicineName) {
+  //       setError("Please fill in the Medicine Name field.");
+  //       return;
+  //     }
+  //     const response = await fetch(`/api/pharmacist/searchMedicineByName`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ medicineName: medicineName }),
+  //     });
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       if (data) {
+  //         // If medicine is found, populate the form fields with its details
+  //         const foundMedicine = data;
+  //         setSearchedMedicine(foundMedicine); // Store the searched medicine
+  //         setMedicineToUpdate(foundMedicine); // Populate the form fields
+  //         toggleSearchResults();
+  //       } else {
+  //         setError("Medicine not found");
+  //         setSearchedMedicine([]); 
+  //         toggleSearchResults();
+  //       }
+  //     } else {
+  //         setError("Medicine not found");
+  //         setSearchedMedicine([]); 
+  //         toggleSearchResults();
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "An error occurred while searching for the medicine:",
+  //       error
+  //     );
+  //   }
+  // };
 
   const handleEditMedicine = async () => {
     let errorMessage = "";
     if (
-      !medicineToUpdate.name ||
       !medicineToUpdate.activeIngredients ||
       medicineToUpdate.price < 0 ||
       !medicineToUpdate.description ||
@@ -99,9 +93,6 @@ const EditMedicine = () => {
       setError("Please fill in all fields and ensure that price and quantity are not negative.");
       setMessage("");
       return;
-    }
-    else if (!medicineToUpdate.name ) {
-      errorMessage = "Please fill the name field.";
     }else if (!medicineToUpdate.activeIngredients){
       errorMessage = "Please fill the active ingredient field.";
     }
@@ -124,7 +115,7 @@ const EditMedicine = () => {
 
     try {
       const formData = new FormData();
-      formData.append("name", medicineToUpdate.name);
+      formData.append("name", medicine);
       formData.append("activeIngredients", medicineToUpdate.activeIngredients);
       formData.append("price", medicineToUpdate.price);
       formData.append("description", medicineToUpdate.description);
@@ -170,28 +161,8 @@ const EditMedicine = () => {
       <div className="card-body">
         <h2>Edit Medicine</h2>
         {error && <p className="text-danger">{error}</p>}
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Medicine Name:
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            name="name"
-            value={medicineName}
-            onChange={handleSearchInputChange}
-            placeholder="Type a Name"
-          />
-          <button
-            className="btn btn-primary mt-2"
-            onClick={handleSearchMedicine}
-          >
-            Search Medicine
-          </button>
-        </div>
         {/* Display searched medicine details */}
-        {showSearchResults &&searchedMedicine &&
+        {/* {showSearchResults &&searchedMedicine &&
           searchedMedicine.map((medicine) => (
             <div>
               <p>Name: {medicine.name}</p>
@@ -209,21 +180,12 @@ const EditMedicine = () => {
                 <p>No Image Available</p>
               )}
             </div>
-          ))}
+          ))} */}
         {/* Rest of the form fields for editing */}
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
-            Name:
+            Name: {medicine}
           </label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            name="name"
-            value={medicineToUpdate.name}
-            onChange={handleInputChange}
-            placeholder="Type a Name"
-          />
         </div>
         <div className="mb-3">
           <label htmlFor="activeIngredients" className="form-label">

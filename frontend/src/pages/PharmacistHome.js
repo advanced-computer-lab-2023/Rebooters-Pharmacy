@@ -191,11 +191,11 @@ const PharmacistHome = () => {
           <AddMedicine />
         </div>
       )}
-      {activeTab === "medicines" && (
+      {/*{activeTab === "medicines" && (
         <div className="mt-4">
           <EditMedicine />
         </div>
-      )}
+      )}*/}
 
       {activeTab === "home" && (
         <div className="mt-4">
