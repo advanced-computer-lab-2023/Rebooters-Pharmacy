@@ -11,6 +11,8 @@ import CheckingOut from "./components/CheckingOut";
 import Login from "./pages/Login";
 import OTP from "./pages/OTP";
 import ForgotPassword from "./pages/ForgotPassword";
+import AboutusPage from "./pages/AboutusPage";
+import ContactPage from "./pages/ContactPage";
 
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
           <Route path="/api/patient/checkOutmyOrder"  element={<CheckingOut/>}/>
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/otp" element={<OTP />} />
+          <Route path= "/AboutusPage" element={<AboutusPage/>}/>
+          <Route path= "/ContactPage" element={<ContactPage/>}/>
 
          
         </Routes>
