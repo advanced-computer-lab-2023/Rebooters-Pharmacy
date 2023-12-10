@@ -5,6 +5,7 @@ const Chat = require('../Models/chatModel');
 const {viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName } = require('./medicineController');
 const {logout, changePassword} = require('./authController');
 const {getOutOfStockMedicines} = require('./patientController');
+const { removeNotification } = require('./patientController');
 const {checkWalletBalance} = require('./walletController');
 const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist for testing only
 const { generateSalesReport } = require('./commonController');
@@ -612,6 +613,54 @@ const editMedicine = async (req, res) => {
         res.status(500).json({ message: 'Error fetching chats' });
       }
     };
+
+    const ChatsToDoctor = async (req, res) => {
+      try {
+        const pharmacistUsername = req.cookies.username;
+    
+        // Find all chats where the doctor is either an empty string or matches the doctor's username
+        const chats = await Chat.find({
+          $and: [
+            { pharmacist: { $in: ['', pharmacistUsername] } },
+            { closed: false },
+          ],
+        });
+    
+        if (!chats || chats.length === 0) {
+          return res.status(404).json({ message: 'No active chats found.' });
+        }
+    
+        // Check the status of each chat and update the pharmacist's ability to send messages
+        const updatedChats = chats.map(chat => {
+          const canSendMessages = !chat.closed; // If the chat is closed, the pharmacist can't send messages
+    
+          return {
+            ...chat.toObject(),
+            canSendMessages,
+          };
+        });
+    
+        res.status(200).json(updatedChats);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching active chats' });
+      }
+    };
+
+    const removeOutOfStockMedicine = (req, res) => {
+      try {
+        const { medicineName } = req.body;
+    
+        // Remove the notification
+        removeNotification(medicineName);
+    
+        res.status(200).json({ message: 'Notification removed successfully' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error removing notification' });
+      }
+    };
+    
     
     
      module.exports = {
@@ -630,7 +679,8 @@ const editMedicine = async (req, res) => {
       getOutOfStockMedicines,
       checkWalletBalance,
       archiveMedicine, unarchiveMedicine,getPharmacistProfile
-,startNewChat,continueChat,viewMyChats,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor};
+    ,startNewChat,continueChat,viewMyChats,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor,ChatsToDoctor,
+    removeOutOfStockMedicine};
     
 
     

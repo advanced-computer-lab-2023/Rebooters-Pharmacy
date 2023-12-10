@@ -267,31 +267,34 @@ const EditMedicine = ({medicine}) => {
           <label htmlFor="PrescriptionNeeded" className="form-label">
             Prescription Needed:
           </label>
-          <input
-            type="text"
+          <select
             className="form-control"
             id="PrescriptionNeeded"
             name="PrescriptionNeeded"
-            value={medicineToUpdate.PrescriptionNeeded} // Convert boolean to string
+            value={medicineToUpdate.PrescriptionNeeded.toString()}
             onChange={handleInputChange}
-            placeholder="Type True or False"
-          />
+          >
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
         </div>
+
         <div className="mb-3">
           <label htmlFor="Archive" className="form-label">
-          Archived:
+            Archived:
           </label>
-          <input
-            type="text"
+          <select
             className="form-control"
             id="Archive"
             name="Archive"
-            value={medicineToUpdate.Archive} 
+            value={medicineToUpdate.Archive.toString()}
             onChange={handleInputChange}
-            placeholder="Type True or False"
-
-          />
+          >
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
         </div>
+        
         <div className="mb-3">
           <label htmlFor="image" className="form-label">
             Image: (Optional)

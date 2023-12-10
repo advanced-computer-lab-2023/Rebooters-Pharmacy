@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import '../styles/background.css';
 import AddMedicine from "../components/addMedicine";
 import EditMedicine from "../components/editMedicine";
 import ViewMedicineQuantitySales from "../components/ViewMedicineQuantitySales";
@@ -17,6 +18,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Image from "../content/images/ELHANNY-LOGO.png";
 import PharmacistProfile from "../components/pharmaProfile"; // Import the new component
+import ChatWithDoctor from "../components/ChatWithDoctor";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -94,6 +96,7 @@ const PharmacistHome = () => {
   };
   return (
     <div>
+      
          <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
       <img src={Image} width="60"/>
         <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
@@ -177,7 +180,6 @@ const PharmacistHome = () => {
       {activeTab === "chat" && (
         <div className="card mt-4">
           <PharmacistChats />
-          <PharmacistRespondToDoc/>
         </div>
       )}
       {activeTab === "home" && (
@@ -194,6 +196,18 @@ const PharmacistHome = () => {
       <div className="card mt-4">
         <Pharmacist_DoctorChats setChats={setChats} chats={chats} /> 
       </div>)}
+
+      {activeTab === "chat" && (
+        <div className="card mt-4">
+          <ChatWithDoctor />
+        </div>
+      )}
+      {activeTab === "chat" && (
+        <div className="card mt-4">
+          <PharmacistRespondToDoc/>
+        </div>
+      )}
+
       {activeTab === "medicines" && (
         <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
       )}
@@ -214,12 +228,7 @@ const PharmacistHome = () => {
           <SalesReportGenerator userType="pharmacist"/>
         </div>
       )}
-      {activeTab === "home" && (
-        <div className="mt-4">
-          <h2 className="mb-4 mt-4 text-center">Filtered Repo </h2>
-          <MedicineDropdown handleFilter={handleFilter} />
-        </div>
-      )}
+      
     </div>
     </div>
   );

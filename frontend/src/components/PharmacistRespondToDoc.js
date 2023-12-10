@@ -6,8 +6,6 @@ const PharmacistRespondToDoc = () => {
   const [pollingInterval, setPollingInterval] = useState(null);
   const [showChats, setShowChats] = useState(false);
 
-
-
   const fetchChats = async () => {
     try {
       const response = await fetch("/api/pharmacist/viewAllChatsToDoctor", {
@@ -68,12 +66,14 @@ const PharmacistRespondToDoc = () => {
       console.error("Error sending message to chat:", error);
     }
   };
-  
+
+  // Filter inactive chats
+  const inactiveChats = chats.filter((chat) => chat.closed);
 
   return (
     <div className="card">
       <h2 className="card-header">
-        All Chats{" "}
+        All Chats History{" "}
         <div>
           <button
             className="btn btn-secondary"
@@ -83,11 +83,11 @@ const PharmacistRespondToDoc = () => {
           </button>
         </div>
       </h2>
-      {showChats && chats.length === 0 ? (
-        <p>There are no chats</p>
+      {showChats && inactiveChats.length === 0 ? (
+        <p>There are no inactive chats</p>
       ) : (
         <div>
-          {showChats && chats.map((chat) => (
+          {showChats && inactiveChats.map((chat) => (
             <div key={chat._id}>
               <h4>Chat ID: {chat._id}</h4>
               <div>

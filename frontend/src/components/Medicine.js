@@ -670,7 +670,8 @@ function Medicine({ modelName, sharedState }) {
                             </div>
                           ) : null}
                         </div>
-                      )}
+                      )}  
+
 
                       {modelName === "pharmacist" && (
                         <div>
@@ -684,6 +685,8 @@ function Medicine({ modelName, sharedState }) {
                           >
                             {medicine.Archive ? "Unarchive" : "Archive"}
                           </button>
+
+                          {' '}
 
                           {/* Edit Medicine button */}
                           <button
