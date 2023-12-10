@@ -3,106 +3,119 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Navbar from '../components/Navbar';
+import Footer from '../components/footer';
+import { Link } from 'react-router-dom';
+import ForgotPass from './ForgotPassword';
 
 const Login = () => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const navigate = useNavigate();
-    const [error, setError] = useState(null);
-    const location = useLocation();
-    const errorMessage = location.state && location.state.errorMessage;
-    const handleLogin = async () => {
-        
-        try {
-          const response = await fetch('/api/guest/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-          });
-    
-          if (response.ok) {
-            
-            const data = await response.json();
-            console.log(data);
-            setUsername(data.username); // Store the username in state
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const location = useLocation();
+  const errorMessage = location.state && location.state.errorMessage;
+  const [showEmailWindow, setShowEmailWindow] = useState(false)
+ 
+  const handleForgotEmail = () => {
+    setShowEmailWindow(true);
+  };
 
-            switch (data.type) {
-              case 'patient':
-                navigate('/patient');
-                break;
-              case 'admin':
-                navigate('/admin');
-                break;
-              case 'pharmacist':
-                navigate('/pharmacist');
-                break;
-              default:
-                // Handle other user types or provide a default redirect
-                navigate('/');
-            }
-          } else {
-            // Handle login error, e.g., display an error message
-            console.error('Login failed');
-            setError('An error occurred while logging in. Please try again.');
+  const handleCloseForgotEmail = () => {
+    setShowEmailWindow(false);
+  };
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('/api/guest/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-          }
-        } catch (error) {
-          console.error('An error occurred while logging in:', error);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setUsername(data.username); // Store the username in state
+
+        switch (data.type) {
+          case 'patient':
+            navigate('/patient');
+            break;
+          case 'admin':
+            navigate('/admin');
+            break;
+          case 'pharmacist':
+            navigate('/pharmacist');
+            break;
+          default:
+            // Handle other user types or provide a default redirect
+            navigate('/');
         }
-        // const userTypeCookie = Cookies.get('type');
-        
-      // Handle successful login, e.g., redirect or update state
-      };
-    return(
-     <div>
-      <Navbar/>
-       <div className='container'>
-      <div className='login-cover'>
-      </div>
+      } else {
+        setError('Username or password might be incorrect.');
+      }
+    } catch (error) {
+      console.error('An error occurred while logging in:', error);
+    }
+  };
+
+  return (
+    <div>
+      <Navbar />
+      <div className='login-cover'></div>
+      <div className='login-container container'>
         <div className="login-card card">
-          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <div className="title">
+          {errorMessage && <p className='error' style={{ color: "red" }}>{errorMessage}</p>}
+          <div className='login-form'>
+            <h2 className='wb'>Welcome back!</h2>
+            <div className='wb'>Log in to El7a2ni</div>
+            <br />
+            <input
+              className='login-input form-control'
+              name="username"
+              placeholder='Username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <br />
+            <input
+              className='login-input form-control'
+              name="password"
+              type='password'
+              placeholder='Password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <br />
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <h2>LOGIN</h2>
-            
+            <a className='forgot' onClick={handleForgotEmail}>Forgot password?</a>
+            {showEmailWindow && (
+        <div className="modal-overlay">
+          <div className="card">
+            <div className="forgotPass">
+              <ForgotPass />
             </div>
-            <div className='login-form'>
-            <div className='wb'>Welcome Back to el7a2ni</div>
-            <label>Username:</label>
-            <br/>
-            <input 
-                name="username" 
-                placeholder='your username'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <br/>
-            <label>Password:</label>
-            <br/>
-            <input 
-                name="password" 
-                type='password' 
-                placeholder='*********'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <br/>
-
-            <a className='forgot' href='/forgotpassword'>forgot password?</a>
-            <br/>
-            
-
-            <button className='btn btn-primary btn-default-width' onClick={handleLogin}>Login</button>
-            <br/>
-
-            <a className='center' href='/guest'>CREATE ACCOUNT!</a>
-            
-            </div>
+            <button
+              className="close-btn btn btn-danger btn-default-width"
+              onClick={handleCloseForgotEmail}
+            >
+              Close
+            </button>
+          </div>
         </div>
+      )}
+                          
+            <br />
+            <button className='login-btn btn btn-primary' onClick={handleLogin}>Login</button>
+            <hr />
+            <Link to="/guest" className="createAcc-btn btn btn-primary" style={{ color: 'white', transform: 'translateX(115%)' }}>Create Account</Link>
+          </div>
         </div>
-        </div>
-    )
-}
+      </div>
+      <Footer/>
+    </div>
+  );
+};
+
 export default Login;

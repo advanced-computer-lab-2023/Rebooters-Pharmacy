@@ -1,8 +1,8 @@
 import '../styles/forgotpassword.css';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from '../components/Navbar';
-
+import Image from "../content/images/ELHANNY-LOGO.png";
+import { Link } from 'react-router-dom';
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -31,26 +31,30 @@ const ForgotPassword = () => {
   };
   return (
     <div>
-      <Navbar/>
     <div className='forgot-container'>
-    <div className="card mt-4">
+    <div className="mt-4">
       <div className="body card-body">
-        <div className="title">
-          <h2>El7a2ni</h2>
-        </div>
+      <div className='notwithbtn-container'>
+      <div className="d-flex align-items-center">
+              <img className='logo-img' src={Image} width="50" alt="El7a2ni Logo" />
+              <Link to="" className="logoname"><h4>El7a2ni</h4></Link>
+            </div>
+
         <div className="email-container">
           <div className="cc">Write your email:</div>
-        </div>
+        
         <input
           name="email"
-          className="form-control"
+          className="form-control email-box"
           placeholder="your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        </div>
+        </div>
         <br />
-        <button className="btn btn-primary" onClick={(e) =>handleRequestPasswordResetOTP(e)}>
-          Request OTP Code
+        <button className="request-btn btn btn-primary btn-default-width" onClick={(e) =>handleRequestPasswordResetOTP(e)}>
+          Request OTP
         </button>
 
         <br />

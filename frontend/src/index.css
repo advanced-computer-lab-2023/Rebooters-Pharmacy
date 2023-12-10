@@ -32,8 +32,8 @@ header a {
   margin: 0 auto;
 }
 .form-submit{
-  display: flex;
-  justify-content: end;
+  display: flex !important;
+  justify-content: flex-end !important;
 }
 .form-submit .btn:not(:last-child){
   margin-right: 8px;
@@ -41,13 +41,17 @@ header a {
 .btn-default-width{
   width: 150px;
 }
-
+footer {
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+}
 
 /*bootstrap override*/
 .btn{
   border-radius: 0 !important;
   box-shadow: 3px 2px 5px #b7b1b1;
-  transition: .3s ease-in-out;
+  transition: .3s ease-in-out !important;
 }
 .btn:active{
   box-shadow: none
