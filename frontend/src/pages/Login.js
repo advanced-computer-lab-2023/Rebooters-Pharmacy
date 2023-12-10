@@ -97,7 +97,7 @@ const Login = () => {
               <ForgotPass />
             </div>
             <button
-              className="close-btn btn btn-danger btn-default-width"
+              className="close-btn btn btn-secondary btn-default-width"
               onClick={handleCloseForgotEmail}
             >
               Close
