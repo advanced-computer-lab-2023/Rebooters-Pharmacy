@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
 
 import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
 import Pharmacist from "./pages/PharmacistHome";
 import Admin from "./pages/Admin";
 import Guest from "./pages/Guest";
@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import OTP from "./pages/OTP";
 import ForgotPassword from "./pages/ForgotPassword";
 
-
 function App() {
   return (
     <div className="App">
@@ -20,15 +19,19 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/guest" element={<Guest />} />
-          <Route path="/pharmacist" element={<Pharmacist />} />   
-          <Route path= "/admin" element={<Admin/>}/>
-          <Route path= "/patient" element={<Patient/>}/>
-          <Route path="/api/patient/addNewDeliveryAddress"  element={<PatientActivities/>}/>
-          <Route path="/api/patient/checkOutmyOrder"  element={<CheckingOut/>}/>
+          <Route path="/pharmacist" element={<Pharmacist />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/patient" element={<Patient />} />
+          <Route
+            path="/api/patient/addNewDeliveryAddress"
+            element={<PatientActivities />}
+          />
+          <Route
+            path="/api/patient/checkOutmyOrder"
+            element={<CheckingOut />}
+          />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/otp" element={<OTP />} />
-
-         
         </Routes>
       </BrowserRouter>
     </div>

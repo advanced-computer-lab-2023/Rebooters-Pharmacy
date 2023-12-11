@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import "../styles/patientChat.css";
 
 const PatientChats = () => {
   const [newChatContent, setNewChatContent] = useState('');
@@ -117,7 +117,7 @@ const PatientChats = () => {
 
 
   return (
-    <div className='container'>
+    <div className='chat-container container'>
       <h2>My Chat</h2>
       <div>
         {/* Start a New Chat */}
@@ -125,13 +125,13 @@ const PatientChats = () => {
           <div>
             <h3>Start a New Chat</h3>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <textarea
+            <input className='chat-box form-control'
               rows="1"
               cols="25"
               placeholder="Type your message here..."
               value={newChatContent}
               onChange={(e) => setNewChatContent(e.target.value)}
-            ></textarea>
+            ></input>
             <br />
             <button className='btn btn-primary' onClick={startNewChat}>
               Start Chat
@@ -146,7 +146,7 @@ const PatientChats = () => {
               <h4>
                 {activeChat !== chat._id && (
                   <button
-                    className='btn btn-danger'
+                    className='btn btn-secondary'
                     style={{ marginLeft: '10px' }}
                     onClick={() => deleteChat(chat._id)}
                   >
@@ -167,7 +167,7 @@ const PatientChats = () => {
               {activeChat === chat._id && (
                 <div>
                   {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                  <textarea
+                  <input className='chat-box form-control'
                     rows="1"
                     cols="25"
                     placeholder="Type your message here..."
@@ -175,7 +175,7 @@ const PatientChats = () => {
                     onChange={(e) =>
                       setMessageContents({ ...messageContents, [chat._id]: e.target.value })
                     }
-                  ></textarea>
+                  ></input>
                   <br />
                   <button className='btn btn-primary' onClick={() => continueChat(chat._id)}>
                     Send

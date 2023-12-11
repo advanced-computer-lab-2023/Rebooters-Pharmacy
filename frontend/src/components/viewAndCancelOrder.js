@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const ViewAndCancelOrder = () => {
@@ -7,18 +7,17 @@ const ViewAndCancelOrder = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
 
-
   // Fetch orders for the current patient
   useEffect(() => {
     // Fetch orders based on the logged-in user or patient information
     // You may need to implement this part according to your authentication and data fetching logic
     const fetchOrders = async () => {
       try {
-        const response = await fetch('/api/patient/viewAllOrders'); // Replace with your API endpoint
+        const response = await fetch("/api/patient/viewAllOrders"); // Replace with your API endpoint
         const data = await response.json();
         setOrders(data);
       } catch (error) {
-        console.error('Error fetching orders', error);
+        console.error("Error fetching orders", error);
       }
     };
 
@@ -28,9 +27,9 @@ const ViewAndCancelOrder = () => {
   const handleCancelOrder = async (orderId) => {
     try {
       const response = await fetch(`/api/patient/cancelOrder`, {
-        method: 'POST', 
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderId }),
       });
@@ -40,23 +39,23 @@ const ViewAndCancelOrder = () => {
         // Update the order status in the local state
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
-            order._id === orderId ? { ...order, status: 'Canceled' } : order
+            order._id === orderId ? { ...order, status: "Canceled" } : order
           )
         );
       } else {
         // Handle error from the server
-        console.error('Error canceling order');
+        console.error("Error canceling order");
       }
     } catch (error) {
-      console.error('Error canceling order', error);
+      console.error("Error canceling order", error);
     }
   };
   const handleViewOrderDetails = async (orderId) => {
     try {
       const response = await fetch(`/api/patient/viewOrderDetails`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderId }),
       });
@@ -67,10 +66,10 @@ const ViewAndCancelOrder = () => {
         setSelectedOrderId(orderId);
         toggleDetails();
       } else {
-        console.error('Error fetching order details');
+        console.error("Error fetching order details");
       }
     } catch (error) {
-      console.error('Error fetching order details', error);
+      console.error("Error fetching order details", error);
     }
   };
 
@@ -96,30 +95,30 @@ const ViewAndCancelOrder = () => {
                 <td>{order._id}</td>
                 <td>{order.status}</td>
                 <td>
-                  {order.status === 'Pending' && (
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginRight: "5px" }}
+                    onClick={() => handleViewOrderDetails(order._id)}
+                  >
+                    View Details
+                  </button>
+                  {order.status === "Pending" && (
                     <>
                       <button
-                        className="btn btn-danger"
+                        className="btn btn-secondary"
                         onClick={() => handleCancelOrder(order._id)}
                       >
                         Cancel
                       </button>
-                     
                     </>
                   )}
-                  <button
-                        className="btn btn-info ml-2"
-                        onClick={() => handleViewOrderDetails(order._id)}
-                      >
-                        View Details
-                      </button>
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
 
-      {selectedOrderId && orderDetails && isDetailsVisible &&(
+      {selectedOrderId && orderDetails && isDetailsVisible && (
         <div>
           <h3>Order Details</h3>
           <p>Order ID: {selectedOrderId}</p>
