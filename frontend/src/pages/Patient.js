@@ -12,6 +12,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import Image from "../content/images/ELHANNY-LOGO.png";
 import { Link } from 'react-router-dom';
 import PatientProfile from "../components/patientProfile";
+import "../styles/background.css";
+
 
 const Patient = () => {
   const [sharedState, setSharedState] = useState('');
@@ -91,8 +93,9 @@ const Patient = () => {
   };
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-  
+            <div className='background-cover'></div>
+
+      <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>  
   <img src={Image} width="60"/>
     <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
     <button
@@ -173,7 +176,9 @@ const Patient = () => {
 </nav>
     <div className="container">
       
-      <h1 className="mb-4 text-center">Patient Dashboard</h1>
+    <h1 className="mb-4 text-center">
+    {activeTab === "orders" ? "Order Dashboard" : "Patient Dashboard"}
+  </h1>
       {activeTab === "settings" && (
       <div className="card mt-4">
         <PatientProfile/>
@@ -187,24 +192,18 @@ const Patient = () => {
           )}      </div>)}
       {activeTab === "medicines" && (
       <div className="card mt-4"> {<Medicine sharedState={sharedState} modelName="patient" />}</div>)}
-      {activeTab === "settings" && (
-      <div className="card mt-4">{<PatientActivities modelName="patient" />}</div>)}
+      
       {activeTab === "chat" && (
       <div className="card mt-4">
         <PatientChats setChats={setChats} chats={chats} /> {/* Pass setChats and chats to PatientChats */}
       </div>)}
       {activeTab === "orders" && (
       <div className="container card mt-4">
-        <h3>Order CheckOut </h3>
-        <div>
+        <div >
           <ViewCartItems />
         </div>
-        <div >{<CheckingOut sharedState={sharedState} setSharedState={setSharedState} modelName="patient" />}</div>
       </div>)}
-      {activeTab === "orders" && (
-      <div className="card mt-4">
-        <ViewAndCancelOrder />
-      </div>)}
+      
     </div>
     </div>
   );
