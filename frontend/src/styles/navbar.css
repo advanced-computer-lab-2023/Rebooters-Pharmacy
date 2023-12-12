@@ -1,0 +1,40 @@
+.navbar-container {
+    z-index: 1999;
+    background: #fff;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+}
+
+.nav-list li {
+    margin-right: 20px;
+}
+
+.nav-list li:last-child {
+    margin-right: 0;
+}
+
+.nav-list li a {
+    padding: 10px 5px;
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease;
+}
+.nav-list li a:hover {
+    color: #1aac83;
+}
+.nav-list li a:active {
+    color: #1aac83;
+}
+.nav-logo {
+    display: inline-flex;
+}
+
+.logo-name {
+    text-decoration: none;
+    color: #1aac83;
+    font-weight: bold;
+}
