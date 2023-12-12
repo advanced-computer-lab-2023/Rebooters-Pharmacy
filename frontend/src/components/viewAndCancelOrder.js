@@ -9,14 +9,16 @@ const ViewAndCancelOrder = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
 
+
+  // Fetch orders for the current patient
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('/api/patient/viewAllOrders');
+        const response = await fetch('/api/patient/viewAllOrders'); // Replace with your API endpoint
         const data = await response.json();
         setOrders(data);
       } catch (error) {
-        console.error('Error fetching orders', error);
+        console.error("Error fetching orders", error);
       }
     };
 
@@ -28,7 +30,7 @@ const ViewAndCancelOrder = () => {
       const response = await fetch(`/api/patient/cancelOrder`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderId }),
       });
@@ -36,23 +38,24 @@ const ViewAndCancelOrder = () => {
       if (response.ok) {
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
-            order._id === orderId ? { ...order, status: 'Canceled' } : order
+            order._id === orderId ? { ...order, status: "Canceled" } : order
           )
         );
       } else {
+        // Handle error from the server
         console.error('Error canceling order');
       }
     } catch (error) {
-      console.error('Error canceling order', error);
+      console.error("Error canceling order", error);
     }
   };
 
   const handleViewOrderDetails = async (orderId) => {
     try {
       const response = await fetch(`/api/patient/viewOrderDetails`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderId }),
       });
@@ -63,10 +66,10 @@ const ViewAndCancelOrder = () => {
         setSelectedOrderId(orderId);
         toggleDetails();
       } else {
-        console.error('Error fetching order details');
+        console.error("Error fetching order details");
       }
     } catch (error) {
-      console.error('Error fetching order details', error);
+      console.error("Error fetching order details", error);
     }
   };
 

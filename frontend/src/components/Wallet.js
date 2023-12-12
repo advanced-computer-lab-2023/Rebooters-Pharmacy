@@ -38,9 +38,7 @@ const Wallet = ({ userType }) => {
         <Card.Header>Wallet Balance</Card.Header>
         <Card.Body>
           <Card.Title>{walletBalance} $</Card.Title>
-          <Card.Text>
-            This is your wallet balance. Use it wisely!
-          </Card.Text>
+          
         </Card.Body>
       </Card>
       <br />

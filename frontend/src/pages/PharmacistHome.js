@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../styles/background.css';
+import "../styles/background.css";
 import AddMedicine from "../components/addMedicine";
 import EditMedicine from "../components/editMedicine";
 import ViewMedicineQuantitySales from "../components/ViewMedicineQuantitySales";
@@ -14,11 +14,12 @@ import Wallet from "../components/Wallet";
 import MedicineDropdown from "../components/filterRepo";
 import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
 import PharmacistRespondToDoc from "../components/PharmacistRespondToDoc";
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import axios from "axios";
+import { Link } from "react-router-dom";
 import Image from "../content/images/ELHANNY-LOGO.png";
 import PharmacistProfile from "../components/pharmaProfile"; // Import the new component
 import ChatWithDoctor from "../components/ChatWithDoctor";
+import Footer from "../components/footer";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -73,22 +74,21 @@ const PharmacistHome = () => {
   const closeActiveChat = async (chatId) => {
     try {
       await axios.delete(`/api/pharmacist/deleteChat/${chatId}`);
-      console.log('Chat closed:', chatId);
+      console.log("Chat closed:", chatId);
       setActiveChat(null);
       // Refresh the chat list by filtering out the closed chat
       setChats(chats.filter((chat) => chat._id !== chatId));
     } catch (error) {
-      console.error('Error closing chat:', error);
+      console.error("Error closing chat:", error);
     }
   };
-  
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
   const handleFilter = (medicine) => {
     // Handle the filter logic here
-    console.log('Filtering by medicine:', medicine);
+    console.log("Filtering by medicine:", medicine);
     // You can add more logic or state updates based on the selected medicine
   };
   const togglePasswordPopup = () => {
@@ -96,10 +96,14 @@ const PharmacistHome = () => {
   };
   return (
     <div>
-      
-         <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-      <img src={Image} width="60"/>
-        <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
+      <nav
+        className="navbar navbar-expand-lg"
+        style={{ backgroundColor: "white" }}
+      >
+        <img src={Image} width="60" />
+        <Link to="" className="logo-name">
+          <span>El7a2ni</span>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -112,124 +116,137 @@ const PharmacistHome = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-          <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+          <ul className="nav-list">
+            <li
+              className={`nav-btn nav-item ${
+                activeTab === "home" ? "active" : ""
+              }`}
+            >
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("home")}
               >
                 Home
               </button>
             </li>
             <li
-              className={`nav-item ${
+              className={`nav-btn nav-item ${
                 activeTab === "medicines" ? "active" : ""
               }`}
             >
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("medicines")}
               >
                 Medicines
               </button>
             </li>
             <li
-              className={`nav-item ${
+              className={`nav-btn nav-item ${
                 activeTab === "chat" ? "active" : ""
               }`}
             >
               <button
-                className="nav-link"
+                className="nav-link nav-btn"
                 onClick={() => handleTabClick("chat")}
               >
                 Chat
               </button>
             </li>
             <li
-              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+              className={`nav-item nav-btn ${
+                activeTab === "settings" ? "active" : ""
+              }`}
             >
               <button
-                className="nav-link"
+                className="nav-link nav-btn"
                 onClick={() => handleTabClick("settings")}
               >
                 Settings
               </button>
             </li>
-            <li className="nav-item">
-              <button className="nav-link" onClick={handleLogout}>
+            <li className="nav-btn nav-item">
+              <button className="nav-btn nav-link" onClick={handleLogout}>
                 Logout
               </button>
             </li>
           </ul>
         </div>
-    </nav>
-    <div className="container">
-      <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
-      {activeTab === "settings" && (
-        <div className="card mt-4">
-          <PharmacistProfile/>
-          <button className="btn btn-primary mt-2 d-inline-block w-auto" onClick={togglePasswordPopup}>
-          {showPasswordPopup ? "Hide" : "Change Password"}
-          </button>
-          {showPasswordPopup && (
-            <div className="popup">
-              <ChangePassword userType="pharmacist" />
+      </nav>
+      <div className="background-cover">
+        <div className="container">
+          <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
+          {activeTab === "settings" && (
+            <div className="card mt-4">
+              <PharmacistProfile />
+              <button
+                className="btn btn-primary mt-2 d-inline-block w-auto"
+                onClick={togglePasswordPopup}
+              >
+                {showPasswordPopup ? "Hide" : "Change Password"}
+              </button>
+              {showPasswordPopup && (
+                <div className="popup">
+                  <ChangePassword userType="pharmacist" />
+                </div>
+              )}{" "}
             </div>
-          )}        </div>
-      )}
-      {activeTab === "chat" && (
-        <div className="card mt-4">
-          <PharmacistChats />
-        </div>
-      )}
-      {activeTab === "home" && (
-        <div>
-          <Wallet userType="pharmacist" />
-        </div>
-      )}
-      {activeTab === "home" && (
-        <div className="card mt-4">
-          <Notifications />
-        </div>
-      )}
-      {activeTab === "chat" && (
-      <div className="card mt-4">
-        <Pharmacist_DoctorChats setChats={setChats} chats={chats} /> 
-      </div>)}
+          )}
+          {activeTab === "chat" && (
+            <div className="card mt-4">
+              <PharmacistChats />
+            </div>
+          )}
+          {activeTab === "home" && (
+            <div>
+              <Wallet userType="pharmacist" />
+            </div>
+          )}
+          {activeTab === "home" && (
+            <div className="card mt-4">
+              <Notifications />
+            </div>
+          )}
+          {activeTab === "chat" && (
+            <div className="card mt-4">
+              <Pharmacist_DoctorChats setChats={setChats} chats={chats} />
+            </div>
+          )}
 
-      {activeTab === "chat" && (
-        <div className="card mt-4">
-          <ChatWithDoctor />
-        </div>
-      )}
-      {activeTab === "chat" && (
-        <div className="card mt-4">
-          <PharmacistRespondToDoc/>
-        </div>
-      )}
+          {activeTab === "chat" && (
+            <div className="card mt-4">
+              <ChatWithDoctor />
+            </div>
+          )}
+          {activeTab === "chat" && (
+            <div className="card mt-4">
+              <PharmacistRespondToDoc />
+            </div>
+          )}
 
-      {activeTab === "medicines" && (
-        <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
-      )}
-      {activeTab === "medicines" && (
-        <div className="mt-4">
-          <AddMedicine />
-        </div>
-      )}
-      {/*{activeTab === "medicines" && (
+          {activeTab === "medicines" && (
+            <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
+          )}
+          {activeTab === "medicines" && (
+            <div className="mt-4">
+              <AddMedicine />
+            </div>
+          )}
+          {/*{activeTab === "medicines" && (
         <div className="mt-4">
           <EditMedicine />
         </div>
       )}*/}
 
-      {activeTab === "home" && (
-        <div className="mt-4">
-          <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
-          <SalesReportGenerator userType="pharmacist"/>
+          {activeTab === "home" && (
+            <div className="mt-4">
+              <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
+              <SalesReportGenerator userType="pharmacist" />
+            </div>
+          )}
         </div>
-      )}
-      
-    </div>
+      </div>
+      <Footer />
     </div>
   );
 };

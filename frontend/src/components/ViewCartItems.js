@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Wallet from './Wallet';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
 import '../styles/cartItems.css';
 import Medicine from "../components/Medicine";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CheckingOut from '../components/CheckingOut';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Overlay from 'react-bootstrap/Overlay';
+import Popover from 'react-bootstrap/Popover';
 
 const ViewCartItems = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -20,6 +22,15 @@ const ViewCartItems = () => {
   const [showModal, setShowModal] = useState(false);
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const total = subtotal; 
+  const [coupon, setCoupon] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const [discount, setDiscount] = useState(0); 
+  const [SuccessCoupoun, setCouponSuccess] = useState('');
+  const [image, setImage] = useState(null);
+  const [walletShow, setWalletShow] = useState(false);
+  const [walletTarget, setWalletTarget] = useState(null);
+  const walletRef = useRef(null);
+
 
   useEffect(() => {
     const getCartItems = async () => {
@@ -167,6 +178,50 @@ const ViewCartItems = () => {
   };
 
 
+  useEffect(() => {
+    // Reset successMessage after 2 seconds
+    const resetSuccessCoupoun = () => {
+      setCouponSuccess('');
+    };
+
+    const timer = setTimeout(resetSuccessCoupoun, 2000);
+    
+
+    return () => clearTimeout(timer);
+  }, [SuccessCoupoun]);
+
+  useEffect(() => {
+    // Reset dangerMessage after 2 seconds
+    const resetDangerCoupounError = () => {
+      setCouponError('');
+    };
+
+    const dangerTimer = setTimeout(resetDangerCoupounError, 2000);
+
+    return () => clearTimeout(dangerTimer);
+  }, [couponError]);
+
+
+  const handleApplyCoupon = () => {
+    if (coupon.trim() === '') {
+      setCouponError('Please fill in the coupon code.');
+    } else if (coupon === 'SUP60' || coupon === 'sup60') {
+        const couponDiscount = subtotal * 0.6;
+        setDiscount(couponDiscount);
+        setCouponSuccess('The discount added successfully');      
+    } else {
+      // Reset the discount if the coupon is not valid
+      setDiscount(0);
+      setCouponError('The coupon has expired.');
+    }
+  };
+
+  const handleWalletClick = (event) => {
+    setWalletShow(!walletShow);
+    setWalletTarget(event.target);
+  };
+ 
+
   return (
     <div className="site-section">
        {error && <Alert variant="danger">{error}</Alert>}
@@ -191,7 +246,10 @@ const ViewCartItems = () => {
                   {cartItems.map((item, index) => (
                     <tr key={index}>
                       <td className="product-thumbnail">
-                        <img src={item.imageUrl} alt="Image" className="img-fluid" />
+                        <img  src={`${item.image.filename}`}
+                        alt={item.name} className="bd-placeholder-img card-img-top"
+                        width="20%"
+                        height="125" />
                       </td>
                       <td className="product-name">
                         <h2 className="h5 text-black">{item.name}</h2>
@@ -229,12 +287,14 @@ const ViewCartItems = () => {
                       </td>
                       <td>${item.quantity * item.price}</td>
                       <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => handleRemoveItem(item.name)}
-                        >
-                          X
-                        </button>
+                      <button
+                        type="button" // Add this line to explicitly set the button type
+                        className="btn btn-danger"
+                        onClick={() => handleRemoveItem(item.name)}
+                      >
+                        X
+                      </button>
+
                       </td>
                     </tr>
                   ))}
@@ -247,12 +307,14 @@ const ViewCartItems = () => {
         <div className="row">
           <div className="col-md-6">
             <div className="row mb-5">
-              <div className="col-md-6 mb-3 mb-md-0">
-              <Link to="/patient" className="btn btn-outline-primary btn-md btn-block">
+            <div className="col-md-4 mb-3 mb-md-0">
+              <Link to="/patient#medicines" className="btn btn-outline-primary btn-md btn-block">
               Continue Shopping
             </Link>
               </div>
+              
             </div>
+ 
             <div className="row">
               <div className="col-md-12">
                 <label className="text-black h4" htmlFor="coupon">
@@ -261,12 +323,17 @@ const ViewCartItems = () => {
                 <p>Enter your coupon code if you have one.</p>
               </div>
               <div className="col-md-8 mb-3 mb-md-0">
-                <input type="text" className="form-control py-3" id="coupon" placeholder="Coupon Code" />
+                <input type="text" className="form-control py-3" id="coupon" placeholder="Coupon Code"   onChange={(e) => setCoupon(e.target.value)}/>
               </div>
               <div className="col-md-4">
-                <button className="btn btn-primary btn-md px-4" onClick={"/* Add your apply coupon function */"}>
+                <button
+                  className="btn btn-primary btn-md px-4"
+                  onClick={handleApplyCoupon}
+                >
                   Apply Coupon
                 </button>
+                {couponError && <Alert variant="danger">{couponError}</Alert>}
+              {SuccessCoupoun && <Alert variant="success">{SuccessCoupoun}</Alert>}
               </div>
             </div>
           </div>
@@ -286,14 +353,22 @@ const ViewCartItems = () => {
                     <strong className="text-black">${subtotal.toFixed(2)}</strong>
                   </div>
                 </div>
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <span className="text-black">Discount</span>
+                  </div>
+                  <div className="col-md-6 text-right">
+                    <strong className="text-black">-${discount.toFixed(2)}</strong>
+                  </div>
+                </div>
                 <div className="row mb-5">
                   <div className="col-md-6">
                     <span className="text-black">Total</span>
                   </div>
                   <div className="col-md-6 text-right">
-                    <strong className="text-black">${total.toFixed(2)}</strong>
-                  </div>
-                </div>
+            <strong className="text-black">${(subtotal - discount).toFixed(2)}</strong>
+          </div>
+        </div>
 
                 <div className="row">
                   <div className="col-md-12">
@@ -306,21 +381,21 @@ const ViewCartItems = () => {
                   </div>
                 </div>
                 {/* Bootstrap Modal */}
-      <Modal show={showModal} onHide={handleModalClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Proceed To Checkout</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* Include the CheckingOut component here */}
-          <CheckingOut />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleModalClose}>
-            Close
-          </Button>
-          {/* You can add additional actions/buttons if needed */}
-        </Modal.Footer>
-      </Modal>
+              <Modal show={showModal} onHide={handleModalClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title> Checkout</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {/* Include the CheckingOut component here */}
+                  <CheckingOut />
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleModalClose}>
+                    Close
+                  </Button>
+                  {/* You can add additional actions/buttons if needed */}
+                </Modal.Footer>
+              </Modal>
               </div>
             </div>
           </div>

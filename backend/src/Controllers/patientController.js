@@ -261,6 +261,12 @@ const addMedicineToCart = async (req, res) => {
         name: medicine.name,
         price: medicine.price,
         quantity: 1,
+        image: {
+          data: medicine.image.data,
+          contentType: medicine.image.contentType,
+          filename: medicine.image.filename,
+        },
+        
       };
       patient.cart.push(cartItem);
       await patient.save();
@@ -280,6 +286,11 @@ const addMedicineToCart = async (req, res) => {
         name: medicine.name,
         price: medicine.price,
         quantity: 1,
+        image: {
+          data: medicine.image.data,
+          contentType: medicine.image.contentType,
+          filename: medicine.image.filename,
+        },
       };
       patient.cart.push(cartItem);
       await patient.save();

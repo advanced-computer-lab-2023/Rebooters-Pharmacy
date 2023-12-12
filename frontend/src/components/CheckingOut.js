@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Alert, Form, Row, Col, Button } from "react-bootstrap";
 import PatientAddAddress from "./PatientAddAddress";
+import Wallet from './Wallet';
+
 
 function CheckingOut({ modelName ,sharedState, setSharedState }) {
   const [elementsArray, setelementsArray] = React.useState([]);
@@ -180,6 +182,8 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
   return (
     <div className="container">
 
+      <Wallet userType="patient" />
+
        {/* Bootstrap Alert */}
       {alert.message && (
         <Alert
@@ -212,10 +216,10 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
         <PatientAddAddress addNewAddress={addNewAddress} />
 
       <Form.Group as={Row}>
-          <Form.Label column sm="3">
+          <Form.Label column sm="8">
             Choose one of your shipping addresses:
           </Form.Label>
-          <Col sm="3">
+          <Row sm="2">
             <Form.Control
               as="select"
               id="dropdown"
@@ -227,14 +231,14 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
                 </option>
               ))}
             </Form.Control>
-          </Col>
+          </Row>
         </Form.Group>
 
       <Form.Group as={Row}>
-        <Form.Label column sm="3">
+        <Form.Label column sm="8">
           Choose a Payment Method:
         </Form.Label>
-        <Col sm="3">
+        <Row sm="3">
           <Form.Control as="select" id="paymentMethod">
             <option value="wallet">wallet</option>
             <option value="credit card (using Stripe)">
@@ -242,24 +246,25 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
             </option>
             <option value="cash on delivery">cash on delivery</option>
           </Form.Control>
-        </Col>
+        </Row>
       </Form.Group>
 
       <Form.Group as={Row}>
-        <Form.Label column sm="3">
-          Your mobile number:
+        <Form.Label column sm="8">
+         Mobile number:
         </Form.Label>
-        <Col sm="3">
+        <Row sm="3">
           <Form.Control
             type="text"
             id="phone"
             placeholder="Mobile number"
             className="form-control"
           />
-        </Col>
+        </Row>
       </Form.Group>
 
 
+        
         <Button onClick={checkout} className="btn btn-primary">
           Check Out
         </Button>

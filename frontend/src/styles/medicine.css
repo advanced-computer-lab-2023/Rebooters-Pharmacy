@@ -1,5 +1,29 @@
-.medicine-card{
-    border-radius: 10px;
-    background-color: rgb(240, 240, 240); 
+.medicine-card {
+  border-radius: 5px;
+  background-color: white;
+  /* border-color: #95b9c7; */
+  box-shadow: 1px 1px 14px #e4e4e4;
+  border: none;
+  padding: 15px;
 }
 
+.custom-search-input {
+  position: relative;
+}
+.custom-search-input i {
+  position: absolute;
+  top: 50%;
+  /* right: 0; */
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 28px;
+}
+
+.search-input {
+  outline: none;
+  border: none;
+  height: 60px;
+  box-shadow: 3px 3px 10px #ddd;
+  border-radius: 29px;
+  text-indent: 40px;
+}

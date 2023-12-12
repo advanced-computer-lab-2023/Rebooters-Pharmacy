@@ -54,7 +54,7 @@ useEffect(() => {
 
   return (
     <div>
-    <div id="inputContainer">
+    <div id="inputContainer" style= {{ marginBottom: "5px" }}>
     {successMessage && <Alert variant="success">{successMessage}</Alert>}
    <input
       type="text"
@@ -64,8 +64,14 @@ useEffect(() => {
     />
 <button onClick={addInputField}>+</button>
 <br></br>
+
 </div>
-<button onClick={addAddress}>Add</button>
+<div style={{ marginBottom: "5px" }}>
+  <button onClick={addAddress} className="btn btn-primary">
+    Add
+  </button>
+</div>
+
     </div>
 
   );
