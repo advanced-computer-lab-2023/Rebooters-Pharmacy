@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
 import Pharmacist from "./pages/PharmacistHome";
 import Admin from "./pages/Admin";
 import Guest from "./pages/Guest";
@@ -13,7 +11,7 @@ import OTP from "./pages/OTP";
 import ForgotPassword from "./pages/ForgotPassword";
 import AboutusPage from "./pages/AboutusPage";
 import ContactPage from "./pages/ContactPage";
-
+import Home from "./pages/homePage";
 
 function App() {
   return (
@@ -31,8 +29,7 @@ function App() {
           <Route path="/otp" element={<OTP />} />
           <Route path= "/AboutusPage" element={<AboutusPage/>}/>
           <Route path= "/ContactPage" element={<ContactPage/>}/>
-
-         
+          <Route path="/homePage" element={<Home/>}/>
         </Routes>
       </BrowserRouter>
     </div>
