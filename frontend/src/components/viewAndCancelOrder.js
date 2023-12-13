@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/viewCancelOrder.css';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
@@ -86,12 +87,12 @@ const ViewAndCancelOrder = () => {
   return (
     <div className="container mt-5">
       <h2>Your Orders</h2>
-      <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
-          <tr>
-            <th>Order ID</th>
-            <th>Status</th>
-            <th>Action</th>
+      <table className="table table-bordered table-striped  ">
+        <thead className="thead-primary ">
+          <tr className="table-primary">
+            <th >Order ID</th>
+            <th >Status</th>
+            <th >Action</th>
           </tr>
         </thead>
         <tbody>
@@ -101,8 +102,8 @@ const ViewAndCancelOrder = () => {
                 key={order._id}
                 className={order.status === 'Pending' ? 'table-secondary' : ''}
               >
-                <td>{order._id}</td>
-                <td>
+                <td >{order._id}</td>
+                <td >
                   {order.status === 'Pending' && (
                     <div className="progress">
                       <div
@@ -119,15 +120,8 @@ const ViewAndCancelOrder = () => {
                   )}
                   {order.status !== 'Pending' && <span>{order.status}</span>}
                 </td>
-                <td>
-                  {order.status === 'Pending' && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleCancelOrder(order._id)}
-                    >
-                      Cancel
-                    </button>
-                  )}
+                <td >
+                  
                   <Offcanvas
                     show={isDetailsVisible && selectedOrderId === order._id}
                     onHide={toggleDetails}
@@ -155,6 +149,14 @@ const ViewAndCancelOrder = () => {
                                 <p>Name: {item.name}</p>
                                 <p>Price: ${item.price}</p>
                                 <p>Quantity: {item.quantity}</p>
+                                {item.image && (
+                                  <img
+                                  src={`${item.image.filename}`}
+                                    alt={item.name}
+                                    className="bd-placeholder-img card-img-top"
+                                    style={{ width: "20%", height: "25" }}
+                                  />
+                                )}
                               </li>
                             ))}
                           </ul>
@@ -163,13 +165,17 @@ const ViewAndCancelOrder = () => {
                       <CloseButton />
                     </Offcanvas.Body>
                   </Offcanvas>
-                  <Button
-                    variant="primary"
-                    className="ml-2"
-                    onClick={() => handleViewOrderDetails(order._id)}
-                  >
+                  <Button variant="primary" className="ml-2"  style = {{marginRight:"5px"}}  onClick={() => handleViewOrderDetails(order._id)} >
                     View Details
                   </Button>
+                  {order.status === 'Pending' && (
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => handleCancelOrder(order._id)}
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

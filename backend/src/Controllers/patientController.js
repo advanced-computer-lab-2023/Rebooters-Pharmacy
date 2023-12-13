@@ -503,6 +503,14 @@ const viewOrderDetails = async (req, res) => {
       paymentMethod: order.paymentMethod,
       total: order.total,
       items: order.items,
+       image: order.image
+        ? {
+            data: order.image.data,
+            contentType: order.image.contentType,
+            filename: order.image.filename,
+          }
+        : null,
+    
     };
 
     res.status(200).json(orderDetails);
