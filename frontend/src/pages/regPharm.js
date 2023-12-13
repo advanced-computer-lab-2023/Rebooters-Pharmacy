@@ -103,7 +103,7 @@ const PharmReq = () => {
 
     <div className="request-form-container card container mt-4">
       <div className="request-form card-body">
-      <h2 className="mb-4 mt-4 text-center">Register as a Patient</h2>
+      <h2 className="mb-4 mt-4 text-center">Request to register as a Pharmacist</h2>
 
         <h4>Please fill in these details:</h4>
         {submissionStatus === "success" && (
