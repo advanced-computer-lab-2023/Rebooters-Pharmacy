@@ -21,7 +21,7 @@ const Conc = () => {
   return (
     <div className="site-wrap">
       <Navbar />
-      <div className='xy-cover' style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '100vh', position: 'relative' }}>
+      <div className='xy-cover' style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '89.8vh', position: 'relative' }}>
         <div className="text-center" style={{ marginLeft: '30px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'black' }}>
           <>
             {showContent && (

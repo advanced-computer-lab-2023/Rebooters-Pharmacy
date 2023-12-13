@@ -9,6 +9,22 @@ const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     viewOrderDetails, logout, changePassword ,getPatientProfile, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, checkWalletBalance,viewMedicineAlternatives } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
+
+const multer = require('multer'); 
+const storage = multer.diskStorage({
+    destination: (req, image, cb) => {
+      // Set the directory where uploaded files will be saved
+      cb(null, '../../frontend/public');
+    },
+    filename: (req, image, cb) => {
+      // Define the file name for each uploaded file (e.g., using a timestamp)
+      cb(null, image.originalname);
+    },
+  });
+
+  const upload = multer({ storage: storage });
+  
+
 router.get('/logout', requireAuth, logout);
 
 router.get('/viewAllOrders', requireAuth, viewAllOrders);
@@ -162,7 +178,7 @@ router.put('/addNewDeliveryAddress', requireAuth, AddNewDeliveryAdress);
 router.put('/changeAmountOfAnItem', requireAuth, changeAmountOfAnItem);
 router.post('/checkout', requireAuth, checkout);
 
-router.post('/addMedicineToCart', requireAuth, addMedicineToCart);
+router.post('/addMedicineToCart', requireAuth, upload.single('image'),addMedicineToCart);
 
 router.post('/viewMedicineAlternatives',requireAuth, viewMedicineAlternatives);
 

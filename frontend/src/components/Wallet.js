@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Card from 'react-bootstrap/Card';
 
 const Wallet = ({ userType }) => {
   const [walletBalance, setWalletBalance] = useState(0);
@@ -33,10 +34,14 @@ const Wallet = ({ userType }) => {
 
   return (
     <div className="container">
-      <div className="card p-2" style={{ width: '20%'}}>
-        <h5>Wallet Balance:</h5>
-        <p>{walletBalance} $</p> 
-      </div>
+      <Card border="info" style={{ width: '18rem' }}>
+        <Card.Header>Wallet Balance</Card.Header>
+        <Card.Body>
+          <Card.Title>{walletBalance} $</Card.Title>
+          
+        </Card.Body>
+      </Card>
+      <br />
     </div>
   );
 };

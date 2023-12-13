@@ -434,56 +434,63 @@ function Medicine({ modelName, sharedState }) {
           </div>
         </div>
       )}
-      <div className="card">
+      <div className="">
         <h1 className="mb-4">Medicine Inventory</h1>
-        <div className="mb-3">
-          <div
-            style={{ position: "relative" }}
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <input
-              type="text"
-              placeholder="Search by Name"
-              value={searchTerm}
-              onChange={handleInputChange}
-              className="form-control d-inline w-50"
-            />
+        <div className="row">
+          <div className="mb-3 col w-100">
+            <div
+              style={{ position: "relative" }}
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <div className="custom-search-input">
+                <i className="la la-search"></i>
+                <input
+                  type="text"
+                  placeholder="Search by Name"
+                  value={searchTerm}
+                  onChange={handleInputChange}
+                  className="form-control d-inline w-50 search-input w-100"
+                />
+              </div>
 
-            {suggestedMedicineNames.length > 0 && showDropdown && (
-              <ul className="list-group position-absolute w-50 mt-1">
-                {suggestedMedicineNames.map((name, index) => (
-                  <li
-                    key={index}
-                    className="list-group-item clickable"
-                    onClick={() => handleDropdownClick(name)}
-                  >
-                    {name}
-                  </li>
-                ))}
-              </ul>
-            )}
+              {suggestedMedicineNames.length > 0 && showDropdown && (
+                <ul className="list-group position-absolute w-50 mt-1">
+                  {suggestedMedicineNames.map((name, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item clickable"
+                      onClick={() => handleDropdownClick(name)}
+                    >
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="mb-3">
-          <input
-            type="text"
-            placeholder="Filter by Medical Use"
-            value={medicinalUse}
-            onChange={(e) => {
-              // Reset alternativeMessage when the user types in the filter field
-              setAlternativeMessage(null);
-              setMedicinalUse(e.target.value);
-            }}
-            className="form-control d-inline w-50"
-          />
+          <div className="mb-3 col w-100">
+            <div className="custom-search-input">
+              <i className="la la-search"></i>
+              <input
+                type="text"
+                placeholder="Filter by Medicinal Use"
+                value={medicinalUse}
+                onChange={(e) => {
+                  // Reset alternativeMessage when the user types in the filter field
+                  setAlternativeMessage(null);
+                  setMedicinalUse(e.target.value);
+                }}
+                className="form-control d-inline w-50 search-input w-100"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <hr />
       <div>
-        {/* Display the Bootstrap Alert */}
         {alternativeMessage && <div className="mb-3">{alternativeMessage}</div>}
 
-        <div className="mb-3">
+        <div className="">
           <h2>Medicine List</h2>
           <button className="btn btn-primary" onClick={toggleViewMedicines}>
             {showMedicineList ? "Hide Medicine List" : "View All Medicines"}
@@ -492,7 +499,7 @@ function Medicine({ modelName, sharedState }) {
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
               {medicines.map((medicine, index) => (
                 <div className="col" key={index}>
-                  <div className="medicine-card  card shadow-sm">
+                  <div className="medicine-card card shadow-sm">
                     {medicine.image.filename ? (
                       <img
                         src={`${medicine.image.filename}`}
@@ -519,8 +526,14 @@ function Medicine({ modelName, sharedState }) {
                         </text>
                       </svg>
                     )}
+
                     <div className="card-body ">
                       <h5 className="card-title">{medicine.name} </h5>
+                      {modelName === "patient" && medicine.quantity === 0 && (
+                        <p>
+                          Medicine is out of stock, click to view Alternatives{" "}
+                        </p>
+                      )}
                       <button
                         type="button"
                         className={
@@ -540,7 +553,7 @@ function Medicine({ modelName, sharedState }) {
                       {modelName === "patient" && medicine.quantity === 0 && (
                         <button
                           type="button"
-                          className="btn btn-warning ml-2"
+                          className="btn btn-primary ml-2"
                           onClick={() =>
                             viewMedicineAlternatives(medicine.name)
                           }
@@ -670,8 +683,7 @@ function Medicine({ modelName, sharedState }) {
                             </div>
                           ) : null}
                         </div>
-                      )}  
-
+                      )}
 
                       {modelName === "pharmacist" && (
                         <div>
@@ -684,10 +696,7 @@ function Medicine({ modelName, sharedState }) {
                             }
                           >
                             {medicine.Archive ? "Unarchive" : "Archive"}
-                          </button>
-
-                          {' '}
-
+                          </button>{" "}
                           {/* Edit Medicine button */}
                           <button
                             className="btn btn-success"

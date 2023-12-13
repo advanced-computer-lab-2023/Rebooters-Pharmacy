@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import '../styles/background.css';
+import "../styles/background.css";
 import Medicine from "../components/Medicine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "../components/ChangePassword";
 import SalesReportGenerator from "../components/Repo";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Image from "../content/images/ELHANNY-LOGO.png";
 import AdminProfile from "../components/AdminProfile";
-
+import Footer from "../components/footer";
 function Administrator() {
   //const [administrators, setAdministrators] = useState([]);
   const [pharmacists, setPharmacists] = useState([]);
@@ -26,13 +26,14 @@ function Administrator() {
   const [showPharmacistDetails, setShowPharmacistDetails] = useState(false);
   const [showPatientDetails, setShowPatientDetails] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
-  const [submissionStatusRequest, setSubmissionStatusRequest] = useState(null);  
-  const [submissionStatusviewPharmacists, setSubmissionviewPharmacists] = useState(null);     
-  const [SubmissionStatusViewPatient, setSubmissionStatusViewPatient] = useState(null); 
-  const [submissionStatusRemove, setSubmissionStatusRemove] = useState(null);    
+  const [submissionStatusRequest, setSubmissionStatusRequest] = useState(null);
+  const [submissionStatusviewPharmacists, setSubmissionviewPharmacists] =
+    useState(null);
+  const [SubmissionStatusViewPatient, setSubmissionStatusViewPatient] =
+    useState(null);
+  const [submissionStatusRemove, setSubmissionStatusRemove] = useState(null);
   const [submissionStatusAdmin, setSubmissionStatusAdmin] = useState(null);
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
-
 
   /*const viewAdministrators = async () => {
     try {
@@ -47,7 +48,6 @@ function Administrator() {
     }
   };*/
 
-
   const navigate = useNavigate();
   useEffect(() => {
     const checkUserType = async () => {
@@ -60,10 +60,9 @@ function Administrator() {
         console.error(error);
       }
     };
-console.log(checkUserType());
+    console.log(checkUserType());
     checkUserType();
   }, []);
-
 
   const handlePharmacistUsernameChange = (e) => {
     // Clear the error message when the user starts typing
@@ -85,7 +84,6 @@ console.log(checkUserType());
     setMessage("");
     setUserToRemove(e.target.value);
   };
-
 
   const viewPharmacists = async () => {
     if (!pharmacistUsername) {
@@ -155,7 +153,7 @@ console.log(checkUserType());
         throw new Error("Failed to fetch patients");
       }
       const data = await response.json();
-      if (!data || data.length===0) {
+      if (!data || data.length === 0) {
         setSubmissionStatusViewPatient("error");
         setMessage("Patient not found");
       }
@@ -182,18 +180,15 @@ console.log(checkUserType());
       setSubmissionStatusAdmin("error");
       setMessage("Please fill in all required fields.");
       return;
-    }
-    else if(!adminUsername){
+    } else if (!adminUsername) {
       setSubmissionStatusAdmin("error");
       setMessage("Please fill the admin username field.");
       return;
-    }
-    else if(!password){
+    } else if (!password) {
       setSubmissionStatusAdmin("error");
       setMessage("Please fill the password field.");
       return;
-    }
-    else if(!email){
+    } else if (!email) {
       setSubmissionStatusAdmin("error");
       setMessage("Please fill the email field.");
       return;
@@ -269,12 +264,10 @@ console.log(checkUserType());
       if (data.length == 0) {
         setSubmissionStatusRequest("error");
         setMessage("There are no pharmacist requests");
-      }
-      else{
+      } else {
         setNewPharmacistRequestData(data);
         setshowPharmacistRequests(true);
       }
-      
     } catch (error) {
       setSubmissionStatusRequest("error");
       setMessage("Failed to fetch new pharmacist requests");
@@ -352,7 +345,6 @@ console.log(checkUserType());
   };
 
   const togglePharmacistRequests = () => {
-    
     if (!showPharmacistRequests) {
       viewNewPharmacistRequests();
     } else {
@@ -385,11 +377,15 @@ console.log(checkUserType());
   };
 
   return (
-  
     <div>
-          <nav className="navbar navbar-expand-lg navbar-dark " style={{backgroundColor: "#44bab1"}}>
-      <img src={Image} width="60"/>
-        <Link to="/" className="navbar-brand"><span>el7a2ni</span></Link>
+      <nav
+        className="navbar navbar-expand-lg"
+        style={{ backgroundColor: "white" }}
+      >
+        <img src={Image} width="60" />
+        <Link to="" className="logo-name">
+          <span>El7a2ni</span>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -402,406 +398,429 @@ console.log(checkUserType());
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-          <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
+          <ul className="nav-list">
+            <li className={`nav-item ${activeTab === "home" ? "active" : ""}`}>
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("home")}
               >
                 Home
               </button>
             </li>
             <li
-              className={`nav-item ${
+              className={`nav-btn nav-item ${
                 activeTab === "medicines" ? "active" : ""
               }`}
             >
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("medicines")}
               >
                 Medicines
               </button>
             </li>
             <li
-              className={`nav-item ${
+              className={`nav-btn nav-item ${
                 activeTab === "administrators" ? "active" : ""
               }`}
             >
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("administrators")}
               >
                 Administrators
               </button>
             </li>
             <li
-              className={`nav-item ${
+              className={`nav-btn nav-item ${
                 activeTab === "usermanager" ? "active" : ""
               }`}
             >
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("usermanager")}
               >
                 User Manager
               </button>
             </li>
             <li
-              className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+              className={`nav-btn nav-item ${
+                activeTab === "settings" ? "active" : ""
+              }`}
             >
               <button
-                className="nav-link"
+                className="nav-btn nav-link"
                 onClick={() => handleTabClick("settings")}
               >
                 Settings
               </button>
             </li>
             <li>
-              <button className="nav-link" onClick={handleLogout}>
+              <button className="nav-btn nav-link" onClick={handleLogout}>
                 Logout
               </button>
             </li>
           </ul>
         </div>
-    </nav>
-    <div className="container mt-4">
-      <h1 className="mb-4 text-center">Administrator Dashboard</h1>
-      {activeTab === "settings" && (
-        <div className="card mt-4">
-          <AdminProfile/>
-          <button className="btn btn-primary mt-2 d-inline-block w-auto" onClick={togglePasswordPopup}>
-          {showPasswordPopup ? "Hide" : "Change Password"}
-          </button>
-          {showPasswordPopup && (
-            <div className="popup">
-              <ChangePassword userType="pharmacist" />
-            </div>
-          )}           </div>
-      )}
-      {submissionStatus === "success" && (
-        <div className="alert alert-success">{message}</div>
-      )}
-      {submissionStatus === "error" && (
-        <div className="alert alert-danger">{message}</div>
-      )}
-      <br />
-      {activeTab === "administrators" && (
-        <div className="card mb-3">
-          <h2>Add Administrator</h2>
-          {submissionStatusAdmin === "error"  && (
-          <div className="alert alert-danger">{message}</div>
-        )}
-        {submissionStatusAdmin === "success"  && (
-          <div className="alert alert-success">{message}</div>
-        )}
-          <input
-            type="text"
-            placeholder="Administrator Username"
-            value={adminUsername}
-            onChange={(e) => setAdminUsername(e.target.value)}
-            className="form-control mb-2"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="form-control mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Administrator Email"
-            value={email}
-            onChange={(e) => setAdminEmail(e.target.value)}
-            className="form-control mb-2"
-          />
-          <div>
-            <button className="btn btn-primary" onClick={addAdministrator}>
-              Add Administrator
-            </button>
-          </div>
-        </div>
-      )}
-      {activeTab === "usermanager" && (
-        <div className="card mb-3">
-          <h2>Search for Pharmacist</h2>
-          {submissionStatusviewPharmacists === "error" && (
-          <div className="alert alert-danger">{message}</div>
-        )}
-          <input
-            type="text"
-            placeholder="Pharmacist Username"
-            value={pharmacistUsername}
-            onChange={handlePharmacistUsernameChange}
-            className="form-control mb-2"
-          />
-          <div>
-            <button className="btn btn-primary" onClick={toggleViewPharmacists}>
-              {showPharmacistDetails ? "Hide Pharmacist" : "Search Pharmacist"}
-            </button>
-          </div>
-        </div>
-      )}
-      {activeTab === "usermanager" && (
-        <div>
-          {showPharmacistDetails && pharmacists.length > 0 && (
-            <div>
-              <h4>Search Results</h4>
-              <ul>
-                {pharmacists.map((result) => (
-                  <li key={result.id}>
-                    <p>ID: {result._id}</p>
-                    <p>Name: {result.name}</p>
-                    <p>Email: {result.email}</p>
-                    <p>
-                      Date of Birth:{" "}
-                      {new Date(result.dateOfBirth).toLocaleDateString()}
-                    </p>
-                    <p>Affiliation: {result.affiliation}</p>
-                    <p>
-                      Educational Background: {result.educationalBackground}
-                    </p>
-                    <p>Hourly Rate: {result.hourlyRate}</p>
-                    <p>Status: {result.status}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-      {activeTab === "usermanager" && (
-        <div className="card mb-3">
-          <h2>Search for Patient</h2>
-          {SubmissionStatusViewPatient === "error" && (
-          <div className="alert alert-danger">{message}</div>
-        )}
-          <input
-            type="text"
-            placeholder="Patient Username"
-            value={patientUsername}
-            onChange={handlePatientUsernameChange}
-            className="form-control mb-2"
-          />
-          <div>
-            {" "}
-            <button className="btn btn-primary" onClick={toggleViewPatients}>
-              {showPatientDetails ? "Hide Patient" : "Search Patient"}
-            </button>
-          </div>
-        </div>
-      )}
-      {activeTab === "usermanager" && (
-        <div>
-          {showPatientDetails && patients.length > 0 && (
-            <div>
-              <h4>Search Results</h4>
-              <ul>
-                {patients.map((result) => (
-                  <li key={result.id}>
-                    <p>ID: {result._id}</p>
-                    <p>Name: {result.name}</p>
-                    <p>Email: {result.email}</p>
-                    <p>
-                      Date of Birth:{" "}
-                      {new Date(result.dateOfBirth).toLocaleDateString()}
-                    </p>
-                    <p>Gender: {result.gender}</p>
-                    <p>Mobile Phone: {result.mobile_number}</p>
-                    <p>
-                      Emergency Contact First Name:{" "}
-                      {result.emergency_contact.firstName}
-                    </p>
-                    <p>
-                      Emergency Contact Middle Name:{" "}
-                      {result.emergency_contact.middleName}
-                    </p>
-                    <p>
-                      Emergency Contact Last Name:{" "}
-                      {result.emergency_contact.lastName}
-                    </p>
-                    <p>
-                      Emergency Contact Mobile Phone:{" "}
-                      {result.emergency_contact.mobile_number}
-                    </p>
-                    <p>
-                      Emergency Contact Relation:{" "}
-                      {result.emergency_contact.relation}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-      {activeTab === "home" && (
-        <div className="mt-4">
-          <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
-          <SalesReportGenerator userType="administrator"/>
-        </div>
-      )}
-      {activeTab === "usermanager" && (
-        <div className="card mt-4">
-          <h2>Pharmacist/Patient to remove</h2>
-          {submissionStatusRemove === "error"  && (
-          <div className="alert alert-danger">{message}</div>
-        )}
-        {submissionStatusRemove === "success"  && (
-          <div className="alert alert-success">{message}</div>
-        )}
-          <div className="mb-3">
-            <input
-              type="text"
-              placeholder="Username to Remove"
-              value={userToRemove}
-              onChange={handleRemoveChange}
-              className="form-control"
-            />
-            <div>
+      </nav>
+      <div className="background-cover">
+        <div className="container mt-4">
+          <h1 className="mb-4 text-center">Administrator Dashboard</h1>
+          {activeTab === "settings" && (
+            <div className="card mt-4">
+              <AdminProfile />
               <button
-                className="btn btn-danger mt-2"
-                onClick={removeUserFromSystem}
+                className="btn btn-primary mt-2 d-inline-block w-auto"
+                onClick={togglePasswordPopup}
               >
-                Remove Pharmacist/Patient
+                {showPasswordPopup ? "Hide" : "Change Password"}
               </button>
-              {submissionStatus === "success" && (
-                <div className="alert alert-success mt-2">{message}</div>
+              {showPasswordPopup && (
+                <div className="popup">
+                  <ChangePassword userType="pharmacist" />
+                </div>
+              )}{" "}
+            </div>
+          )}
+          {submissionStatus === "success" && (
+            <div className="alert alert-success">{message}</div>
+          )}
+          {submissionStatus === "error" && (
+            <div className="alert alert-danger">{message}</div>
+          )}
+          <br />
+          {activeTab === "administrators" && (
+            <div className="card mb-3">
+              <h2>Add Administrator</h2>
+              {submissionStatusAdmin === "error" && (
+                <div className="alert alert-danger">{message}</div>
               )}
-              {submissionStatus === "error" && (
-                <div className="alert alert-danger mt-2">{message}</div>
+              {submissionStatusAdmin === "success" && (
+                <div className="alert alert-success">{message}</div>
+              )}
+              <input
+                type="text"
+                placeholder="Administrator Username"
+                value={adminUsername}
+                onChange={(e) => setAdminUsername(e.target.value)}
+                className="form-control mb-2"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-control mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Administrator Email"
+                value={email}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                className="form-control mb-2"
+              />
+              <div>
+                <button className="btn btn-primary" onClick={addAdministrator}>
+                  Add Administrator
+                </button>
+              </div>
+            </div>
+          )}
+          {activeTab === "usermanager" && (
+            <div className="card mb-3">
+              <h2>Search for Pharmacist</h2>
+              {submissionStatusviewPharmacists === "error" && (
+                <div className="alert alert-danger">{message}</div>
+              )}
+              <input
+                type="text"
+                placeholder="Pharmacist Username"
+                value={pharmacistUsername}
+                onChange={handlePharmacistUsernameChange}
+                className="form-control mb-2"
+              />
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={toggleViewPharmacists}
+                >
+                  {showPharmacistDetails
+                    ? "Hide Pharmacist"
+                    : "Search Pharmacist"}
+                </button>
+              </div>
+            </div>
+          )}
+          {activeTab === "usermanager" && (
+            <div>
+              {showPharmacistDetails && pharmacists.length > 0 && (
+                <div>
+                  <h4>Search Results</h4>
+                  <ul>
+                    {pharmacists.map((result) => (
+                      <li key={result.id}>
+                        <p>ID: {result._id}</p>
+                        <p>Name: {result.name}</p>
+                        <p>Email: {result.email}</p>
+                        <p>
+                          Date of Birth:{" "}
+                          {new Date(result.dateOfBirth).toLocaleDateString()}
+                        </p>
+                        <p>Affiliation: {result.affiliation}</p>
+                        <p>
+                          Educational Background: {result.educationalBackground}
+                        </p>
+                        <p>Hourly Rate: {result.hourlyRate}</p>
+                        <p>Status: {result.status}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
-      {activeTab === "usermanager" && (
-        <div className="card mt-4">
-          <h2>New Pharmacist Requests</h2>
-          {submissionStatusRequest === "error" && (
-          <div className="alert alert-danger">{message}</div>
-        )}
-          <div>
-            <button
-              className="btn btn-primary"
-              onClick={togglePharmacistRequests}
-            >
-              {showPharmacistRequests
-                ? "Hide New Pharmacist Requests"
-                : "View New Pharmacist Requests"}
-            </button>
-          </div>
-          {showPharmacistRequests && newPharmacistRequestData.length > 0 &&(
-            <table className="table mt-2">
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Date of Birth</th>
-                  <th>Hourly Rate</th>
-                  <th>Affiliation</th>
-                  <th>Educational Background</th>
-                  <th>ID Document</th>
-                  <th>Pharmacy Degree</th>
-                  <th>Working License</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {newPharmacistRequestData.map(
-                  (request) => (
-                    console.log(request.idDocument),
-                    console.log(request.pharmacyDegreeDocument),
-                    console.log(request.workingLicenseDocument),
-                    (
-                      <tr key={request._id}>
-                        <td>{request.username}</td>
-                        <td>{request.name}</td>
-                        <td>{request.email}</td>
-                        <td>{request.dateOfBirth}</td>
-                        <td>{request.hourlyRate}</td>
-                        <td>{request.affiliation}</td>
-                        <td>{request.educationalBackground}</td>
-                        <td>
-                          {request.idDocument && (
-                            <button
-                              className="btn btn-info"
-                              onClick={() =>
-                                downloadDocument(request.idDocument.filename)
-                              }
-                            >
-                              Download ID Document
-                            </button>
-                          )}
-                        </td>
-                        <td>
-                          {request.pharmacyDegreeDocument && (
-                            <button
-                              className="btn btn-info"
-                              onClick={() =>
-                                downloadDocument(
-                                  request.pharmacyDegreeDocument.filename
-                                )
-                              }
-                            >
-                              Download Pharmacy Degree Document
-                            </button>
-                          )}
-                        </td>
-                        <td>
-                          {request.workingLicenseDocument && (
-                            <button
-                              className="btn btn-info"
-                              onClick={() =>
-                                downloadDocument(
-                                  request.workingLicenseDocument.filename
-                                )
-                              }
-                            >
-                              Download Working License Document
-                            </button>
-                          )}
-                        </td>
-                        <td>
-                          {request.status === "pending" ? (
-                            <div>
-                              <button
-                                className="btn btn-primary"
-                                onClick={() =>
-                                  approvePharmacistRequest(request.username)
-                                }
-                              >
-                                Accept
-                              </button>
-                              <button
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  rejectPharmacistRequest(request.username)
-                                }
-                              >
-                                Reject
-                              </button>
-                            </div>
-                          ) : (
-                            "Request Handled"
-                          )}
-                        </td>
+          )}
+          {activeTab === "usermanager" && (
+            <div className="card mb-3">
+              <h2>Search for Patient</h2>
+              {SubmissionStatusViewPatient === "error" && (
+                <div className="alert alert-danger">{message}</div>
+              )}
+              <input
+                type="text"
+                placeholder="Patient Username"
+                value={patientUsername}
+                onChange={handlePatientUsernameChange}
+                className="form-control mb-2"
+              />
+              <div>
+                {" "}
+                <button
+                  className="btn btn-primary"
+                  onClick={toggleViewPatients}
+                >
+                  {showPatientDetails ? "Hide Patient" : "Search Patient"}
+                </button>
+              </div>
+            </div>
+          )}
+          {activeTab === "usermanager" && (
+            <div>
+              {showPatientDetails && patients.length > 0 && (
+                <div>
+                  <h4>Search Results</h4>
+                  <ul>
+                    {patients.map((result) => (
+                      <li key={result.id}>
+                        <p>ID: {result._id}</p>
+                        <p>Name: {result.name}</p>
+                        <p>Email: {result.email}</p>
+                        <p>
+                          Date of Birth:{" "}
+                          {new Date(result.dateOfBirth).toLocaleDateString()}
+                        </p>
+                        <p>Gender: {result.gender}</p>
+                        <p>Mobile Phone: {result.mobile_number}</p>
+                        <p>
+                          Emergency Contact First Name:{" "}
+                          {result.emergency_contact.firstName}
+                        </p>
+                        <p>
+                          Emergency Contact Middle Name:{" "}
+                          {result.emergency_contact.middleName}
+                        </p>
+                        <p>
+                          Emergency Contact Last Name:{" "}
+                          {result.emergency_contact.lastName}
+                        </p>
+                        <p>
+                          Emergency Contact Mobile Phone:{" "}
+                          {result.emergency_contact.mobile_number}
+                        </p>
+                        <p>
+                          Emergency Contact Relation:{" "}
+                          {result.emergency_contact.relation}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+          {activeTab === "home" && (
+            <div className="mt-4">
+              <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
+              <SalesReportGenerator userType="administrator" />
+            </div>
+          )}
+          {activeTab === "usermanager" && (
+            <div className="card mt-4">
+              <h2>Pharmacist/Patient to remove</h2>
+              {submissionStatusRemove === "error" && (
+                <div className="alert alert-danger">{message}</div>
+              )}
+              {submissionStatusRemove === "success" && (
+                <div className="alert alert-success">{message}</div>
+              )}
+              <div className="mb-3">
+                <input
+                  type="text"
+                  placeholder="Username to Remove"
+                  value={userToRemove}
+                  onChange={handleRemoveChange}
+                  className="form-control"
+                />
+                <div>
+                  <button
+                    className="btn btn-danger mt-2"
+                    onClick={removeUserFromSystem}
+                  >
+                    Remove Pharmacist/Patient
+                  </button>
+                  {submissionStatus === "success" && (
+                    <div className="alert alert-success mt-2">{message}</div>
+                  )}
+                  {submissionStatus === "error" && (
+                    <div className="alert alert-danger mt-2">{message}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          {activeTab === "usermanager" && (
+            <div className="card mt-4">
+              <h2>New Pharmacist Requests</h2>
+              {submissionStatusRequest === "error" && (
+                <div className="alert alert-danger">{message}</div>
+              )}
+              <div>
+                <button
+                  className="btn btn-primary"
+                  onClick={togglePharmacistRequests}
+                >
+                  {showPharmacistRequests
+                    ? "Hide New Pharmacist Requests"
+                    : "View New Pharmacist Requests"}
+                </button>
+              </div>
+              {showPharmacistRequests &&
+                newPharmacistRequestData.length > 0 && (
+                  <table className="table mt-2">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Date of Birth</th>
+                        <th>Hourly Rate</th>
+                        <th>Affiliation</th>
+                        <th>Educational Background</th>
+                        <th>ID Document</th>
+                        <th>Pharmacy Degree</th>
+                        <th>Working License</th>
+                        <th>Status</th>
                       </tr>
-                    )
-                  )
+                    </thead>
+                    <tbody>
+                      {newPharmacistRequestData.map(
+                        (request) => (
+                          console.log(request.idDocument),
+                          console.log(request.pharmacyDegreeDocument),
+                          console.log(request.workingLicenseDocument),
+                          (
+                            <tr key={request._id}>
+                              <td>{request.username}</td>
+                              <td>{request.name}</td>
+                              <td>{request.email}</td>
+                              <td>{request.dateOfBirth}</td>
+                              <td>{request.hourlyRate}</td>
+                              <td>{request.affiliation}</td>
+                              <td>{request.educationalBackground}</td>
+                              <td>
+                                {request.idDocument && (
+                                  <button
+                                    className="btn btn-info"
+                                    onClick={() =>
+                                      downloadDocument(
+                                        request.idDocument.filename
+                                      )
+                                    }
+                                  >
+                                    Download ID Document
+                                  </button>
+                                )}
+                              </td>
+                              <td>
+                                {request.pharmacyDegreeDocument && (
+                                  <button
+                                    className="btn btn-info"
+                                    onClick={() =>
+                                      downloadDocument(
+                                        request.pharmacyDegreeDocument.filename
+                                      )
+                                    }
+                                  >
+                                    Download Pharmacy Degree Document
+                                  </button>
+                                )}
+                              </td>
+                              <td>
+                                {request.workingLicenseDocument && (
+                                  <button
+                                    className="btn btn-info"
+                                    onClick={() =>
+                                      downloadDocument(
+                                        request.workingLicenseDocument.filename
+                                      )
+                                    }
+                                  >
+                                    Download Working License Document
+                                  </button>
+                                )}
+                              </td>
+                              <td>
+                                {request.status === "pending" ? (
+                                  <div>
+                                    <button
+                                      className="btn btn-primary"
+                                      onClick={() =>
+                                        approvePharmacistRequest(
+                                          request.username
+                                        )
+                                      }
+                                    >
+                                      Accept
+                                    </button>
+                                    <button
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        rejectPharmacistRequest(
+                                          request.username
+                                        )
+                                      }
+                                    >
+                                      Reject
+                                    </button>
+                                  </div>
+                                ) : (
+                                  "Request Handled"
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        )
+                      )}
+                    </tbody>
+                  </table>
                 )}
-                
-              </tbody>
-            </table>
+            </div>
+          )}
+          {activeTab === "medicines" && (
+            <div className="mt-4">{<Medicine modelName="administrator" />}</div>
           )}
         </div>
-      )}
-      {activeTab === "medicines" && (
-        <div className="mt-4">{<Medicine modelName="administrator" />}</div>
-      )}
-    </div>
+      </div>
+      <Footer />
     </div>
   );
 }

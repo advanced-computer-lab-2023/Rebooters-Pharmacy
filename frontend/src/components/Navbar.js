@@ -6,7 +6,7 @@ import '../styles/navbar.css';
 
 const Navbar = () => {
   return (
-    <div className="navbar-container py-2">
+    <div className="navbar-container py-2 border-bottom">
       <div className="container">
         <div className="d-flex align-items-center">
           <div className="nav-logo">
