@@ -248,6 +248,13 @@ const Patient = () => {
               </div>
             </div>
           )}
+          {activeTab === "orderDetails" && (
+            <div className="container mt-4">
+              <div>
+                <ViewAndCancelOrder />
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <Footer />

@@ -243,13 +243,17 @@ const ViewCartItems = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cartItems.map((item, index) => (
+                {cartItems.map((item, index) => (
                     <tr key={index}>
                       <td className="product-thumbnail">
-                        <img  src={`${item.image.filename}`}
-                        alt={item.name} className="bd-placeholder-img card-img-top"
-                        width="20%"
-                        height="125" />
+                        {item.image && (
+                          <img
+                          src={`${item.image.filename}`}
+                            alt={item.name}
+                            className="bd-placeholder-img card-img-top"
+                            style={{ width: "20%", height: "125" }}
+                          />
+                        )}
                       </td>
                       <td className="product-name">
                         <h2 className="h5 text-black">{item.name}</h2>
