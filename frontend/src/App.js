@@ -4,7 +4,6 @@ import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
 import Home from "./pages/Home";
 import Pharmacist from "./pages/PharmacistHome";
 import Admin from "./pages/Admin";
-import Guest from "./pages/Guest";
 import Patient from "./pages/Patient";
 import PatientActivities from "./components/PatientAddAddress";
 import CheckingOut from "./components/CheckingOut";
@@ -17,6 +16,7 @@ import Homey from "./pages/homePage";
 import Medicine from "./components/Medicine";
 import AddPatient from "./pages/regPat";
 import PharmReq from "./pages/regPharm";
+import Help from "./pages/help";
 
 function App() {
   return (
@@ -24,7 +24,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/guest" element={<Guest />} />
           <Route path="/pharmacist" element={<Pharmacist />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/patient" element={<Patient />} />
@@ -44,6 +43,7 @@ function App() {
           <Route path="/medicines" element={<Medicine />} />
           <Route path="/regPat" element={<AddPatient />} />
           <Route path="/regPharm" element={<PharmReq />} />
+          <Route path="/helpYou" element={<Help />} />
 
 
 

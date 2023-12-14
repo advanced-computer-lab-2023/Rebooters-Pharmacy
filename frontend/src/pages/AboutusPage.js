@@ -73,19 +73,20 @@ const AboutUs = () => {
     <div className="site-wrap">
       <Navbar />
       <div className='xy-cover' style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '100vh', position: 'relative' }}>
-        <div className="text-center" style={{ marginLeft: '40px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'black' }}>
+        <div className="text-center" style={{ marginLeft: '40px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'black',backgroundColor: 'rgba(255, 255, 255, 0.4)',padding: '20px', borderRadius: '15px' }}>
           <h1 style={{ fontSize: '52px'}} >About Us</h1>
           <p ref={aboutUsRef} className={`fade-in ${showAboutUs ? 'visible' : ''}`} style={{ fontSize: '28px'}}>
+            
             Welcome to El7a2ni Pharmacy, your trusted partner in health and wellness. At El7a2ni, we are committed to providing high-quality pharmaceutical products and services to our valued patients.
           </p>
         </div>
       </div>
 
-      <div className="container-fluid mt-5" style={{ marginLeft: '50px' }}>
+      <div className="container-fluid mt-5" style={{ marginLeft: '50px' ,padding: '20px', borderRadius: '15px'}}>
         {/* Mission Card */}
-        <div className={`row justify-content-center mb-5 ${showMissionCard ? 'fade-in slide-from-left' : ''}`} ref={missionCardRef}>
+        <div className={`row justify-content-center mb-5 ${showMissionCard ? 'fade-in slide-from-left' : ''}`} ref={missionCardRef} >
           <div className="col-md-8">
-            <div className="site-section bg-light custom-border-bottom" data-aos="fade">
+            <div className="site-section bg-light custom-border-bottom" data-aos="fade" style={{padding: '20px', borderRadius: '15px'}}>
               <div className="row mb-5">
                 <div className="col-md-6">
                   <div className="block-16">
@@ -94,9 +95,9 @@ const AboutUs = () => {
                     </figure>
                   </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6" >
                   <div className="row justify-content-center">
-                    <div className="site-section-heading pt-3 mb-4">
+                    <div className="site-section-heading pt-3 mb-4" >
                       <h2 className="text-black">Mission</h2>
                     </div>
                     <p>
@@ -115,7 +116,7 @@ const AboutUs = () => {
         {/* Trusted Company Card */}
         <div className={`row justify-content-center mb-5 ${showTrustedCompanyCard ? 'fade-in slide-from-right' : ''}`} ref={trustedCompanyCardRef}>
           <div className="col-md-8">
-            <div className="site-section bg-light custom-border-bottom" data-aos="fade">
+            <div className="site-section bg-light custom-border-bottom" data-aos="fade" style={{padding: '20px', borderRadius: '15px'}}>
               <div className="row mb-5">
                 <div className="col-md-6">
                   <div className="block-16">

@@ -22,7 +22,7 @@ const Conc = () => {
     <div className="site-wrap">
       <Navbar />
       <div className='xy-cover' style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '89.8vh', position: 'relative' }}>
-        <div className="text-center" style={{ marginLeft: '30px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'black' }}>
+        <div className="text-center" style={{ marginLeft: '30px', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'black',backgroundColor: 'rgba(255, 255, 255, 0.4)',padding: '20px', borderRadius: '15px' }}>
           <>
             {showContent && (
               <>

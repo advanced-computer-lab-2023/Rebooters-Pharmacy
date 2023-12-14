@@ -13,8 +13,9 @@ const Homey = () => {
   }, []);
 
   return (
-    <div className="site-wrap">
+    <div className="site-wrap" style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '100vh', position: 'relative' }}>
       <Navbar />
+
       <div className="home-page" style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', paddingLeft: '20px', overflow: 'hidden' }}>
         <div className="button-container" style={{ height: '45vh', textAlign: 'left', color: '#fff', fontFamily: 'Arial, sans-serif', transform: containerTransform, transition: 'transform 0.5s ease-in-out' }}>
           <h1 style={{ fontSize: '40px', marginBottom: '20px' }}>Welcome to El7a2ni Pharmacy</h1>
