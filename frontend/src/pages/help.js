@@ -3,7 +3,9 @@ import Navbar from '../components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import loginCoverImage from '../content/images/login-cover.png';
-import '../styles/au.css'; // Add your CSS file if not already included
+import '../styles/au.css'; 
+import Footer from "../components/footer";
+
 
 const Help = () => {
   const [showContent, setShowContent] = useState(false);
@@ -26,16 +28,16 @@ const Help = () => {
         style={{
           backgroundImage: `url(${loginCoverImage})`,
           backgroundSize: 'cover',
-          height: '145vh',
+          height: '138vh',
         }}
       >
          <div
           style={{
             margin: '20px auto',
             maxWidth: '800px',
-            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Adjust the opacity here
-            padding: '20px', // Add padding for better readability
-            borderRadius: '10px', // Add border-radius for rounded corners
+            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+            padding: '20px', 
+            borderRadius: '10px', 
           }}
         >
           <section style={{ marginBottom: '30px' }}>
@@ -102,21 +104,33 @@ const Help = () => {
             <div >
             <ul style={{ listStyleType: 'none', padding: '0', fontSize: '18px' }}>
                   <li className={`fade-in ${showContent ? 'visible' : ''}`} style={{ fontSize: 'style= 28px' }}>
-                    <FontAwesomeIcon icon={faMapMarkerAlt} /> GUC - El Tagamoa El Khames New Cairo City - Egypt
+                    <FontAwesomeIcon icon={faMapMarkerAlt} /> {''} <a
+                      href="https://www.google.com/maps?q=GUC,El+Tagamoa+El+Khames,New+Cairo+City,Egypt"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GUC - El Tagamoa El Khames New Cairo City - Egypt
+                    </a>
                   </li>
                   <li className={`fade-in ${showContent ? 'visible' : ''}`} style={{ fontSize: 'style= 28px' }}>
                     <FontAwesomeIcon icon={faPhone} /> <a href="tel://23923929210">+1 23456789</a>
                   </li>
                   <li className={`fade-in ${showContent ? 'visible' : ''}`} style={{ fontSize: 'style= 28px' }}>
-                    <FontAwesomeIcon icon={faEnvelope} /> rebootersteam9@gmail.com
-                    </li>
+                   <FontAwesomeIcon icon={faEnvelope} /> <a href="mailto:rebootersteam9@gmail.com">rebootersteam9@gmail.com</a>
+                  </li>
+
                 </ul>
               </div>
             </div>
           </section>
-        </div>
+
+          </div>
+          <Footer />
+
       </div>
+
     </div>
+    
   );
 };
 
