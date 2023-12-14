@@ -1,0 +1,251 @@
+.xy-cover {
+  background: url('../content/images/login-cover.png') no-repeat center center fixed;
+  background-size: cover;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 91.5%;
+}
+
+a {
+  -webkit-transition: .3s all ease;
+  -o-transition: .3s all ease;
+  transition: .3s all ease;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.text-black {
+  color: #000;
+}
+
+.site-wrap:before {
+  background: rgba(0, 0, 0, 0.6);
+  content: "";
+  position: absolute;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: .3s all ease-in-out;
+  -o-transition: .3s all ease-in-out;
+  transition: .3s all ease-in-out;
+}
+
+.site-section {
+  padding: 2.5em 0;
+}
+
+.site-section-heading {
+  font-size: 30px;
+  color: #25262a;
+  position: relative;
+}
+
+.site-section-heading:before {
+  display: none;
+  content: "";
+  left: 0%;
+  top: 0;
+  position: absolute;
+  width: 40px;
+  height: 2px;
+  background: #51eaea;
+}
+
+.site-section-heading.text-center:before {
+  display: none;
+  content: "";
+  left: 50%;
+  top: 0;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  position: absolute;
+  width: 40px;
+  height: 2px;
+  background: #51eaea;
+}
+
+.border-top {
+  border-top: 1px solid #edf0f5 !important;
+}
+
+.site-footer {
+  padding: 6em 0;
+}
+
+.site-footer ul li {
+  margin-bottom: 10px;
+}
+
+.site-footer ul li a {
+  color: #5c626e;
+}
+
+.site-footer ul li a:hover {
+  color: #51eaea;
+}
+
+.site-footer .footer-heading {
+  font-size: 1.2rem;
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+/* Navbar */
+.site-logo a {
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  font-size: 22px;
+  color: #000 !important;
+  font-weight: 900;
+}
+
+.site-logo a:hover {
+  text-decoration: none;
+}
+/* Styles for the aboutUs component */
+
+/* Blocks */
+.site-blocks-cover.inner-page, .site-blocks-cover.inner-page .row {
+  min-height: 400px;
+  height: 700px;
+}
+
+.site-blocks-cover h1 {
+  font-size: 50px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .site-blocks-cover h1 {
+      font-size: 70px;
+  }
+}
+
+.site-blocks-cover p {
+  color: #fff;
+  font-size: 20px;
+  line-height: 35px;
+}
+
+.site-blocks-cover .intro-text {
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.5;
+}
+
+.site-blocks-cover.inner-page .site-block-cover-content {
+  margin-top: 20%;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .site-blocks-cover.inner-page .site-block-cover-content {
+      margin-top: 30%;
+  }
+}
+
+.site-block-1 .text h2 {
+  color: #25262a;
+  letter-spacing: .05em;
+  font-size: 18px;
+}
+
+.site-block-1 .text p:last-child {
+  margin-bottom: 0;
+}
+/* AboutUs.css */
+
+.mission-section {
+  background-color: #f8f9fa; /* Light gray background color for the mission section */
+  padding: 30px;
+}
+
+.trusted-company-section {
+  background-color: #f4f4f4; /* Lighter gray background color for the trusted company section */
+  padding: 30px;
+}
+
+.text {
+  margin-bottom: 20px;
+}
+
+.footer-heading {
+  color: #007bff; /* Blue color for footer heading */
+}
+
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* This makes the background fixed */
+  /*opacity: 0.5; /* Adjust the opacity as needed */
+  z-index: -1; /* Ensure the background stays behind the content */
+}
+/* You can customize the styles further based on your design preferences */
+
+
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.fade-in-location {
+  animation: fadeIn 1s ease-in-out 1s; /* 1s delay */
+}
+
+.fade-in-phone {
+  animation: fadeIn 1s ease-in-out 2s; /* 2s delay */
+}
+
+.fade-in-email {
+  animation: fadeIn 1s ease-in-out 3s; /* 3s delay */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* Define forward animation */
+/* Define slide animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in {
+  animation-name: slideIn;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
