@@ -23,7 +23,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Homey />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/pharmacist" element={<Pharmacist />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/patient" element={<Patient />} />
@@ -37,9 +38,9 @@ function App() {
           />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/otp" element={<OTP />} />
-          <Route path= "/AboutusPage" element={<AboutusPage/>}/>
-          <Route path= "/ContactPage" element={<ContactPage/>}/>
-          <Route path="/homePage" element={<Homey/>}/>
+          <Route path="/AboutusPage" element={<AboutusPage />} />
+          <Route path="/ContactPage" element={<ContactPage />} />
+          <Route path="/homePage" element={<Homey />} />
           <Route path="/medicines" element={<Medicine />} />
           <Route path="/regPat" element={<AddPatient />} />
           <Route path="/regPharm" element={<PharmReq />} />

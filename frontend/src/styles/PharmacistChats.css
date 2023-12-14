@@ -1,58 +1,53 @@
 /* PharmacistChats.css */
 
 .chat-container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .card-header {
-    background-color: #007bff;
-  }
-  
-  .text-white {
-    color: #fff;
-  }
-  
-  .chat-body {
-    height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
-  .message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  
-  .patient-message {
-    background-color: #d4edda;
-  }
-  
-  .pharmacist-message {
-    background-color: #cce5ff;
-  }
-  
-  .message-content {
-    margin-bottom: 5px;
-  }
-  
-  .timestamp {
-    font-size: 12px;
-    color: #6c757d;
-  }
-  
-  .form-control {
-    margin-top: 10px;
-  }
-  
-  .btn-primary {
-    margin-top: 10px;
-  }
+  max-width: 600px;
+  margin: 0 auto;
+}
 
-  .card-header.bg-chat-text {
-    background-color:  #44bab1;
-  }
-  
+.card-header {
+  background-color: #007bff;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.chat-body {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.patient-message {
+  background-color: #d4edda;
+}
+
+.pharmacist-message {
+  background-color: #cce5ff;
+}
+
+.message-content {
+  margin-bottom: 5px;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.form-control {
+  margin-top: 10px;
+}
+
+.card-header.bg-chat-text {
+  background-color: #44bab1;
+}

@@ -13,7 +13,7 @@ import Image from "../content/images/ELHANNY-LOGO.png";
 import { Link } from "react-router-dom";
 import PatientProfile from "../components/patientProfile";
 import Footer from "../components/footer";
-import '../styles/cartItems.css';
+import "../styles/cartItems.css";
 
 const Patient = () => {
   const [sharedState, setSharedState] = useState("");
@@ -36,7 +36,7 @@ const Patient = () => {
   useEffect(() => {
     // Check the URL hash to determine the active tab or section
     const hash = window.location.hash;
-    if (hash === '#medicines') {
+    if (hash === "#medicines") {
       setActiveTab("medicines");
     }
   }, []);
@@ -233,7 +233,7 @@ const Patient = () => {
               {<Medicine sharedState={sharedState} modelName="patient" />}
             </div>
           )}
-          
+
           {activeTab === "chat" && (
             <div className="mt-4">
               <PatientChats setChats={setChats} chats={chats} />{" "}
@@ -242,7 +242,7 @@ const Patient = () => {
           )}
           {activeTab === "orders" && (
             <div className="container mt-4">
-          <h3 className="font-cart mb-4">Cart Items</h3>
+              <h3 className="font-cart">Cart Items</h3>
               <div>
                 <ViewCartItems />
               </div>

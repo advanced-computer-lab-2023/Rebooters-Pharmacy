@@ -249,7 +249,7 @@ const ViewCartItems = () => {
                   </tr>
                 </thead>
                 <tbody>
-                {cartItems.map((item, index) => (
+                  {cartItems.map((item, index) => (
                     <tr key={index}>
                       <td className="product-thumbnail">
                         {item.image && (
@@ -284,6 +284,7 @@ const ViewCartItems = () => {
                           <input
                             type="text"
                             className="form-control text-center"
+                            style={{ marginTop: 0 }}
                             value={item.quantity}
                             placeholder=""
                             aria-label="Example text with button addon"
@@ -351,7 +352,8 @@ const ViewCartItems = () => {
               </div>
               <div className="col-md-4">
                 <button
-                  className="btn btn-primary btn-md px-4"
+                  className="btn btn-primary px-4"
+                  style={{ marginTop: "17px" }}
                   onClick={handleApplyCoupon}
                 >
                   Apply Coupon

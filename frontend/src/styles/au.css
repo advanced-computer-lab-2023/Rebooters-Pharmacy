@@ -1,5 +1,6 @@
 .xy-cover {
-  background: url('../content/images/login-cover.png') no-repeat center center fixed;
+  background: url("../content/images/login-cover.png") no-repeat center center
+    fixed;
   background-size: cover;
   position: absolute;
   margin: 0;
@@ -10,9 +11,9 @@
 }
 
 a {
-  -webkit-transition: .3s all ease;
-  -o-transition: .3s all ease;
-  transition: .3s all ease;
+  -webkit-transition: 0.3s all ease;
+  -o-transition: 0.3s all ease;
+  transition: 0.3s all ease;
 }
 
 a:hover {
@@ -34,13 +35,14 @@ a:hover {
   bottom: 0;
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: .3s all ease-in-out;
-  -o-transition: .3s all ease-in-out;
-  transition: .3s all ease-in-out;
+  -webkit-transition: 0.3s all ease-in-out;
+  -o-transition: 0.3s all ease-in-out;
+  transition: 0.3s all ease-in-out;
 }
 
 .site-section {
-  padding: 2.5em 0;
+  padding: 34px 30px;
+  border-radius: 10px;
 }
 
 .site-section-heading {
@@ -103,7 +105,7 @@ a:hover {
 /* Navbar */
 .site-logo a {
   text-transform: uppercase;
-  letter-spacing: .2em;
+  letter-spacing: 0.2em;
   font-size: 22px;
   color: #000 !important;
   font-weight: 900;
@@ -115,7 +117,8 @@ a:hover {
 /* Styles for the aboutUs component */
 
 /* Blocks */
-.site-blocks-cover.inner-page, .site-blocks-cover.inner-page .row {
+.site-blocks-cover.inner-page,
+.site-blocks-cover.inner-page .row {
   min-height: 400px;
   height: 700px;
 }
@@ -130,7 +133,7 @@ a:hover {
 
 @media (min-width: 768px) {
   .site-blocks-cover h1 {
-      font-size: 70px;
+    font-size: 70px;
   }
 }
 
@@ -153,13 +156,13 @@ a:hover {
 
 @media (min-width: 768px) {
   .site-blocks-cover.inner-page .site-block-cover-content {
-      margin-top: 30%;
+    margin-top: 30%;
   }
 }
 
 .site-block-1 .text h2 {
   color: #25262a;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
   font-size: 18px;
 }
 
@@ -200,7 +203,6 @@ a:hover {
 }
 /* You can customize the styles further based on your design preferences */
 
-
 .fade-in {
   animation: fadeIn 1s ease-in-out;
 }
@@ -228,8 +230,6 @@ a:hover {
     transform: translateY(0);
   }
 }
-
-
 
 /* Define forward animation */
 /* Define slide animation */

@@ -120,7 +120,7 @@ const Login = () => {
                 Login
               </button>
               <hr />
-              <Link to="/homePage" className="createAcc-btn btn btn-primary">
+              <Link to="/" className="createAcc-btn btn btn-primary">
                 Create Account
               </Link>
             </div>
