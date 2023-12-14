@@ -11,7 +11,12 @@ import CheckingOut from "./components/CheckingOut";
 import Login from "./pages/Login";
 import OTP from "./pages/OTP";
 import ForgotPassword from "./pages/ForgotPassword";
+import AboutusPage from "./pages/AboutusPage";
+import ContactPage from "./pages/ContactPage";
+import Homey from "./pages/homePage";
 import Medicine from "./components/Medicine";
+import AddPatient from "./pages/regPat";
+import PharmReq from "./pages/regPharm";
 
 function App() {
   return (
@@ -33,7 +38,14 @@ function App() {
           />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/otp" element={<OTP />} />
+          <Route path= "/AboutusPage" element={<AboutusPage/>}/>
+          <Route path= "/ContactPage" element={<ContactPage/>}/>
+          <Route path="/homePage" element={<Homey/>}/>
           <Route path="/medicines" element={<Medicine />} />
+          <Route path="/regPat" element={<AddPatient />} />
+          <Route path="/regPharm" element={<PharmReq />} />
+
+
 
         </Routes>
       </BrowserRouter>

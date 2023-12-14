@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../styles/pharmacistrequest.css';
+import Navbar from '../components/Navbar';
+
 import { useNavigate } from "react-router-dom";
 const PharmReq = () => {
   const [newPharmacist, setNewPharmacist] = useState({
@@ -96,8 +98,13 @@ const PharmReq = () => {
   };
 
   return (
+    <div className='register-container'>
+    <Navbar />
+
     <div className="request-form-container card container mt-4">
       <div className="request-form card-body">
+      <h2 className="mb-4 mt-4 text-center">Request to register as a Pharmacist</h2>
+
         <h4>Please fill in these details:</h4>
         {submissionStatus === "success" && (
           <div className="alert alert-success">{message}</div>
@@ -263,7 +270,8 @@ const PharmReq = () => {
         </button>
         </div>
       </div>
-    </div>
+    </div>    </div>
+
   );
 };
 

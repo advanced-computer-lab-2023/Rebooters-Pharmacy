@@ -170,7 +170,7 @@ router.post('/cancelOrder',requireAuth, cancelOrder);
 
 router.delete('/removeCartItem', requireAuth, removeCartItem);
 
-router.post('/viewCartItems', requireAuth, viewCartItems);
+router.post('/viewCartItems', requireAuth,viewCartItems);
 router.post('/viewDeliveryAddresses', requireAuth, viewDeliveryAdresses);
 router.post('/viewItems', requireAuth, viewItems);
 

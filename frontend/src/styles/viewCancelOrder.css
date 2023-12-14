@@ -1,0 +1,23 @@
+.table-bordered.table-striped thead tr.table-primary th {
+    background-color: rgb(26, 188, 188);
+    color: black; /* or any color for text on the cyan background */
+  }
+  
+
+.table-bordered, .table-bordered th, .table-bordered td {
+    border: 2px solid black; /* Set border color and width for table, th, and td */
+  }
+  
+  .table-bordered th, .table-bordered td {
+    font-weight: bold; /* Set font-weight to bold for th and td */
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa; /* Set background color for odd rows in striped table */
+  }
+
+  .card-color{
+    background-color: rgb(26, 188, 188);
+    color: black;
+  }
+  

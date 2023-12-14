@@ -20,6 +20,8 @@ import Image from "../content/images/ELHANNY-LOGO.png";
 import PharmacistProfile from "../components/pharmaProfile"; // Import the new component
 import ChatWithDoctor from "../components/ChatWithDoctor";
 import Footer from "../components/footer";
+import ChatNavbar from "../components/ChatNavbar";
+
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -27,6 +29,8 @@ const PharmacistHome = () => {
   const [chats, setChats] = useState([]);
   const [activeTab, setActiveTab] = useState("home");
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(null);
+  
 
   useEffect(() => {
     const checkUserType = async () => {
@@ -94,6 +98,13 @@ const PharmacistHome = () => {
   const togglePasswordPopup = () => {
     setShowPasswordPopup(!showPasswordPopup);
   };
+
+  
+  const handleChatButtonClick = (component) => {
+    setActiveComponent(component);
+  };
+
+
   return (
     <div>
       <nav
@@ -175,7 +186,6 @@ const PharmacistHome = () => {
       </nav>
       <div className="background-cover">
         <div className="container">
-          <h1 className="mb-4 text-center">Pharmacist Dashboard</h1>
           {activeTab === "settings" && (
             <div className="card mt-4">
               <PharmacistProfile />
@@ -193,8 +203,28 @@ const PharmacistHome = () => {
             </div>
           )}
           {activeTab === "chat" && (
-            <div className="card mt-4">
-              <PharmacistChats />
+            <div>
+               <ChatNavbar onChatButtonClick={handleChatButtonClick} />
+                {activeComponent === "ChatsWithPatients" && (
+                  <div>
+                    <PharmacistChats />
+                  </div>
+                )}
+                {activeComponent === "StartChatwithaDoctor" && (
+                  <div>
+                    <Pharmacist_DoctorChats setChats={setChats} chats={chats} />
+                  </div>
+                )}
+                {activeComponent === "ChatWithaDoctor" && (
+                  <div>
+                        <ChatWithDoctor />     
+                  </div>
+                )}
+                {activeComponent === "History" && (
+                  <div>
+                      <PharmacistRespondToDoc />
+                  </div>
+                )}
             </div>
           )}
           {activeTab === "home" && (
@@ -205,22 +235,6 @@ const PharmacistHome = () => {
           {activeTab === "home" && (
             <div className="card mt-4">
               <Notifications />
-            </div>
-          )}
-          {activeTab === "chat" && (
-            <div className="card mt-4">
-              <Pharmacist_DoctorChats setChats={setChats} chats={chats} />
-            </div>
-          )}
-
-          {activeTab === "chat" && (
-            <div className="card mt-4">
-              <ChatWithDoctor />
-            </div>
-          )}
-          {activeTab === "chat" && (
-            <div className="card mt-4">
-              <PharmacistRespondToDoc />
             </div>
           )}
 

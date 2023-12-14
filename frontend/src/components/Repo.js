@@ -235,7 +235,7 @@ const SalesReportGenerator = ({ userType }) => {
           </>
         )}
       </div>
-      <div className="right-container">
+      <div className="right-container" style={{ marginRight: userType !== 'pharmacist' ? '300px' : '0' }}>
         {chartsVisible && (
           <>
             <canvas className="chart-canvas" id="barChart" width="300" height="200"></canvas>
@@ -243,8 +243,8 @@ const SalesReportGenerator = ({ userType }) => {
           </>
         )}
       </div>
-      {showTable && (
-        <div className="filter-container">
+      {userType === 'pharmacist' && showTable && (
+        <div className="filter-container" >
           <label htmlFor="medicine-dropdown">Select Medicine:</label>
           <select
             id="medicine-dropdown"

@@ -249,7 +249,7 @@ const ViewCartItems = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cartItems.map((item, index) => (
+                {cartItems.map((item, index) => (
                     <tr key={index}>
                       <td className="product-thumbnail">
                         {item.image && (
