@@ -42,30 +42,28 @@
   color: #6e6e6e;
   font-weight: 600;
 }
-.login-form .login-btn {
+.login-btn {
+  width: 80%;
   margin-top: 10px;
-  margin-bottom: 10px;
-  width: 80%;
-  position: relative;
-  left: 10%;
+  margin-left: 48px;
 }
-.login-form .createAcc-btn {
+.createAcc-btn {
   width: 80%;
-  position: relative;
-  right: 82%;
-  font-weight: light;
+  margin-left: 48px;
 }
 .login-btn:hover {
   cursor: pointer;
 }
 
 .forgotPass {
-  height: 500px;
-  width: 800px;
+  height: 370px;
+  width: 610px;
   overflow-y: scroll;
+  position: relative;
 }
 .close-btn {
   position: absolute;
-  left: 80%;
-  bottom: 0.25%;
+  transform: translate(50%);
+  bottom: 5px;
+  right: 85px;
 }

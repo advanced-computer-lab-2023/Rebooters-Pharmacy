@@ -1,55 +1,59 @@
 .navbar-container {
-    z-index: 1999;
-    background: #fff;
+  z-index: 1999;
+  background: #fff;
 }
 
 .nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
+  display: flex;
+  list-style: none;
+  margin: 0;
 }
 
 .nav-list li {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .nav-list li:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .nav-list li a {
-    padding: 10px 5px;
-    text-decoration: none;
-    color: black;
-    transition: color 0.3s ease;
+  padding: 10px 5px;
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s ease;
 }
 .nav-list li a:hover {
-    color: #1aac83;
+  color: #1aac83;
 }
-.nav-list li.active {
-    color: #1aac83;
+.nav-list li a.active {
+  color: #1aac83;
 }
+.nav-list .nav-item.active {
+  color: #1aac83;
+}
+
 .nav-logo {
-    display: inline-flex;
+  display: inline-flex;
 }
 
 .logo-name {
-    text-decoration: none;
-    color: #1aac83;
-    font-weight: bold;
+  text-decoration: none;
+  color: #1aac83;
+  font-weight: bold;
 }
 .nav-btn {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: #333; 
-    transition: color 0.3s ease-in-out;
-  }
-  
-  .nav-btn:hover {
-    color: #1aac83; 
-  }
-  
-  .nav-btn.active {
-    color: #1aac83; 
-  }
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-btn:hover {
+  color: #1aac83;
+}
+
+.nav-btn.active {
+  color: #1aac83;
+}

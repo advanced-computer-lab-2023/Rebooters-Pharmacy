@@ -1,11 +1,54 @@
-.boxes{
-    list-style: none;
-    display: flex;
+.boxes {
+  list-style: none;
+  display: flex;
+  padding-left: 10px;
 }
 
-.single-box{
-    width: 60px;
-    height: 50px;
-    margin-left: 10px ;
-    border-radius: 15px;
+.single-box {
+  width: 60px;
+  height: 50px;
+  margin-left: 10px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 3px 3px 10px #ccc;
+  text-indent: 20px;
+}
+.otp-card {
+  width: 40%;
+  padding: 30px;
+  border-radius: 15px;
+  background-color: whitesmoke;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-top: 185px;
+  margin-left: 360px;
+}
+.li-box {
+  box-sizing: none;
+}
+.submit-otp {
+  margin-top: 25px;
+}
+.title {
+  color: #44bbb2;
+  text-align: center;
+}
+.enter-code {
+  margin-left: 30px;
+}
+.emailPass-card {
+  padding: 60px;
+  position: relative;
+}
+.submit-pass {
+  position: absolute;
+  top: 90%;
+  transform: translateY(-50%);
+  right: 143px;
+}
+.close {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 399px;
+  top: 90%;
 }
