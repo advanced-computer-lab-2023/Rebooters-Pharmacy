@@ -98,7 +98,7 @@ const Login = () => {
               </a>
               {showEmailWindow && (
                 <div className="modal-overlay">
-                  <div className="card">
+                  <div className="email-card card">
                     <div className="forgotPass">
                       <ForgotPass />
                     </div>
@@ -120,11 +120,7 @@ const Login = () => {
                 Login
               </button>
               <hr />
-              <Link
-                to="/guest"
-                className="createAcc-btn btn btn-primary"
-                style={{ color: "white", transform: "translateX(115%)" }}
-              >
+              <Link to="/guest" className="createAcc-btn btn btn-primary">
                 Create Account
               </Link>
             </div>
