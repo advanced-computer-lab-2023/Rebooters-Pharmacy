@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/viewCancelOrder.css';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import Card from 'react-bootstrap/Card';
 
 const ViewAndCancelOrder = () => {
   const [orders, setOrders] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
-
 
   // Fetch orders for the current patient
   useEffect(() => {
@@ -87,23 +88,21 @@ const ViewAndCancelOrder = () => {
   return (
     <div className="container mt-5">
       <h2>Your Orders</h2>
-      <table className="table table-bordered table-striped  ">
-        <thead className="thead-primary ">
-          <tr className="table-primary">
-            <th >Order ID</th>
-            <th >Status</th>
-            <th >Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.length > 0 &&
-            orders.map((order) => (
-              <tr
-                key={order._id}
-                className={order.status === 'Pending' ? 'table-secondary' : ''}
-              >
-                <td >{order._id}</td>
-                <td >
+
+      {orders.length > 0 ? ( // Conditionally render either the table or the card
+        <table className="table table-bordered table-striped">
+          <thead className="thead-primary">
+            <tr className="table-primary">
+              <th>Order ID</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order._id} className={order.status === 'Pending' ? '' : ''}>
+                <td>{order._id}</td>
+                <td>
                   {order.status === 'Pending' && (
                     <div className="progress">
                       <div
@@ -120,8 +119,7 @@ const ViewAndCancelOrder = () => {
                   )}
                   {order.status !== 'Pending' && <span>{order.status}</span>}
                 </td>
-                <td >
-                  
+                <td>
                   <Offcanvas
                     show={isDetailsVisible && selectedOrderId === order._id}
                     onHide={toggleDetails}
@@ -151,7 +149,7 @@ const ViewAndCancelOrder = () => {
                                 <p>Quantity: {item.quantity}</p>
                                 {item.image && (
                                   <img
-                                  src={`${item.image.filename}`}
+                                    src={`${item.image.filename}`}
                                     alt={item.name}
                                     className="bd-placeholder-img card-img-top"
                                     style={{ width: "20%", height: "25" }}
@@ -165,7 +163,12 @@ const ViewAndCancelOrder = () => {
                       <CloseButton />
                     </Offcanvas.Body>
                   </Offcanvas>
-                  <Button variant="primary" className="ml-2"  style = {{marginRight:"5px"}}  onClick={() => handleViewOrderDetails(order._id)} >
+                  <Button
+                    variant="primary"
+                    className="ml-2"
+                    style={{ marginRight: "5px" }}
+                    onClick={() => handleViewOrderDetails(order._id)}
+                  >
                     View Details
                   </Button>
                   {order.status === 'Pending' && (
@@ -179,8 +182,25 @@ const ViewAndCancelOrder = () => {
                 </td>
               </tr>
             ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      ) : (
+        <div>
+           <Card style={{ backgroundColor: 'rgb(26, 188, 188)', color: 'black', width: '18rem' }} className="mb-2">
+            <Card.Header>No Orders</Card.Header>
+            <Card.Body>
+              <Card.Title>No past orders and no pending orders.</Card.Title>
+              <Card.Text>
+                You can start exploring and place orders.
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          <Link to="/patient#medicines" className="btn btn-outline-primary btn-md btn-block" >
+            Start Shopping
+          </Link>
+
+        </div>
+      )}
     </div>
   );
 };
