@@ -4,7 +4,6 @@ import "line-awesome/dist/line-awesome/css/line-awesome.min.css";
 import Home from "./pages/Home";
 import Pharmacist from "./pages/PharmacistHome";
 import Admin from "./pages/Admin";
-import Guest from "./pages/Guest";
 import Patient from "./pages/Patient";
 import PatientActivities from "./components/PatientAddAddress";
 import CheckingOut from "./components/CheckingOut";
@@ -23,8 +22,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/guest" element={<Guest />} />
+          <Route path="/" element={<Homey />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/pharmacist" element={<Pharmacist />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/patient" element={<Patient />} />
@@ -38,15 +37,12 @@ function App() {
           />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/otp" element={<OTP />} />
-          <Route path= "/AboutusPage" element={<AboutusPage/>}/>
-          <Route path= "/ContactPage" element={<ContactPage/>}/>
-          <Route path="/homePage" element={<Homey/>}/>
+          <Route path="/AboutusPage" element={<AboutusPage />} />
+          <Route path="/ContactPage" element={<ContactPage />} />
+          <Route path="/homePage" element={<Homey />} />
           <Route path="/medicines" element={<Medicine />} />
           <Route path="/regPat" element={<AddPatient />} />
           <Route path="/regPharm" element={<PharmReq />} />
-
-
-
         </Routes>
       </BrowserRouter>
     </div>
