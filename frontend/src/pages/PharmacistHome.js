@@ -21,7 +21,7 @@ import PharmacistProfile from "../components/pharmaProfile"; // Import the new c
 import ChatWithDoctor from "../components/ChatWithDoctor";
 import Footer from "../components/footer";
 import ChatNavbar from "../components/ChatNavbar";
-
+import ChatBox from "../components/ChatBox";
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -30,6 +30,8 @@ const PharmacistHome = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
   const [activeComponent, setActiveComponent] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+
   
 
   useEffect(() => {
@@ -56,6 +58,7 @@ const PharmacistHome = () => {
       }
     };
   }, [navigate, activeChat]);
+  
   const handleLogout = async () => {
     try {
       if (activeChat) {
@@ -153,18 +156,6 @@ const PharmacistHome = () => {
               </button>
             </li>
             <li
-              className={`nav-btn nav-item ${
-                activeTab === "chat" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-link nav-btn"
-                onClick={() => handleTabClick("chat")}
-              >
-                Chat
-              </button>
-            </li>
-            <li
               className={`nav-item nav-btn ${
                 activeTab === "settings" ? "active" : ""
               }`}
@@ -202,31 +193,7 @@ const PharmacistHome = () => {
               )}{" "}
             </div>
           )}
-          {activeTab === "chat" && (
-            <div>
-               <ChatNavbar onChatButtonClick={handleChatButtonClick} />
-                {activeComponent === "ChatsWithPatients" && (
-                  <div>
-                    <PharmacistChats />
-                  </div>
-                )}
-                {activeComponent === "StartChatwithaDoctor" && (
-                  <div>
-                    <Pharmacist_DoctorChats setChats={setChats} chats={chats} />
-                  </div>
-                )}
-                {activeComponent === "ChatWithaDoctor" && (
-                  <div>
-                        <ChatWithDoctor />     
-                  </div>
-                )}
-                {activeComponent === "History" && (
-                  <div>
-                      <PharmacistRespondToDoc />
-                  </div>
-                )}
-            </div>
-          )}
+          
           {activeTab === "home" && (
             <div>
               <Wallet userType="pharmacist" />
@@ -258,6 +225,7 @@ const PharmacistHome = () => {
               <SalesReportGenerator userType="pharmacist" />
             </div>
           )}
+          <ChatBox/>
         </div>
       </div>
       <Footer />

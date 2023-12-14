@@ -117,7 +117,7 @@ const PatientChats = () => {
 
 
   return (
-    <div className='chat-container container'>
+    <div className='chat-container123 container'>
       <h2>My Chat</h2>
       <div>
         {/* Start a New Chat */}
@@ -125,7 +125,7 @@ const PatientChats = () => {
           <div>
             <h3>Start a New Chat</h3>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <input className='chat-box form-control'
+            <input className='chat-box123 form-control'
               rows="1"
               cols="25"
               placeholder="Type your message here..."

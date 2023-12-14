@@ -497,17 +497,8 @@ const editMedicine = async (req, res) => {
         const pharmacistUsername = req.cookies.username;
     
         // Find all chats where the patient is the same as the logged-in patient's username
-        const chats = await Chat.find({
-          $and: [
-            {
-              $or: [
-                { pharmacist: '' },
-                { pharmacist: pharmacistUsername },
-              ],
-            },
-            { patient: "" }, 
-          ],
-        });    
+        const chats = await Chat.find({ pharmacist: pharmacistUsername });
+    
         if (!chats || chats.length === 0) {
           return res.status(404).json({ message: 'No chats found.' });
         }
@@ -623,6 +614,7 @@ const editMedicine = async (req, res) => {
           $and: [
             { pharmacist: { $in: ['', pharmacistUsername] } },
             { closed: false },
+            {patient: false},
           ],
         });
     

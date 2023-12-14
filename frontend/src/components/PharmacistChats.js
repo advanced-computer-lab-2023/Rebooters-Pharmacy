@@ -23,14 +23,14 @@ const PharmacistChats = () => {
       if (response.ok) {
         const json = await response.json();
         setChats(json);
-        setLoading(true); // Set loading to false when data is fetched
+        setLoading(true); 
       } else {
         setChats([]);
-        setLoading(false); // Set loading to false even if there's an error
+        setLoading(false); 
       }
     } catch (error) {
       console.error('Error fetching chats:', error);
-      setLoading(false); // Set loading to false if there's an error
+      setLoading(false); 
     }
   };
 
@@ -46,15 +46,7 @@ const PharmacistChats = () => {
     };
   }, []);
 
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [chats]);
 
   const sendMessageToChat = async (chatId) => {
     const content = messageContents[chatId] || '';
@@ -78,14 +70,13 @@ const PharmacistChats = () => {
       setChats(chats.map((chat) => (chat._id === chatId ? json : chat)));
       // Clear the content for the specific chatId
       setMessageContents({ ...messageContents, [chatId]: '' });
-      scrollToBottom();
     } catch (error) {
       console.error('Error sending message to chat:', error);
     }
   };
 
   return (
-    <div className="card chat-container">
+    <div className="card dc ">
       <div className="card-header bg-chat-text text-white">
         <h2>
           {chats.length === 0 ? 'Chat' : 'Chatting... '}
@@ -101,7 +92,7 @@ const PharmacistChats = () => {
           {chats.map((chat) => (
             <div key={chat._id} className="mb-4">
               <h4 className="mb-3">Chat ID: {chat._id}</h4>
-              <div className="chat-box">
+              <div >
                 {chat.messages.map((message, index) => (
                   <div
                     key={index}
@@ -138,6 +129,7 @@ const PharmacistChats = () => {
         </div>
       )}
     </div>
+
   );
 };
 

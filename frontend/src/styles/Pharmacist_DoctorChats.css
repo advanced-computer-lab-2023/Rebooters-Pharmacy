@@ -1,0 +1,53 @@
+
+  .new-chat-container label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .new-chat-container select {
+    width: 45%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  
+  .doc-text {
+    background-color: #44bab1;
+  }
+  
+  .dc {
+    border: 2px solid #000;
+   
+  }
+
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+
+  .pharmacist-message2 {
+    background-color: #cce5ff;
+    display: inline-block;
+    overflow-wrap: break-word;
+  }
+  
+  .doctor-message2 {
+    background-color: #d4edda;
+    display: inline-block;
+    overflow-wrap: break-word;
+  }
+
+  .message2 {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .message-content2 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+  
+
+ 

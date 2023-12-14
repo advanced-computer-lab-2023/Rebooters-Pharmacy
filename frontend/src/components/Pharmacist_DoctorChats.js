@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
+import moment from 'moment';
+import '../styles/Pharmacist_DoctorChats.css'
 
 const Pharmacist_DoctorChats = () => {
   const [newChatContent, setNewChatContent] = useState('');
@@ -25,6 +26,8 @@ const Pharmacist_DoctorChats = () => {
     };
   }, []);
 
+ 
+
   const fetchDoctors = async () => {
     // Fetch the list of available doctors
     try {
@@ -42,31 +45,39 @@ const Pharmacist_DoctorChats = () => {
     }
   };
 
-  const fetchChats = async () => {
-    try {
-      const response = await fetch("/api/pharmacist/viewMyChats", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+const fetchChats = async () => {
+  try {
+    const response = await fetch("/api/pharmacist/viewMyChats", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (response.ok) {
-        const json = await response.json();
-        // Filter out closed chats
-        const openChats = json.filter((chat) => !chat.closed);
-        setChats(openChats);
-        // Set the selected doctor if there's an active chat
-        const activeChat = openChats.find((chat) => chat.pharmacist === selectedDoctor);
-        if (activeChat) {
-          setSelectedDoctor(activeChat.pharmacist);
-          setActiveChat(activeChat._id);
-        }
+    if (response.ok) {
+      const json = await response.json();
+      console.log('Fetched chats:', json); // Log the fetched chats for debugging
+
+      // Filter out closed chats
+      const openChats = json.filter((chat) => !chat.closed);
+      console.log('Open chats:', openChats); // Log the open chats for debugging
+
+      setChats(openChats);
+
+      // Set the selected doctor if there's an active chat
+      const activeChat = openChats.find((chat) => chat.pharmacist === selectedDoctor);
+      if (activeChat) {
+        setSelectedDoctor(activeChat.pharmacist);
+        setActiveChat(activeChat._id);
       }
-    } catch (error) {
-      console.error('Error fetching chats:', error);
+    } else {
+      console.error('Failed to fetch chats:', response.status, response.statusText);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching chats:', error);
+  }
+};
+
 
   const startNewChat = async () => {
     try {
@@ -163,8 +174,7 @@ const Pharmacist_DoctorChats = () => {
         },
       });
 
-      // Reset the active chat to null
-      setActiveChat(null);
+      
       // Refresh the chat list by filtering out the deleted chat
       setChats(chats.filter((chat) => chat._id !== chatId));
       // Clear the selected doctor when the chat is closed
@@ -177,17 +187,82 @@ const Pharmacist_DoctorChats = () => {
   };
 
   return (
-    <div className='container'>
-      <h2>Chats With Doctors</h2>
-      <div>
-        {/* Start a New Chat */}
-        {activeChat === null && (
-          <div>
+    <div className='card dc'>
+      <div className='card-header doc-text text-black'>
+        <h2>Chat With a Selected Doctor</h2>
+      </div>
+      <div className='card-body'>
+        {/* Existing Chats */}
+        {chats.map((chat) => (
+          <div key={chat._id}>
+            {chat.closed ? (
+              <div>
+                <p>This chat is closed.</p>
+              </div>
+            ) : (
+              <div>
+                <div >
+                  {chat.messages &&
+                    chat.messages.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`message2 ${message.userType === 'pharmacist' ? 'pharmacist-message2' : 'doctor-message2'}`}
+                      >
+                        <div className="message-content2">
+                          <strong>{message.userType === 'pharmacist' ? 'Pharmacist' : 'Doctor'}:</strong>
+                          {message.content}
+                        </div>
+                        <span className="text-muted timestamp">
+                          {moment(message.timestamp).format('MMM DD, YYYY h:mm A')}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+  
+                <div style={{ marginTop: '10px' }}>
+                  {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                  <textarea
+                    rows="2"
+                    className="form-control mt-3"
+                    placeholder="Type your reply here..."
+                    value={messageContents[chat._id] || ''}
+                    onChange={(e) =>
+                      setMessageContents({ ...messageContents, [chat._id]: e.target.value })
+                    }
+                  ></textarea>
+                  
+                  {/* Button container with flex layout */}
+                  <div style={{ marginTop: '10px' }}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => continueChat(chat._id)}
+                    style={{ marginRight: '10px',  marginTop: '10px' }}
+                  >
+                    Send
+                  </button>
+                  <button
+                    className='btn btn-secondary'
+                    onClick={() => deleteChat(chat._id)}
+                    style={{ marginRight: '10px',  marginTop: '10px' }}
+                  >
+                    Close Chat
+                  </button>
+                </div>
+
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+  
+        {/* Start a New Chat section */}
+        {chats.length === 0 && (
+          <div className='new-chat-container'>
             <h3>Start a New Chat</h3>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            {errorMessage && <p className='error-message'> {errorMessage}</p>}
             <textarea
-              rows="1"
-              cols="25"
+              rows="2"
+              className="form-control mt-3"
               placeholder="Type your message here..."
               value={newChatContent}
               onChange={(e) => setNewChatContent(e.target.value)}
@@ -195,14 +270,16 @@ const Pharmacist_DoctorChats = () => {
             <br />
             <label>Select a Doctor:</label>
             <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)}>
-              <option value="" disabled>Select a doctor</option>
+              <option value="" disabled>
+                Select a doctor
+              </option>
               {doctors.map((doctor) => (
                 <option key={doctor._id} value={doctor.username}>
                   {doctor.name}
                 </option>
               ))}
             </select>
-
+  
             {selectedDoctor && (
               <div>
                 <h2>Selected Doctor:</h2>
@@ -215,70 +292,10 @@ const Pharmacist_DoctorChats = () => {
             </button>
           </div>
         )}
-
-        {/* Existing Chats */}
-        <div>
-          {chats.map((chat) => (
-            <div key={chat._id}>
-              {chat.closed && (
-                <p>This chat is closed.</p>
-              )}
-              {!chat.closed && (
-                <div>
-                  <h4>
-                    {activeChat !== chat._id && (
-                      <button
-                        className='btn btn-danger'
-                        style={{ marginLeft: '10px' }}
-                        onClick={() => deleteChat(chat._id)}
-                      >
-                        Close Chat
-                      </button>
-                    )}
-                  </h4>
-                  <div>
-                    {chat.messages && chat.messages.map((message, index) => (
-                      <div key={index}>
-                        <strong>{message.userType}: </strong> {message.content}
-                        <span style={{ marginLeft: '10px', color: 'gray' }}>
-                          {new Date(message.timestamp).toLocaleString()}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  {activeChat === chat._id && (
-                    <div>
-                      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                      <textarea
-                        rows="1"
-                        cols="25"
-                        placeholder="Type your message here..."
-                        value={messageContents[chat._id] || ''}
-                        onChange={(e) =>
-                          setMessageContents({ ...messageContents, [chat._id]: e.target.value })
-                        }
-                      ></textarea>
-                      <br />
-                      <button className='btn btn-primary' onClick={() => continueChat(chat._id)}>
-                        Send
-                      </button>
-                      <button
-                        className='btn btn-danger'
-                        style={{ marginLeft: '10px' }}
-                        onClick={() => deleteChat(chat._id)}
-                      >
-                        Close Chat
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
-};
+            }  
+
 
 export default Pharmacist_DoctorChats;
