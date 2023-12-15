@@ -9,7 +9,7 @@ function Medicine({ modelName, sharedState }) {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [medicinalUse, setMedicinalUse] = useState("");
-  const [showMedicineList, setShowMedicineList] = useState(false);
+  const [showMedicineList, setShowMedicineList] = useState(true);
   const [alternativeMessage, setAlternativeMessage] = useState(null);
   const [archiveMessages, setArchiveMessages] = useState({});
   const [alternativeMedicines, setAlternativeMedicines] = useState([]);
@@ -43,7 +43,9 @@ function Medicine({ modelName, sharedState }) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      setMedicines(data);
+      const filteredData = modelName === "patient" ? data.filter(medicine => !medicine.Archive) : data;
+      setMedicines(filteredData);
+      //setMedicines(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -52,6 +54,12 @@ function Medicine({ modelName, sharedState }) {
   useEffect(() => {
     fetchData();
   }, [sharedState]);
+
+  useEffect(() => {
+    if (searchTerm === '' && medicinalUse === '') {
+      fetchData();
+    }
+  }, [searchTerm ,medicinalUse ]);
 
   const viewMedicineInventory = async () => {
     try {
@@ -107,7 +115,7 @@ function Medicine({ modelName, sharedState }) {
         const data = await response.json();
         setSuggestedMedicineNames(data.map((medicine) => medicine.name));
         setShowMedicineList(true);
-        setSearchTerm("");
+        //setSearchTerm("");
         setMedicines(data);
       }
     } catch (error) {
@@ -152,7 +160,7 @@ function Medicine({ modelName, sharedState }) {
       } else {
         const data = await response.json();
         setShowMedicineList(true);
-        setMedicinalUse("");
+        //setMedicinalUse("");
         setMedicines(data);
       }
     } catch (error) {
@@ -483,7 +491,7 @@ function Medicine({ modelName, sharedState }) {
           </div>
         </div>
       </div>
-      <hr />
+     
       <div>
         {alternativeMessage && <div className="mb-3">{alternativeMessage}</div>}
 

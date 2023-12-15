@@ -222,7 +222,7 @@ const Patient = () => {
               </button>
               {showPasswordPopup && (
                 <div className="popup">
-                  <ChangePassword userType="pharmacist" />
+                  <ChangePassword userType="patient" />
                 </div>
               )}{" "}
             </div>

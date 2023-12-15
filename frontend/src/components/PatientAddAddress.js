@@ -10,7 +10,8 @@ function PatientAddAddress({ addNewAddress }) {
  // const params = new URLSearchParams(window.location.search);
   //const patientUsername = params.get('patientUsername') //will bet taken from login later ;
 
-  function addInputField() {
+  function addInputField(event) {
+    event.preventDefault();
     var input = document.createElement("input");
     input.type = "text";
     input.placeholder = "Enter address...";
@@ -22,19 +23,25 @@ function PatientAddAddress({ addNewAddress }) {
 
     document.getElementById("inputContainer").appendChild(div);
 }
-const addAddress = async () => {
+const addAddress = async (event) => {
+  event.preventDefault();
   try {
+    let emptyAddress = false;
     let deliveryAddress = document.getElementById("ad1").value + "%";
     for (let i = 2; i < counter; i++) {
       deliveryAddress += document.getElementById(`ad${i}`).value + "%";
+      if (document.getElementById(`ad${i}`).value + "" === "")
+        emptyAddress = true;
     }
 
     // Call the addNewAddress function passed as a prop
     addNewAddress(deliveryAddress);
 
     //alert("address added");
-    setSuccessMessage('Address Added successfull');
-        
+    if (!emptyAddress)
+      setSuccessMessage('Address Added successfully');
+    else 
+      setSuccessMessage('One (or more) of the addresses were empty.');
 
   } catch (error) {
     console.error(error);
@@ -62,12 +69,12 @@ useEffect(() => {
      placeholder="enter address..."
     
     />
-<button onClick={addInputField}>+</button>
+<button onClick={(e) => addInputField(e)}>+</button>
 <br></br>
 
 </div>
 <div style={{ marginBottom: "5px" }}>
-  <button onClick={addAddress} className="btn btn-primary">
+  <button onClick={(e) => addAddress(e)} className="btn btn-primary">
     Add
   </button>
 </div>

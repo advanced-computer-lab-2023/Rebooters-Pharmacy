@@ -541,7 +541,7 @@ const handlePatientDropdownSelection = (username) => {
               </button>
               {showPasswordPopup && (
                 <div className="popup">
-                  <ChangePassword userType="pharmacist" />
+                  <ChangePassword userType="administrator" />
                 </div>
               )}{" "}
             </div>
