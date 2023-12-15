@@ -11,7 +11,6 @@ import PharmacistChats from "../components/PharmacistChats";
 import Notifications from "../components/PharmacistNotifications"; // Import the Notifications component
 import SalesReportGenerator from "../components/Repo";
 import Wallet from "../components/Wallet";
-import MedicineDropdown from "../components/filterRepo";
 import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
 import PharmacistRespondToDoc from "../components/PharmacistRespondToDoc";
 import axios from "axios";
@@ -22,6 +21,10 @@ import ChatWithDoctor from "../components/ChatWithDoctor";
 import Footer from "../components/footer";
 import ChatNavbar from "../components/ChatNavbar";
 import ChatBox from "../components/ChatBox";
+import ki from "../content/images/ki.jpg";
+import BarChart from "../components/ProfitBarChartPharm";
+import "../styles/pharmHome.css";
+
 
 const PharmacistHome = () => {
   const navigate = useNavigate();
@@ -156,6 +159,18 @@ const PharmacistHome = () => {
               </button>
             </li>
             <li
+              className={`nav-btn nav-item ${
+                activeTab === "notification" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-btn nav-link"
+                onClick={() => handleTabClick("notification")}
+              >
+                Notifications
+              </button>
+            </li>
+            <li
               className={`nav-item nav-btn ${
                 activeTab === "settings" ? "active" : ""
               }`}
@@ -175,6 +190,7 @@ const PharmacistHome = () => {
           </ul>
         </div>
       </nav>
+          
       <div className="background-cover">
         <div className="container">
           {activeTab === "settings" && (
@@ -193,17 +209,74 @@ const PharmacistHome = () => {
               )}{" "}
             </div>
           )}
-          
-          {activeTab === "home" && (
-            <div>
-              <Wallet userType="pharmacist" />
-            </div>
+          {activeTab === "notification" && (
+          <div>
+            <Notifications />
+          </div>
           )}
           {activeTab === "home" && (
-            <div className="card mt-4">
-              <Notifications />
-            </div>
-          )}
+  <div className="home-container">
+    <div className="slogan-container">
+      <img src={ki} alt="Your Image Alt Text" className="slogan-image" />
+      <p className="slogan-text">
+        <span className="slogan-highlight">Empowering Health,</span>
+        <br />
+        Serving with Care
+      </p>
+      <div className="wallet-container">
+      <Wallet userType="pharmacist" />
+    </div>
+    </div>
+
+    {/* Opening Hours Table Container */}
+    <div className="opening-hours-container">
+  <h2 style={{ textAlign: 'center' }}>Opening Hours</h2>
+  <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#f2f2f2' }}>
+    <tbody>
+      <tr style={{ borderBottom: '7px solid #ddd' }}>
+        <th style={{ padding: '13px', textAlign: 'center', border: '1px solid #ddd', backgroundColor: '#44bab1' }}>Day</th>
+        <th style={{ padding: '13px', textAlign: 'center', border: '1px solid #ddd',backgroundColor: '#44bab1' }}>Hours</th>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Monday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Tuesday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Wednesday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Thursday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Friday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Saturday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>10:00 AM - 4:00 PM</td>
+      </tr>
+      <tr>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Sunday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Closed</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+
+    <div className="barchart-container">
+      <BarChart />
+    </div>
+    
+  </div>
+)}
 
           {activeTab === "medicines" && (
             <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
@@ -213,13 +286,9 @@ const PharmacistHome = () => {
               <AddMedicine />
             </div>
           )}
-          {/*{activeTab === "medicines" && (
-        <div className="mt-4">
-          <EditMedicine />
-        </div>
-      )}*/}
+          
 
-          {activeTab === "home" && (
+          {activeTab === "medicines" && (
             <div className="mt-4">
               <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
               <SalesReportGenerator userType="pharmacist" />
@@ -228,6 +297,7 @@ const PharmacistHome = () => {
           <ChatBox/>
         </div>
       </div>
+      
       <Footer />
     </div>
   );

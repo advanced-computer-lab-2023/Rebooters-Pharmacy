@@ -1,0 +1,75 @@
+.slogan-container {
+    position: absolute;
+    left: 20px;
+    top: 47%;
+    transform: translateY(-50%);
+    text-align: center;
+    background-color: rgba(224, 230, 226, 0.488);
+    padding: 20px; /* Add padding for better visibility */
+    border-radius: 10px; /* Add border-radius for rounded corners */
+  height: 600px;
+  
+  }
+  .notification-container {
+    position: fixed;
+    top: 84%;
+    right: 68px;
+    transform: translateY(-50%);
+    text-align: center;
+    width: 650px; 
+    border-radius: 10px;
+  } 
+  .opening-hours-container{
+    position: fixed;
+    top: 96%;
+    right: 68px;
+    transform: translateY(-50%);
+    text-align: center;
+    width: 650px; 
+    border-radius: 10px;
+
+  }
+  
+  .barchart-container {
+    position: fixed;
+    top: 280px;
+    right: 68px;
+    transform: translateY(-50%);
+    text-align: center;
+    width: 700px; /* Adjust the width as needed */
+    padding: 15px;
+    border-radius: 10px;
+  }
+  .slogan-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover; /* Adjust the object-fit property as needed */
+    border-radius: 20%; /* Optional: Applies rounded corners for a circular image */
+    margin-right: 20px; /* Optional: Adds some space to the right of the image */
+  }
+  
+  .notification-item {
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .slogan-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 58px;
+    font-weight: bold;
+    color: #363738; /* Choose a color that fits your design */
+  }
+  
+  .slogan-highlight {
+    color: #1aac83; /* Choose a contrasting color for highlighting */
+  }
+  .wallet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px; 
+    margin-left: 115px;
+  }
+
+  
