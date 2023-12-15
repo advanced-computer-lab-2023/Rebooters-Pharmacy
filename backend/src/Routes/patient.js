@@ -6,7 +6,7 @@ const { checkout, viewMedicineInventory, filterMedicineByMedicinalUse,
     AddNewDeliveryAdress, searchMedicineByName, cancelOrder, 
     removeCartItem, changeAmountOfAnItem,viewItems, 
     viewCartItems,viewDeliveryAdresses,addMedicineToCart, 
-    viewOrderDetails, logout, changePassword ,getPatientProfile, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, checkWalletBalance,viewMedicineAlternatives } = require('../Controllers/patientController') //we're destructuring so we need curly braces
+    viewOrderDetails, logout, changePassword ,getPatientProfile, viewAllOrders, startNewChat, continueChat, viewMyChats, deleteChat, checkWalletBalance,viewMedicineAlternatives, getPackage } = require('../Controllers/patientController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
@@ -188,6 +188,8 @@ router.post('/startNewChat',requireAuth, startNewChat);
 router.get('/viewMyChats',requireAuth, viewMyChats);
 router.post('/continueChat',requireAuth, continueChat);
 router.delete('/deleteChat/:chatId', requireAuth, deleteChat);
+
+router.get('/getPackage', requireAuth, getPackage);
 
 
 

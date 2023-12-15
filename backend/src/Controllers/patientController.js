@@ -153,6 +153,8 @@ const cancelOrder = async (req, res) => {
     order.status = 'Canceled';
     await order.save();
 
+    const medicinesWithPrescription = order.items.filter(item => item.medicine.PrescriptionNeeded === true);
+
     for (const item of order.items) {
       const medicine = item.medicine;
 
@@ -168,6 +170,30 @@ const cancelOrder = async (req, res) => {
 
     // Remove sales related to the canceled order
     await Sales.deleteMany({ order: order._id });
+
+    for (i=0 ; i<medicinesWithPrescription.length ; i++) {
+      const medicineName = medicinesWithPrescription[i].medicine.name;
+      //const wordsArray = medicineNameSubstring.split();
+      const recentPrescription = await mongoose.connection.db.collection('prescriptions').findOne({
+        patientName: patientUsername,
+        'medicationInfo.medicine': medicineName + " (purchased)",
+        date: { $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) } // Within the last week
+      });
+
+      if (recentPrescription) {
+        const indexToUpdate = recentPrescription.medicationInfo.findIndex(
+          (item) => item.medicine === medicineName + " (purchased)"
+        );
+        if (indexToUpdate !== -1) {
+          const updateField = `medicationInfo.${indexToUpdate}.medicine`;
+          await mongoose.connection.db.collection('prescriptions').updateOne(
+            { _id: recentPrescription._id },
+            { $set: { [updateField]: medicineName} }
+          );
+        }
+    
+      }
+    }
 
     res.status(200).json({ message: 'Order canceled successfully', updatedOrder: order });
   } catch (error) {
@@ -198,7 +224,9 @@ const AddNewDeliveryAdress = async (req, res) => {
  
   var arrayOfAddresses = req.body.deliveryAddress.split("%");
   for(let i=0;i<arrayOfAddresses.length-1;i++){
-        deliveryAddresses.push(arrayOfAddresses[i])
+    if (arrayOfAddresses[i].trim() !== "") {
+      deliveryAddresses.push(arrayOfAddresses[i]);
+    }
       
   }
   
@@ -420,6 +448,25 @@ const checkout = async (req, res) => {
         saleDate: orderDate,
       });
       await salesEntry.save();
+
+      //remove it from prescription array if it is PrescriptionNeeded
+      const recentPrescription = await mongoose.connection.db.collection('prescriptions').findOne({
+      patientName: patientUsername,
+      'medicationInfo.medicine': givenMedicine.name,
+      date: { $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) } // Within the last week
+    });
+
+    if (recentPrescription) {
+      const prescriptionId = recentPrescription._id;
+      const indexToUpdate = recentPrescription.medicationInfo.findIndex(item => item.medicine === givenMedicine.name);
+      if (indexToUpdate !== -1) {
+        const updateField = `medicationInfo.${indexToUpdate}.medicine`;
+        await mongoose.connection.db.collection('prescriptions').updateOne(
+          { _id: prescriptionId },
+          { $set: { [updateField]: givenMedicine.name + " (purchased)" } }
+        );
+      }
+    }
     }
     // Create a new order using the Order schema
     const newOrder = new Order({
@@ -617,7 +664,7 @@ const viewMyChats = async (req, res) => {
     const patientUsername = req.cookies.username;
 
     // Find all chats where the patient is the same as the logged-in patient's username
-    const chats = await Chat.find({ patient: patientUsername });
+    const chats = await Chat.find({ patient: patientUsername , doctor: ""});
 
     if (!chats || chats.length === 0) {
       return res.status(404).json({ message: 'No chats found.' });
@@ -703,6 +750,26 @@ const viewMedicineAlternatives = async (req, res) => {
   }
 };
 
+const getPackage = async (req, res) => { //this will help getting medicine discount
+  try {
+    const patientUsername = req.cookies.username;
+    const patient = await Patient.findOne({ username: patientUsername });
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+    if (patient.healthPackage != null){
+      res.status(200).json(patient.healthPackage);
+    }
+    else {
+      res.status(404).json({ message: 'Patient does not have a health package' });
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching chats' });
+  }
+};
+
 module.exports = {  getPatientProfile,checkout, viewItems, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName, checkWalletBalance,
   viewCartItems, removeCartItem, cancelOrder,changeAmountOfAnItem,viewDeliveryAdresses,AddNewDeliveryAdress ,addMedicineToCart, viewOrderDetails, logout, changePassword, viewAllOrders, 
-startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines,viewMedicineAlternatives,removeNotification}; 
+startNewChat, continueChat, viewMyChats, deleteChat, getOutOfStockMedicines,viewMedicineAlternatives,removeNotification , getPackage}; 

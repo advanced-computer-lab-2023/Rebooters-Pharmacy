@@ -44,7 +44,9 @@ function Medicine({ modelName, sharedState }) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      setMedicines(data);
+      const filteredData = modelName === "patient" ? data.filter(medicine => !medicine.Archive) : data;
+      setMedicines(filteredData);
+      //setMedicines(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -492,7 +494,7 @@ function Medicine({ modelName, sharedState }) {
           </div>
         </div>
       </div>
-      <hr />
+     
       <div>
         {alternativeMessage && <div className="mb-3">{alternativeMessage}</div>}
 
