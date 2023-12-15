@@ -88,35 +88,51 @@ const viewPharmacistApplication = async (req, res) => {
 
 
     // View a pharmacist's information
-const viewPharmacistInformation = async (req, res) => {
+    const viewPharmacistInformation = async (req, res) => {
       try {
-        const {pharmacistUsername} = req.body;
-        const pharmacist = await Pharmacist.find({username : pharmacistUsername});
-        // if (!pharmacist) {
-        //   return res.status(404).json({ message: 'Pharmacists not found' });
-        // }
-        res.status(200).json(pharmacist);
+        const { pharmacistUsername, startsWithLetter } = req.body;
+    
+        let query = { username: new RegExp(`^${startsWithLetter}`, 'i') };
+    
+        if (pharmacistUsername) {
+          // If specific username is provided, include it in the query
+          query = { ...query, username: new RegExp(`^${pharmacistUsername}`, 'i') };
+        }
+    
+        const pharmacists = await Pharmacist.find(query);
+        res.status(200).json(pharmacists);
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching pharmacist information' });
       }
-}
+    }
+    
   
     // View a patient's basic information
-const viewPatientInformation = async (req, res) => {
+    const viewPatientInformation = async (req, res) => {
       try {
-        const {patientUsername} = req.body;
-        const patient = await Patient.find({username : patientUsername});
-        if (!patient) {
+        const { patientUsername, startsWithLetter } = req.body;
+    
+        let query = { username: new RegExp(`^${startsWithLetter}`, 'i') };
+    
+        if (patientUsername) {
+          // If specific username is provided, include it in the query
+          query = { ...query, username: new RegExp(`^${patientUsername}`, 'i') };
+        }
+    
+        const patient = await Patient.find(query);
+        
+        if (!patient || patient.length === 0) {
           return res.status(404).json({ message: 'Patients not found' });
         }
-        
+    
         res.status(200).json(patient);
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching patient information' });
       }
-}
+    }
+    
 
 const approvePharmacistRequest = async (req, res) => {
   try {
@@ -237,6 +253,81 @@ const sendEmail = async (email, subject, html) => {
     throw error; // Add this line to rethrow the error
   }
 };
+
+const viewAllPharmacists = async (req, res) => {
+  try {
+    const allPharmacists = await Pharmacist.find();
+    res.status(200).json(allPharmacists);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching pharmacists" });
+  }
+};
+
+const viewAllAdmins = async (req, res) => {
+  try {
+    const allAdmins = await Administrator.find();
+    res.status(200).json(allAdmins);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching admins" });
+  }
+};
+
+const viewAllPatients = async (req, res) => {
+  try {
+    const allPatients = await Patient.find();
+    res.status(200).json(allPatients);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching patients" });
+  }
+};
+
+const getMonthlyPendingOrdersTotal = async (req, res) => {
+  try {
+    // Aggregate pipeline to filter pending orders and calculate the total cost by month
+    const pipeline = [
+      {
+        $match: {
+          status: 'Pending',
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m',
+              date: '$orderDate',
+            },
+          },
+          totalCost: { $sum: '$total' },
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the _id field from the result
+          month: '$_id',
+          totalCost: 1,
+        },
+      },
+    ];
+
+    // Execute the aggregation pipeline
+    const result = await mongoose.connection.db.collection('orders').aggregate(pipeline).toArray();
+
+    // Return the result
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error calculating monthly pending orders total:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+
 module.exports = {  
   addAdministrator,
   removeUserFromSystem,
@@ -249,5 +340,5 @@ module.exports = {
   approvePharmacistRequest,
   rejectPharmacistRequest,
   logout, changePassword, createToken, sendApprovalEmail, sendRejectionEmail,sendEmail
-,generateSalesReport , getAdminProfile
+,generateSalesReport , getAdminProfile,viewAllPharmacists,viewAllAdmins,viewAllPatients,getMonthlyPendingOrdersTotal
 }; 

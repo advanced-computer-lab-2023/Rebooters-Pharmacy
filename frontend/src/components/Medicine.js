@@ -13,8 +13,7 @@ function Medicine({ modelName, sharedState }) {
   const [alternativeMessage, setAlternativeMessage] = useState(null);
   const [archiveMessages, setArchiveMessages] = useState({});
   const [alternativeMedicines, setAlternativeMedicines] = useState([]);
-  const [selectedAlternativeMedicine, setSelectedAlternativeMedicine] =
-    useState(null);
+  const [selectedAlternativeMedicine, setSelectedAlternativeMedicine] = useState(null);
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [medicineAlerts, setMedicineAlerts] = useState({});
   const [currentMedicine, setCurrentMedicine] = useState(null);
@@ -162,9 +161,7 @@ function Medicine({ modelName, sharedState }) {
   };
 
   const debouncedFilterMedicineByMedicinalUse = debounce(
-    filterMedicineByMedicinalUse,
-    1000
-  );
+    filterMedicineByMedicinalUse,1000 );
   useEffect(() => {
     // Trigger filterMedicineByMedicinalUse when medicinalUse changes
     debouncedFilterMedicineByMedicinalUse();
