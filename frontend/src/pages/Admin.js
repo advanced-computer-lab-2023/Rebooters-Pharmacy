@@ -477,7 +477,7 @@ function Administrator() {
               </button>
               {showPasswordPopup && (
                 <div className="popup">
-                  <ChangePassword userType="pharmacist" />
+                  <ChangePassword userType="administrator" />
                 </div>
               )}{" "}
             </div>
