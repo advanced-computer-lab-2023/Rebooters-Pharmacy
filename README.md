@@ -1044,8 +1044,8 @@ POST /api/administrator/generateSalesReport
 ## Running Tests
 
 To run tests to make sure the routes are working fine, download [Postman](https://www.postman.com/downloads/) software for free.
-
-//screen shots of postman?
+Lets quickly give directions on how to use postman. Simply you choose whether your request is a GET/POST/DELETE/PUT/ETC.. and then you paste the correct route you want to test (Check API Reference). Then if your request needs parameters, you will click on "Body" and choose the "JSON" Text style, and add your parameters as seen in the screenshot "username" and "password". Make sure your backend is running and Then you click send and observe the output at the bottom of the screen.
+![image](screenshots/postman.png)
 
 
 ## How to Use?
@@ -1099,5 +1099,5 @@ Public Contributions are unfortunately not welcome yet as per this project's tea
 ## License
 
 Apache 2.0 license 
-
+MIT license
 
