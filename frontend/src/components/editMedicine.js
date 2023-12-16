@@ -106,6 +106,8 @@ const EditMedicine = ({ medicine }) => {
       errorMessage = "Please fill the medical use field.";
     } else if (medicineToUpdate.quantity <= 0 || !medicineToUpdate.quantity) {
       errorMessage = "Quantity cannot be a negative number and cannot be zero.";
+    } else if (image === null) {
+      errorMessage = "Please add an image for the medicine.";
     }
 
     if (errorMessage) {

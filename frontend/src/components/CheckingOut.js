@@ -3,9 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Alert, Form, Row, Col, Button } from "react-bootstrap";
 import PatientAddAddress from "./PatientAddAddress";
 import Wallet from './Wallet';
+import '../styles/checkout.css';
 
-
-function CheckingOut({ modelName ,sharedState, setSharedState }) {
+function CheckingOut({ modelName ,sharedState, setSharedState  }) {
   const [elementsArray, setelementsArray] = React.useState([]);
   const [cartItems, setCartItems] = React.useState([]);
   const [subTotal, setsubTotal] = useState(() => {
@@ -264,8 +264,7 @@ function CheckingOut({ modelName ,sharedState, setSharedState }) {
       </Form.Group>
 
 
-        
-        <Button onClick={checkout} className="btn btn-primary">
+        <Button onClick={checkout} className="btn btn-primary check-container">
           Check Out
         </Button>
       </Form>

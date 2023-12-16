@@ -4,8 +4,10 @@ import Alert from 'react-bootstrap/Alert';
 
 
 function PatientAddAddress({ addNewAddress }) {
-  const [counter,setCounter]=React.useState(2);
+  const [counter,setCounter]=React.useState(2);    
   const [successMessage, setSuccessMessage] = useState('');
+  const [dangerMessage, setdangerMessage] = useState('');
+
 
  // const params = new URLSearchParams(window.location.search);
   //const patientUsername = params.get('patientUsername') //will bet taken from login later ;
@@ -28,20 +30,23 @@ const addAddress = async (event) => {
   try {
     let emptyAddress = false;
     let deliveryAddress = document.getElementById("ad1").value + "%";
-    for (let i = 2; i < counter; i++) {
+    for (let i = 1; i < counter; i++) {
       deliveryAddress += document.getElementById(`ad${i}`).value + "%";
       if (document.getElementById(`ad${i}`).value + "" === "")
         emptyAddress = true;
     }
 
-    // Call the addNewAddress function passed as a prop
+    
+
     addNewAddress(deliveryAddress);
 
     //alert("address added");
-    if (!emptyAddress)
+    if (!emptyAddress){
       setSuccessMessage('Address Added successfully');
-    else 
-      setSuccessMessage('One (or more) of the addresses were empty.');
+    }
+    else {
+      setdangerMessage('One (or more) of the addresses were empty.');
+    }
 
   } catch (error) {
     console.error(error);
@@ -59,10 +64,23 @@ useEffect(() => {
   return () => clearTimeout(timer);
 }, [successMessage]);
 
+useEffect(() => {
+  // Reset successMessage after 2 seconds
+  const resetDangerMessage = () => {
+    setdangerMessage('');
+  };
+
+  const timer = setTimeout(resetDangerMessage, 2000);
+
+  return () => clearTimeout(timer);
+}, [dangerMessage]);
+
   return (
     <div>
     <div id="inputContainer" style= {{ marginBottom: "5px" }}>
     {successMessage && <Alert variant="success">{successMessage}</Alert>}
+    {dangerMessage && <Alert variant="danger">{dangerMessage}</Alert>}
+
    <input
       type="text"
       id="ad1"

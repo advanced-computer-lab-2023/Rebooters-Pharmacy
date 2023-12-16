@@ -27,6 +27,7 @@ function Medicine({ modelName, sharedState }) {
   const [showEditingWindow, setShowEditingWindow] = useState(false);
   const [medicineName, setMedicineName] = useState("");
 
+
   const handleEditMedicine = (medicine) => {
     setEditingMedicine(medicine);
     setShowEditingWindow(true);
@@ -724,6 +725,16 @@ function Medicine({ modelName, sharedState }) {
                         </div>
                       )}
 
+                      
+                      {modelName === "patient" && medicine.quantity > 0 && (
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => addMedicineToCart(medicine.name)}
+                        >
+                          Add to Cart
+                        </button>
+                      )}
                       {medicineCartMessages[medicine.name] && (
                         <div className="mb-3">
                           <Alert
@@ -734,15 +745,6 @@ function Medicine({ modelName, sharedState }) {
                             {medicineCartMessages[medicine.name].message}
                           </Alert>
                         </div>
-                      )}
-                      {modelName === "patient" && medicine.quantity > 0 && (
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => addMedicineToCart(medicine.name)}
-                        >
-                          Add to Cart
-                        </button>
                       )}
                     </div>
                   </div>

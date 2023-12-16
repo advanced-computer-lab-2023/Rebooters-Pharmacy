@@ -10,6 +10,7 @@ import ChangePassword from "../components/ChangePassword";
 import PharmacistChats from "../components/PharmacistChats";
 import Notifications from "../components/PharmacistNotifications"; // Import the Notifications component
 import SalesReportGenerator from "../components/Repo";
+import PrescriptionChart from "../components/PrescriptionChart";
 import Wallet from "../components/Wallet";
 import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
 import PharmacistRespondToDoc from "../components/PharmacistRespondToDoc";
@@ -171,6 +172,18 @@ const PharmacistHome = () => {
               </button>
             </li>
             <li
+              className={`nav-btn nav-item ${
+                activeTab === "notification" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-btn nav-link"
+                onClick={() => handleTabClick("reports")}
+              >
+                Sales
+              </button>
+            </li>
+            <li
               className={`nav-item nav-btn ${
                 activeTab === "settings" ? "active" : ""
               }`}
@@ -213,9 +226,10 @@ const PharmacistHome = () => {
         <br />
         Serving with Care
       </p>
-      <div className="wallet-container">
-      <Wallet userType="pharmacist" />
     </div>
+
+    <div className="wallet-containerPharmacist" >
+      <Wallet userType="pharmacist" />
     </div>
 
     {/* Opening Hours Table Container */}
@@ -278,12 +292,32 @@ const PharmacistHome = () => {
           )}
           
 
-          {activeTab === "medicines" && (
+          {/* {activeTab === "medicines" && (
             <div className="mt-4">
               <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
               <SalesReportGenerator userType="pharmacist" />
             </div>
+          )} */}
+
+          {activeTab === "reports" && (
+            <div className="report" style={{ textAlign: 'center', marginBottom: '60px', fontSize: '20px', fontFamily: 'inherit' }}>
+              <h2 style={{ borderBottom: '1px solid #333', paddingBottom: '10px', display: 'inline-block', width: '100%' }}>Sales Report</h2>
+            </div>
           )}
+
+          {activeTab === "reports" && (
+          <div style={{ width: "55%" ,paddingLeft:"5%" , float:"left"  }}>
+            <PrescriptionChart />
+          </div>
+        )}
+        {activeTab === "reports" && (
+          <div className="sales-container12">
+             <SalesReportGenerator userType="pharmacist" />
+          </div>
+        )}
+
+
+
           <ChatBox/>
         </div>
       </div>

@@ -192,6 +192,44 @@ const fetchChats = async () => {
         <h2>Chat With a Selected Doctor</h2>
       </div>
       <div className='card-body'>
+
+         {/* Start a New Chat section */}
+       
+         <div className='new-chat-container'>
+            <h3>Start a New Chat</h3>
+            {errorMessage && <p className='error-message'> {errorMessage}</p>}
+            <textarea
+              rows="2"
+              className="form-control mt-3"
+              placeholder="Type your message here..."
+              value={newChatContent}
+              onChange={(e) => setNewChatContent(e.target.value)}
+            ></textarea>
+            <br />
+            <label>Select a Doctor:</label>
+            <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)}>
+              <option value="" disabled>
+                Select a doctor
+              </option>
+              {doctors.map((doctor) => (
+                <option key={doctor._id} value={doctor.username}>
+                  {doctor.name}
+                </option>
+              ))}
+            </select>
+  
+            {selectedDoctor && (
+              <div>
+                <h2>Selected Doctor:</h2>
+                <p>{selectedDoctor}</p>
+              </div>
+            )}
+            <br />
+            <button className='btn btn-primary' onClick={startNewChat}>
+              Start Chat
+            </button>
+          </div>
+          
         {/* Existing Chats */}
         {chats.map((chat) => (
           <div key={chat._id}>
@@ -254,44 +292,7 @@ const fetchChats = async () => {
             )}
           </div>
         ))}
-  
-        {/* Start a New Chat section */}
-        {chats.length === 0 && (
-          <div className='new-chat-container'>
-            <h3>Start a New Chat</h3>
-            {errorMessage && <p className='error-message'> {errorMessage}</p>}
-            <textarea
-              rows="2"
-              className="form-control mt-3"
-              placeholder="Type your message here..."
-              value={newChatContent}
-              onChange={(e) => setNewChatContent(e.target.value)}
-            ></textarea>
-            <br />
-            <label>Select a Doctor:</label>
-            <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)}>
-              <option value="" disabled>
-                Select a doctor
-              </option>
-              {doctors.map((doctor) => (
-                <option key={doctor._id} value={doctor.username}>
-                  {doctor.name}
-                </option>
-              ))}
-            </select>
-  
-            {selectedDoctor && (
-              <div>
-                <h2>Selected Doctor:</h2>
-                <p>{selectedDoctor}</p>
-              </div>
-            )}
-            <br />
-            <button className='btn btn-primary' onClick={startNewChat}>
-              Start Chat
-            </button>
-          </div>
-        )}
+        
       </div>
     </div>
   );

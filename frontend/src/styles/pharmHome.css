@@ -21,7 +21,7 @@
   } 
   .opening-hours-container{
     position: fixed;
-    top: 96%;
+    top: 40%;
     right: 68px;
     transform: translateY(-50%);
     text-align: center;
@@ -62,14 +62,35 @@
   .slogan-highlight {
     color: #1aac83; /* Choose a contrasting color for highlighting */
   }
-  .wallet-container {
+  .wallet-containerPharmacist {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin-top: 20px; 
-    margin-left: 115px;
+    margin-top: 475px; 
+    margin-left: 815px;
   }
 
+  .filter-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: -955px; 
+    margin-left: 80px;
+    font-size: large;
+  }
+
+  .sales-container12{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 390px; 
+    margin-right: 600px;
+    font-family: serif;
+  }
   

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Carousel from 'react-bootstrap/Carousel';
 import axios from "axios";
 import Medicine from "../components/Medicine";
 import PatientActivities from "../components/PatientActivities";
@@ -14,6 +15,11 @@ import PatientProfile from "../components/patientProfile";
 import Footer from "../components/footer";
 import "../styles/cartItems.css";
 import ChatBoxPatient from "../components/ChatBoxPatient";
+import care from '../content/images/care.jpg';
+import coupon from '../content/images/coupon.jpeg';
+import back from '../content/images/back.png';
+
+
 
 const Patient = () => {
   const [sharedState, setSharedState] = useState("");
@@ -103,9 +109,11 @@ const Patient = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+  
   const togglePasswordPopup = () => {
     setShowPasswordPopup(!showPasswordPopup);
   };
+
   return (
     <div>
       <nav
@@ -155,6 +163,18 @@ const Patient = () => {
             </li>
             <li
               className={`nav-item nav-btn ${
+                activeTab === "orderDetails" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-btn nav-link"
+                onClick={() => handleTabClick("orderDetails")}
+              >
+                Orders
+              </button>
+            </li>
+            <li
+              className={`nav-item nav-btn ${
                 activeTab === "orders" ? "active" : ""
               }`}
             >
@@ -165,18 +185,7 @@ const Patient = () => {
                 Cart
               </button>
             </li>
-            <li
-              className={`nav-item nav-btn ${
-                activeTab === "orderDetails" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-btn nav-link"
-                onClick={() => handleTabClick("orderDetails")}
-              >
-                Order
-              </button>
-            </li>
+            
             <li
               className={`nav-item nav-btn ${
                 activeTab === "settings" ? "active" : ""
@@ -202,7 +211,7 @@ const Patient = () => {
           {activeTab === "settings" && (
             <div className="card mt-4">
               <PatientProfile />
-              <button
+              {/* <button
                 className="btn btn-primary mt-2 d-inline-block w-auto"
                 onClick={togglePasswordPopup}
               >
@@ -212,7 +221,7 @@ const Patient = () => {
                 <div className="popup">
                   <ChangePassword userType="patient" />
                 </div>
-              )}{" "}
+              )}{" "} */}
             </div>
           )}
           {activeTab === "medicines" && (
@@ -234,6 +243,93 @@ const Patient = () => {
               <div>
                 <ViewAndCancelOrder />
               </div>
+            </div>
+          )}
+          {activeTab === "home" && (
+            <div className=" mt-4"> 
+
+              <div className="header-center">
+                <h1 style={{marginLeft:'180px', fontFamily:'fantasy'}}>Welcome to El7a2ni Pharmacy</h1>
+                <p style={{marginLeft:'180px', fontFamily:'serif',fontSize:'18px'}}>Your Partner in Health and Wellness</p>
+              </div>
+
+              <Carousel style={{ width: '40%', marginTop:'90px' }}>
+              <Carousel.Item>
+                <img src={back} alt="First Slide" className="d-block w-100 h-90" />
+                <Carousel.Caption>
+                </Carousel.Caption>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img src={coupon} alt="Second Slide" className="d-block w-100" />
+                <Carousel.Caption>
+                </Carousel.Caption>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img src={care} alt="Third Slide" className="d-block w-100" />
+                <Carousel.Caption>
+                </Carousel.Caption>
+              </Carousel.Item>
+            </Carousel>
+
+             {/* Opening Hours Table Container */}
+              <div className="opening-hours-container">
+            <h2 style={{ textAlign: 'center' }}>Opening Hours</h2>
+            <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#f2f2f2' }}>
+              <tbody>
+                <tr style={{ borderBottom: '7px solid #ddd' }}>
+                  <th style={{ padding: '13px', textAlign: 'center', border: '1px solid #ddd', backgroundColor: '#44bab1' }}>Day</th>
+                  <th style={{ padding: '13px', textAlign: 'center', border: '1px solid #ddd',backgroundColor: '#44bab1' }}>Hours</th>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Monday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Tuesday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Wednesday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Thursday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Friday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Saturday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>10:00 AM - 4:00 PM</td>
+                </tr>
+                <tr>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Sunday</td>
+                  <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Closed</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="additional-info">
+        <h2 style={{fontFamily:'serif'}}>Our Services</h2>
+        <p>
+          Welcome to our pharmacy! We provide a range of services to meet your healthcare needs.
+          Whether you're looking for prescription medications, over-the-counter remedies, or expert
+          advice, we're here to help.
+        </p>
+        <p>
+          Visit us today and experience personalized care from our friendly and knowledgeable staff.
+        </p>
+      </div>
+
+            <div className="cta-button-container">
+        <button className="cta-button" style={{ backgroundColor: '#44bab1', border: 'none', padding: '10px 20px', borderRadius: '5px' }}>
+          <Link to="/patient#medicines" style={{ color: 'black', textDecoration: 'none' }}>
+            Explore Our Products
+          </Link>
+        </button>
+      </div>
             </div>
           )}
         </div>
