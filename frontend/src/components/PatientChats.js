@@ -97,9 +97,9 @@ const PatientChats = () => {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (response.ok) {
-        // Remove the closed chat from the frontend
+        
         setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
       } else {
         console.error('Error deleting chat:', response.statusText);

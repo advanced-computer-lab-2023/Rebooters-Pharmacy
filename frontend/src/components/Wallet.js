@@ -32,13 +32,15 @@ const Wallet = ({ userType }) => {
     fetchWalletBalance();
   }, [userType]);
 
+  const cardBorderStyle = userType === 'pharmacist' ? 'success' : 'success';
+  const cardHeaderStyle = userType === 'pharmacist' ? { backgroundColor: '#44bab1', color: 'black',fontWeight:'bold' } : {};
+
   return (
     <div className="container">
-      <Card border="info" style={{ width: '18rem' }}>
-        <Card.Header>Wallet Balance</Card.Header>
+      <Card border={cardBorderStyle} style={{ width: '18rem' }}>
+        <Card.Header style={cardHeaderStyle}>Wallet Balance</Card.Header>
         <Card.Body>
           <Card.Title>{walletBalance} $</Card.Title>
-          
         </Card.Body>
       </Card>
       <br />

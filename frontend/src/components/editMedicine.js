@@ -106,6 +106,9 @@ const EditMedicine = ({medicine}) => {
     else if (medicineToUpdate.quantity <= 0 || !medicineToUpdate.quantity) {
       errorMessage = "Quantity cannot be a negative number and cannot be zero.";
     }
+    else if (image === null) {
+      errorMessage = "Please add an image for the medicine.";
+    }
     
     if (errorMessage) {
       setError(errorMessage);
@@ -297,7 +300,7 @@ const EditMedicine = ({medicine}) => {
         
         <div className="mb-3">
           <label htmlFor="image" className="form-label">
-            Image: (Optional)
+            Image: 
           </label>
           <input
             type="file"

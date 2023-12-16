@@ -577,18 +577,18 @@ const handlePatientDropdownSelection = (username) => {
   {activeTab === "administrators" && (
     <>
       {/* Slides on the left */}
-      <Carousel style={{ width: '40%' }}>
-        <Carousel.Item>
-          <img src={slideAdmin} alt="First Slide" className="d-block w-100" />
-          <Carousel.Caption>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img src={addAdmin} alt="Second Slide" className="d-block w-100" />
-          <Carousel.Caption>
-          </Carousel.Caption>
-        </Carousel.Item>
-      </Carousel>
+            <Carousel style={{ width: '40%' }}>
+              <Carousel.Item>
+                <img src={slideAdmin} alt="First Slide" className="d-block w-100" />
+                <Carousel.Caption>
+                </Carousel.Caption>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img src={addAdmin} alt="Second Slide" className="d-block w-100" />
+                <Carousel.Caption>
+                </Carousel.Caption>
+              </Carousel.Item>
+            </Carousel>
 
       {/* Card on the right */}
       <Card className="mb-3" border="dark" style={{ width: '50%', marginLeft: '20px', marginTop: '55px', borderWidth: '2px' }}>

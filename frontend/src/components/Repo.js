@@ -161,7 +161,7 @@ const SalesReportGenerator = ({ userType }) => {
 
       setSalesData(response.data);
       setError(null);
-      setChartsVisible(true);
+      setChartsVisible(false);
       setShowTable(true);
       setShowAlert(false); // Reset the alert when new data is loaded
 

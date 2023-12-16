@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
+import ChangePassword from "../components/ChangePassword";
+import Wallet from './Wallet';
+
 
 const PatientProfile = () => {
   const [patientData, setPatientData] = useState({});
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -21,8 +26,11 @@ const PatientProfile = () => {
     fetchPatientData();
   }, []);
 
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
+  };
+
   return (
-    <div className="container">
       <div className="row">
         <div className="col-lg-4">
           <div className="card">
@@ -46,7 +54,21 @@ const PatientProfile = () => {
                   <p className="text-secondary mb-1">Patient</p>
                 </div>
               </div>
+              
               <hr className="my-4" />
+              <Wallet userType="patient" />
+
+              <button
+                className="btn btn-primary mt-2 d-inline-block w-auto"
+                onClick={togglePasswordPopup}
+              >
+                {showPasswordPopup ? "Hide" : "Change Password"}
+              </button>
+              {showPasswordPopup && (
+                <div className="popup">
+                  <ChangePassword userType="patient" />
+                </div>
+              )}{" "}
             </div>
           </div>
         </div>
@@ -174,7 +196,6 @@ const PatientProfile = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

@@ -693,6 +693,33 @@ const editMedicine = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+const getMedicineCountByPrescription = async (req, res) => {
+  try {
+    const pipeline = [
+      {
+        $group: {
+          _id: '$PrescriptionNeeded',
+          count: { $sum: 1 },
+        },
+      },
+    ];
+
+    const result = await mongoose.connection.db.collection('medicines').aggregate(pipeline).toArray();
+
+    // Assuming PrescriptionNeeded is a boolean field
+    const prescriptionNeededCount = result.find(item => item._id === true)?.count || 0;
+    const prescriptionNotNeededCount = result.find(item => item._id === false)?.count || 0;
+
+    res.status(200).json({
+      prescriptionNeededCount,
+      prescriptionNotNeededCount,
+    });
+  } catch (error) {
+    console.error('Error getting medicine count by prescription:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
     
     
      module.exports = {
@@ -712,7 +739,7 @@ const editMedicine = async (req, res) => {
       checkWalletBalance,
       archiveMedicine, unarchiveMedicine,getPharmacistProfile
     ,startNewChat,continueChat,viewMyChats,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor,ChatsToDoctor,
-    removeOutOfStockMedicine, getMonthlyPending};
+    removeOutOfStockMedicine, getMonthlyPending,getMedicineCountByPrescription};
     
 
     

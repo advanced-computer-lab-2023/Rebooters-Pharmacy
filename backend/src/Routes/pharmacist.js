@@ -8,7 +8,7 @@ const {generateSalesReport, filterSalesReport,
     searchMedicineByName,editMedicine,getPharmacistProfile,
      viewMedicineInventoryPharmacist, logout, changePassword,
       viewAllChats, sendMessageToChat, getOutOfStockMedicines, 
-      checkWalletBalance,getMonthlyPending, unarchiveMedicine,archiveMedicine,startNewChat,viewMyChats,continueChat,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor,ChatsToDoctor,removeOutOfStockMedicine} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
+      checkWalletBalance,getMonthlyPending, unarchiveMedicine,archiveMedicine,startNewChat,viewMyChats,continueChat,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor,ChatsToDoctor,removeOutOfStockMedicine,getMedicineCountByPrescription} = require('../Controllers/PharmacistController') //we're destructuring so we need curly braces
 
 const multer = require('multer'); 
 const storage = multer.diskStorage({
@@ -63,5 +63,8 @@ router.get('/profile', requireAuth, getPharmacistProfile);
 router.post('/removeOutOfStockMedicine',requireAuth,removeOutOfStockMedicine);
 
 router.get('/getMonthlyPending' , requireAuth, getMonthlyPending);
+
+router.get('/getMedicineCountByPrescription' , requireAuth, getMedicineCountByPrescription);
+
 
 module.exports = router //we need to export that router at the end so that App.js can access it

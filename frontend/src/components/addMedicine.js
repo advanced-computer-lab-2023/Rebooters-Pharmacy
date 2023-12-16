@@ -41,7 +41,8 @@ const AddMedicine = () => {
       newMedicine.price < 0 ||
       !newMedicine.description ||
       !newMedicine.medicinalUse ||
-      newMedicine.quantity < 0 // Check for negative quantity
+      newMedicine.quantity < 0 
+      
     ) {
       setError("Please fill in all fields and ensure that price and quantity are not negative.");
       setMessage("");
@@ -62,6 +63,10 @@ const AddMedicine = () => {
     else if (newMedicine.quantity <= 0 || !newMedicine.quantity) {
       errorMessage = "Quantity cannot be a negative number and cannot be zero.";
     }
+    else if (image === null) {
+      errorMessage = "Please add an image for the medicine.";
+    }
+    
     
     if (errorMessage) {
       setError(errorMessage);
@@ -220,7 +225,7 @@ const AddMedicine = () => {
 
         <div className="mb-3">
           <label htmlFor="image" className="form-label">
-            Image: (Optional)
+            Image:
           </label>
           <input
             type="file"
