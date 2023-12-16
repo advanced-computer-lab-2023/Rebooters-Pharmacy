@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const EditMedicine = ({medicine}) => {
+const EditMedicine = ({ medicine }) => {
   const [medicineToUpdate, setMedicineToUpdate] = useState({
     activeIngredients: "",
     price: 0,
@@ -8,7 +8,7 @@ const EditMedicine = ({medicine}) => {
     medicinalUse: "",
     quantity: 0,
     PrescriptionNeeded: false,
-    Archive: false
+    Archive: false,
   });
 
   const [error, setError] = useState("");
@@ -20,15 +20,13 @@ const EditMedicine = ({medicine}) => {
   const [image, setImage] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
-
-  
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
   };
 
   const handleInputChange = (e) => {
-    const { name, value , checked, type} = e.target;
+    const { name, value, checked, type } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
     setMedicineToUpdate({
       ...medicineToUpdate,
@@ -36,13 +34,12 @@ const EditMedicine = ({medicine}) => {
     });
   };
 
-
   const toggleSearchResults = () => {
     setShowSearchResults((prevShowSearchResults) => !prevShowSearchResults);
   };
 
   // const handleSearchMedicine = async () => {
-    
+
   //   try {
   //     if (!medicineName) {
   //       setError("Please fill in the Medicine Name field.");
@@ -65,12 +62,12 @@ const EditMedicine = ({medicine}) => {
   //         toggleSearchResults();
   //       } else {
   //         setError("Medicine not found");
-  //         setSearchedMedicine([]); 
+  //         setSearchedMedicine([]);
   //         toggleSearchResults();
   //       }
   //     } else {
   //         setError("Medicine not found");
-  //         setSearchedMedicine([]); 
+  //         setSearchedMedicine([]);
   //         toggleSearchResults();
   //     }
   //   } catch (error) {
@@ -90,23 +87,27 @@ const EditMedicine = ({medicine}) => {
       !medicineToUpdate.medicinalUse ||
       medicineToUpdate.quantity < 0 // Check for negative quantity
     ) {
-      setError("Please fill in all fields and ensure that price and quantity are not negative.");
+      setError(
+        "Please fill in all fields and ensure that price and quantity are not negative."
+      );
       setMessage("");
       return;
-    }else if (!medicineToUpdate.activeIngredients){
+    } else if (!medicineToUpdate.activeIngredients) {
       errorMessage = "Please fill the active ingredient field.";
-    }
-     else if (medicineToUpdate.price <= 0 || !medicineToUpdate.price) {
-      errorMessage = "Please fill the price field and ensure Price cannot be a negative number and cannot be zero.";
-    } else if (!medicineToUpdate.description || !medicineToUpdate.medicinalUse) {
+    } else if (medicineToUpdate.price <= 0 || !medicineToUpdate.price) {
+      errorMessage =
+        "Please fill the price field and ensure Price cannot be a negative number and cannot be zero.";
+    } else if (
+      !medicineToUpdate.description ||
+      !medicineToUpdate.medicinalUse
+    ) {
       errorMessage = "Please fill the description field.";
-    } else if ( !medicineToUpdate.medicinalUse){
+    } else if (!medicineToUpdate.medicinalUse) {
       errorMessage = "Please fill the medical use field.";
-    }
-    else if (medicineToUpdate.quantity <= 0 || !medicineToUpdate.quantity) {
+    } else if (medicineToUpdate.quantity <= 0 || !medicineToUpdate.quantity) {
       errorMessage = "Quantity cannot be a negative number and cannot be zero.";
     }
-    
+
     if (errorMessage) {
       setError(errorMessage);
       setMessage("");
@@ -121,10 +122,13 @@ const EditMedicine = ({medicine}) => {
       formData.append("description", medicineToUpdate.description);
       formData.append("medicinalUse", medicineToUpdate.medicinalUse);
       formData.append("quantity", medicineToUpdate.quantity);
-      formData.append("PrescriptionNeeded", medicineToUpdate.PrescriptionNeeded);
+      formData.append(
+        "PrescriptionNeeded",
+        medicineToUpdate.PrescriptionNeeded
+      );
       formData.append("Archive", medicineToUpdate.Archive);
 
-      if(image !== null) {
+      if (image !== null) {
         formData.append("image", image);
       }
       const response = await fetch("/api/pharmacist/editMedicine", {
@@ -143,7 +147,7 @@ const EditMedicine = ({medicine}) => {
           medicinalUse: "",
           quantity: 0,
           PrescriptionNeeded: false,
-          Archive: false
+          Archive: false,
         });
         setImage(null);
         setUpdatedMedicine(updatedMedicineData);
@@ -157,7 +161,7 @@ const EditMedicine = ({medicine}) => {
   };
 
   return (
-    <div className="card mt-4">
+    <div className="">
       <div className="card-body">
         <h2>Edit Medicine</h2>
         {error && <p className="text-danger">{error}</p>}
@@ -182,134 +186,143 @@ const EditMedicine = ({medicine}) => {
             </div>
           ))} */}
         {/* Rest of the form fields for editing */}
+
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name: {medicine}
           </label>
         </div>
-        <div className="mb-3">
-          <label htmlFor="activeIngredients" className="form-label">
-            Active Ingredients:
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="activeIngredients"
-            name="activeIngredients"
-            value={medicineToUpdate.activeIngredients}
-            onChange={handleInputChange}
-            placeholder="Type an Active Ingredient"
+        <div className="row">
+          <div className="col-4 mb-3">
+            <label htmlFor="activeIngredients" className="form-label">
+              Active Ingredients:
+            </label>
+            <input
+              type="text"
+              className="form-control m-0"
+              id="activeIngredients"
+              name="activeIngredients"
+              value={medicineToUpdate.activeIngredients}
+              onChange={handleInputChange}
+              placeholder="Type an Active Ingredient"
+            />
+          </div>
 
-          />
+          <div className="col-4 mb-3">
+            <label htmlFor="price" className="form-label">
+              Price:
+            </label>
+            <input
+              type="number"
+              className="form-control m-0"
+              id="price"
+              name="price"
+              value={medicineToUpdate.price === 0 ? "" : medicineToUpdate.price}
+              onChange={handleInputChange}
+              placeholder="Type a price"
+            />
+          </div>
+          <div className="col-4 mb-3">
+            <label htmlFor="medicinalUse" className="form-label">
+              Medical Use:
+            </label>
+            <input
+              type="text"
+              className="form-control m-0"
+              id="medicinalUse"
+              name="medicinalUse"
+              value={medicineToUpdate.medicinalUse}
+              onChange={handleInputChange}
+              placeholder="Type a medical use"
+            />
+          </div>
         </div>
-
-        <div className="mb-3">
-          <label htmlFor="price" className="form-label">
-            Price:
-          </label>
-          <input
-            type="number"
-            className="form-control"
-            id="price"
-            name="price"
-            value={medicineToUpdate.price === 0 ? '' : medicineToUpdate.price}
-            onChange={handleInputChange}
-            placeholder="Type a price"
-
-          />
+        <div className="row">
+          <div className="col-4 mb-3">
+            <label htmlFor="description" className="form-label">
+              Description:
+            </label>
+            <input
+              type="text"
+              className="form-control m-0"
+              id="description"
+              name="description"
+              value={medicineToUpdate.description}
+              onChange={handleInputChange}
+              placeholder="Type a description"
+            />
+          </div>
+          <div className="col-4 mb-3">
+            <label htmlFor="quantity" className="form-label">
+              Quantity:
+            </label>
+            <input
+              type="number"
+              className="form-control m-0"
+              id="quantity"
+              name="quantity"
+              value={
+                medicineToUpdate.quantity === 0 ? "" : medicineToUpdate.quantity
+              }
+              onChange={handleInputChange}
+              placeholder="Type a number"
+            />
+          </div>
+          <div className="col-4 mb-3">
+            <label htmlFor="PrescriptionNeeded" className="form-label">
+              Prescription Needed:
+            </label>
+            <select
+              className="form-control m-0"
+              id="PrescriptionNeeded"
+              name="PrescriptionNeeded"
+              value={medicineToUpdate.PrescriptionNeeded.toString()}
+              onChange={handleInputChange}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="medicinalUse" className="form-label">
-            Medical Use:
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="medicinalUse"
-            name="medicinalUse"
-            value={medicineToUpdate.medicinalUse}
-            onChange={handleInputChange}
-            placeholder="Type a medical use"
+        <div className="row mb-5">
+          <div className="col-4 mb-3">
+            <label htmlFor="Archive" className="form-label">
+              Archived:
+            </label>
+            <select
+              className="form-control m-0"
+              id="Archive"
+              name="Archive"
+              value={medicineToUpdate.Archive.toString()}
+              onChange={handleInputChange}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
 
-          />
+          <div className="col-4 mb-3">
+            <label htmlFor="image" className="form-label">
+              Image: (Optional)
+            </label>
+            <input
+              type="file"
+              className="form-control m-0"
+              id="image"
+              name="image"
+              onChange={handleImageChange}
+            />
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="description" className="form-label">
-            Description:
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="description"
-            name="description"
-            value={medicineToUpdate.description}
-            onChange={handleInputChange}
-            placeholder="Type a description"
-
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">
-            Quantity:
-          </label>
-          <input
-            type="number"
-            className="form-control"
-            id="quantity"
-            name="quantity"
-            value={medicineToUpdate.quantity === 0 ? '' : medicineToUpdate.quantity}
-            onChange={handleInputChange}
-            placeholder="Type a number"
-
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="PrescriptionNeeded" className="form-label">
-            Prescription Needed:
-          </label>
-          <select
-            className="form-control"
-            id="PrescriptionNeeded"
-            name="PrescriptionNeeded"
-            value={medicineToUpdate.PrescriptionNeeded.toString()}
-            onChange={handleInputChange}
+        <div className="form-submit">
+          <button
+            className="btn btn-primary"
+            style={{ position: "absolute", right: "12%", bottom: "7%" }}
+            onClick={handleEditMedicine}
           >
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
+            Edit Medicine
+          </button>
         </div>
-
-        <div className="mb-3">
-          <label htmlFor="Archive" className="form-label">
-            Archived:
-          </label>
-          <select
-            className="form-control"
-            id="Archive"
-            name="Archive"
-            value={medicineToUpdate.Archive.toString()}
-            onChange={handleInputChange}
-          >
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        </div>
-        
-        <div className="mb-3">
-          <label htmlFor="image" className="form-label">
-            Image: (Optional)
-          </label>
-          <input
-            type="file"
-            className="form-control"
-            id="image"
-            name="image"
-            onChange={handleImageChange}
-          />
-        </div>
-        <button className="btn btn-primary" onClick={handleEditMedicine}>
-          Edit Medicine
-        </button>
       </div>
       {updatedMedicine && (
         <div>
@@ -319,9 +332,11 @@ const EditMedicine = ({medicine}) => {
           <p>Description: {updatedMedicine.description}</p>
           <p>Medicinal Use: {updatedMedicine.medicinalUse}</p>
           <p>Quantity: {updatedMedicine.quantity}</p>
-          <p>Prescription Needed: {updatedMedicine.PrescriptionNeeded ? 'Yes' : 'No'}</p>
-          <p>Archived: {updatedMedicine.Archive ? 'Yes' : 'No'}</p>
-
+          <p>
+            Prescription Needed:{" "}
+            {updatedMedicine.PrescriptionNeeded ? "Yes" : "No"}
+          </p>
+          <p>Archived: {updatedMedicine.Archive ? "Yes" : "No"}</p>
         </div>
       )}
     </div>

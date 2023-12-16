@@ -62,7 +62,7 @@ footer {
 }
 
 .modal-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -75,7 +75,11 @@ footer {
 }
 
 .editMedicine {
-  height: 600px;
+  max-height: 80vh;
   width: 900px;
-  overflow-y: scroll;
+  overflow-y: auto; /* Use 'auto' for automatic scrolling when needed */
+  background-color: #fff; /* Set a background color to distinguish from overlay */
+  padding: 20px; /* Add padding for content */
+  border-radius: 8px; /* Optional: Add rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle box shadow */
 }

@@ -13,7 +13,8 @@ function Medicine({ modelName, sharedState }) {
   const [alternativeMessage, setAlternativeMessage] = useState(null);
   const [archiveMessages, setArchiveMessages] = useState({});
   const [alternativeMedicines, setAlternativeMedicines] = useState([]);
-  const [selectedAlternativeMedicine, setSelectedAlternativeMedicine] = useState(null);
+  const [selectedAlternativeMedicine, setSelectedAlternativeMedicine] =
+    useState(null);
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [medicineAlerts, setMedicineAlerts] = useState({});
   const [currentMedicine, setCurrentMedicine] = useState(null);
@@ -43,7 +44,10 @@ function Medicine({ modelName, sharedState }) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      const filteredData = modelName === "patient" ? data.filter(medicine => !medicine.Archive) : data;
+      const filteredData =
+        modelName === "patient"
+          ? data.filter((medicine) => !medicine.Archive)
+          : data;
       setMedicines(filteredData);
       //setMedicines(data);
     } catch (error) {
@@ -56,10 +60,10 @@ function Medicine({ modelName, sharedState }) {
   }, [sharedState]);
 
   useEffect(() => {
-    if (searchTerm === '' && medicinalUse === '') {
+    if (searchTerm === "" && medicinalUse === "") {
       fetchData();
     }
-  }, [searchTerm ,medicinalUse ]);
+  }, [searchTerm, medicinalUse]);
 
   const viewMedicineInventory = async () => {
     try {
@@ -169,7 +173,9 @@ function Medicine({ modelName, sharedState }) {
   };
 
   const debouncedFilterMedicineByMedicinalUse = debounce(
-    filterMedicineByMedicinalUse,1000 );
+    filterMedicineByMedicinalUse,
+    1000
+  );
   useEffect(() => {
     // Trigger filterMedicineByMedicinalUse when medicinalUse changes
     debouncedFilterMedicineByMedicinalUse();
@@ -431,7 +437,13 @@ function Medicine({ modelName, sharedState }) {
               <EditMedicine medicine={editingMedicine} />
             </div>
             <button
-              className="btn btn-danger"
+              style={{
+                width: "15",
+                position: "absolute",
+                right: "4%",
+                bottom: "6.75%",
+              }}
+              className="btn btn-secondary"
               onClick={handleCloseEditMedicine}
             >
               Close
@@ -491,7 +503,7 @@ function Medicine({ modelName, sharedState }) {
           </div>
         </div>
       </div>
-     
+
       <div>
         {alternativeMessage && <div className="mb-3">{alternativeMessage}</div>}
 
