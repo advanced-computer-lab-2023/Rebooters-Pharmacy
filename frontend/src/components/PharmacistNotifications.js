@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import bell from "../content/images/belll.png";
+import "../styles/pharmHome.css";
 
 const Notifications = () => {
   const [outOfStockMedicines, setOutOfStockMedicines] = useState([]);
@@ -47,25 +49,43 @@ const Notifications = () => {
   };
 
   return (
-    <div className="card">
-      <h2 className="card-header">Notifications</h2>
+<div className="card position-relative m-3 p-3" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+      
+      <h2 className="card-header text-center" style={{ background: '#44bab1', margin: '0' }}>
+        Notifications
+      </h2><img
+        src={bell}
+        alt="Notification Bell"
+        className="position-absolute  end-0 m-3 rounded-circle"
+        style={{ width: '60px', height: '56px', cursor: 'pointer', top: '1px' }}
+      />
       <div className="card-body">
         {outOfStockMedicines.length === 0 ? (
-          <p>No notifications</p>
+          <p className="alert alert-danger">No notifications at the moment.</p>
         ) : (
-          <ul>
-            {outOfStockMedicines.map((medicine, index) => (
-              <li key={index}>
-                {`${medicine} is out of stock`}
-                <button
-                  className="btn btn-sm btn-danger ml-2"
-                  onClick={() => removeNotification(index, medicine)}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Medicine</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {outOfStockMedicines.map((medicine, index) => (
+                <tr key={index} className="notification-item">
+                  <td>{`${medicine} is out of stock`}</td>
+                  <td>
+                    <button
+  className="btn btn-sm btn-outline-danger"
+  onClick={() => removeNotification(index, medicine)}
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

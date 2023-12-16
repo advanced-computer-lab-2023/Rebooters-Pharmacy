@@ -1,7 +1,7 @@
 /* ChatBox.css */
 .chat-box {
   position: fixed;
-  right: -200px;
+  right: 20px;
   transition: transform 0.3s ease-in-out, bottom 0.3s ease-in-out;
 }
 
