@@ -196,17 +196,7 @@ const PharmacistHome = () => {
           {activeTab === "settings" && (
             <div className="card mt-4">
               <PharmacistProfile />
-              <button
-                className="btn btn-primary mt-2 d-inline-block w-auto"
-                onClick={togglePasswordPopup}
-              >
-                {showPasswordPopup ? "Hide" : "Change Password"}
-              </button>
-              {showPasswordPopup && (
-                <div className="popup">
-                  <ChangePassword userType="pharmacist" />
-                </div>
-              )}{" "}
+              
             </div>
           )}
           {activeTab === "notification" && (
@@ -229,7 +219,7 @@ const PharmacistHome = () => {
     </div>
 
     {/* Opening Hours Table Container */}
-    <div className="opening-hours-container">
+    {/* <div className="opening-hours-container">
   <h2 style={{ textAlign: 'center' }}>Opening Hours</h2>
   <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#f2f2f2' }}>
     <tbody>
@@ -268,7 +258,7 @@ const PharmacistHome = () => {
     </tbody>
   </table>
 
-</div>
+</div> */}
 
 
     <div className="barchart-container">

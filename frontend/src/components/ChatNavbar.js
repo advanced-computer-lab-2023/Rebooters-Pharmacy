@@ -10,6 +10,7 @@ import Pharmacist_DoctorChats from './Pharmacist_DoctorChats';
 import ChatWithDoctor from './ChatWithDoctor';
 
 
+
 function ChatNavbar() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showPharmacistChats, setShowPharmacistChats] = useState(false);
@@ -48,8 +49,7 @@ function ChatNavbar() {
   const handleChatDoctorClick = () => {
     // Toggle the state for "Chat History"
     setShowChatwithDoctorChats(!showChatwithDoctorChats);
-    // Call the parent component's function
-    //onChatButtonClick("ChatWithaDoctor");
+  
   };
 
 

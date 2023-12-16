@@ -7,13 +7,13 @@ import ViewCartItems from "../components/ViewCartItems";
 import ViewAndCancelOrder from "../components/viewAndCancelOrder";
 import CheckingOut from "../components/CheckingOut";
 import ChangePassword from "../components/ChangePassword";
-import PatientChats from "../components/PatientChats";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import Image from "../content/images/ELHANNY-LOGO.png";
 import { Link } from "react-router-dom";
 import PatientProfile from "../components/patientProfile";
 import Footer from "../components/footer";
 import "../styles/cartItems.css";
+import ChatBoxPatient from "../components/ChatBoxPatient";
 
 const Patient = () => {
   const [sharedState, setSharedState] = useState("");
@@ -179,18 +179,6 @@ const Patient = () => {
             </li>
             <li
               className={`nav-item nav-btn ${
-                activeTab === "chat" ? "active" : ""
-              }`}
-            >
-              <button
-                className="nav-btn nav-link"
-                onClick={() => handleTabClick("chat")}
-              >
-                Chat
-              </button>
-            </li>
-            <li
-              className={`nav-item nav-btn ${
                 activeTab === "settings" ? "active" : ""
               }`}
             >
@@ -233,13 +221,6 @@ const Patient = () => {
               {<Medicine sharedState={sharedState} modelName="patient" />}
             </div>
           )}
-
-          {activeTab === "chat" && (
-            <div className="mt-4">
-              <PatientChats setChats={setChats} chats={chats} />{" "}
-              {/* Pass setChats and chats to PatientChats */}
-            </div>
-          )}
           {activeTab === "orders" && (
             <div className="container mt-4">
               <h3 className="font-cart">Cart Items</h3>
@@ -256,6 +237,7 @@ const Patient = () => {
             </div>
           )}
         </div>
+        <ChatBoxPatient/>
       </div>
       <Footer />
     </div>
