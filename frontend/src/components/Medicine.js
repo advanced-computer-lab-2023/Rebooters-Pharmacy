@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Alert, Dropdown, DropdownButton } from "react-bootstrap";
 import debounce from "lodash.debounce";
@@ -26,7 +26,7 @@ function Medicine({ modelName, sharedState }) {
   const [editingMedicine, setEditingMedicine] = useState("");
   const [showEditingWindow, setShowEditingWindow] = useState(false);
   const [medicineName, setMedicineName] = useState("");
-
+  const editMedicineRef = useRef(null);
 
   const handleEditMedicine = (medicine) => {
     setEditingMedicine(medicine);
@@ -428,11 +428,18 @@ function Medicine({ modelName, sharedState }) {
     }
   };
 
+  useEffect(() => {
+    // Scroll to the EditMedicine component when it is shown
+    if (showEditingWindow) {
+      editMedicineRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showEditingWindow]);
+
   return (
     <div className="container mt-4">
       {/* Edit Medicine modal */}
       {showEditingWindow && (
-        <div className="modal-overlay">
+        <div  ref={editMedicineRef} className="modal-overlay-medicine">
           <div className="card">
             <div className="editMedicine">
               <EditMedicine medicine={editingMedicine} />

@@ -305,7 +305,7 @@ const EditMedicine = ({ medicine }) => {
 
           <div className="col-4 mb-3">
             <label htmlFor="image" className="form-label">
-              Image: (Optional)
+              Image: 
             </label>
             <input
               type="file"
