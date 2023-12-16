@@ -10,6 +10,8 @@ const {checkWalletBalance} = require('./walletController');
 const bcrypt = require('bcrypt'); //needed for when u create a dummy pharmacist for testing only
 const { generateSalesReport } = require('./commonController');
 const Sales= require('../Models/salesModel');
+const Orders= require ('../Models/orderModel');
+const mongoose = require('mongoose');
 
 
 // Generate a random password (you can use a library like 'crypto' for this)
@@ -497,17 +499,8 @@ const editMedicine = async (req, res) => {
         const pharmacistUsername = req.cookies.username;
     
         // Find all chats where the patient is the same as the logged-in patient's username
-        const chats = await Chat.find({
-          $and: [
-            {
-              $or: [
-                { pharmacist: '' },
-                { pharmacist: pharmacistUsername },
-              ],
-            },
-            { patient: "" }, 
-          ],
-        });    
+        const chats = await Chat.find({ pharmacist: pharmacistUsername });
+    
         if (!chats || chats.length === 0) {
           return res.status(404).json({ message: 'No chats found.' });
         }
@@ -623,6 +616,7 @@ const editMedicine = async (req, res) => {
           $and: [
             { pharmacist: { $in: ['', pharmacistUsername] } },
             { closed: false },
+            {patient: false},
           ],
         });
     
@@ -660,7 +654,45 @@ const editMedicine = async (req, res) => {
         res.status(500).json({ message: 'Error removing notification' });
       }
     };
-    
+
+    const getMonthlyPending = async (req, res) => {
+  try {
+    // Aggregate pipeline to filter pending orders and calculate the total cost by month
+    const pipeline = [
+      {
+        $match: {
+          status: 'Pending',
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m',
+              date: '$orderDate',
+            },
+          },
+          totalCost: { $sum: '$total' },
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the _id field from the result
+          month: '$_id',
+          totalCost: 1,
+        },
+      },
+    ];
+    const result = await mongoose.connection.db.collection('orders').aggregate(pipeline).toArray();
+
+    console.log('Monthly Pending Result:', result);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error in getMonthlyPending:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
     
     
      module.exports = {
@@ -680,7 +712,7 @@ const editMedicine = async (req, res) => {
       checkWalletBalance,
       archiveMedicine, unarchiveMedicine,getPharmacistProfile
     ,startNewChat,continueChat,viewMyChats,deleteChat,sendMessageToDoctor,viewAllChatsToDoctor,ChatsToDoctor,
-    removeOutOfStockMedicine};
+    removeOutOfStockMedicine, getMonthlyPending};
     
 
     

@@ -97,6 +97,9 @@ const AboutUs = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             color: "black",
+            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+            padding: '20px', 
+            borderRadius: '10px', 
           }}
         >
           <h1 style={{ fontSize: "52px" }}>About Us</h1>

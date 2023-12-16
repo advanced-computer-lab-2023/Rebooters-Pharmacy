@@ -42,7 +42,9 @@ const Conc = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            color: "black",
+            color: "black",backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+            padding: '20px', 
+            borderRadius: '10px', 
           }}
         >
           <>
@@ -53,16 +55,19 @@ const Conc = () => {
                 </h1>
                 <ul className="list-unstyled">
                   <li className="fade-in" style={{ fontSize: "style= 28px" }}>
-                    <FontAwesomeIcon icon={faMapMarkerAlt} /> GUC - El Tagamoa
-                    El Khames New Cairo City - Egypt
+                  <FontAwesomeIcon icon={faMapMarkerAlt} /> {''} <a
+                      href="https://www.google.com/maps?q=GUC,El+Tagamoa+El+Khames,New+Cairo+City,Egypt"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GUC - El Tagamoa El Khames New Cairo City - Egypt
+                    </a>
                   </li>
-                  <li className="fade-in" style={{ fontSize: "style= 28px" }}>
-                    <FontAwesomeIcon icon={faPhone} />{" "}
-                    <a href="tel://23923929210">+1 23456789</a>
+                  <li className={`fade-in ${showContent ? 'visible' : ''}`} style={{ fontSize: 'style= 28px' }}>
+                    <FontAwesomeIcon icon={faPhone} /> <a href="tel://23923929210">+1 23456789</a>
                   </li>
-                  <li className="fade-in" style={{ fontSize: "style= 28px" }}>
-                    <FontAwesomeIcon icon={faEnvelope} />{" "}
-                    rebootersteam9@gmail.com
+                  <li className={`fade-in ${showContent ? 'visible' : ''}`} style={{ fontSize: 'style= 28px' }}>
+                   <FontAwesomeIcon icon={faEnvelope} /> <a href="mailto:rebootersteam9@gmail.com">rebootersteam9@gmail.com</a>
                   </li>
                 </ul>
               </>

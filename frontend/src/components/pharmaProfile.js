@@ -1,8 +1,12 @@
 // PharmacistProfile.js
 import React, { useState, useEffect } from "react";
+import ChangePassword from "../components/ChangePassword";
+
 
 const PharmacistProfile = () => {
   const [pharmacistData, setPharmacistData] = useState({});
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+
 
   useEffect(() => {
     const fetchPharmacistData = async () => {
@@ -22,8 +26,11 @@ const PharmacistProfile = () => {
     fetchPharmacistData();
   }, []);
 
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
+  };
+
   return (
-    <div className="container">
       <div className="row">
         <div className="col-lg-4">
           <div className="card">
@@ -41,6 +48,17 @@ const PharmacistProfile = () => {
                 </div>
               </div>
               <hr className="my-4" />
+              <button
+                className="btn btn-primary mt-2 d-inline-block w-auto"
+                onClick={togglePasswordPopup}
+              >
+                {showPasswordPopup ? "Hide" : "Change Password"}
+              </button>
+              {showPasswordPopup && (
+                <div className="popup">
+                  <ChangePassword userType="pharmacist" />
+                </div>
+              )}{" "}
             </div>
           </div>
         </div>
@@ -106,12 +124,10 @@ const PharmacistProfile = () => {
                   <span>{pharmacistData.wallet}</span> 
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

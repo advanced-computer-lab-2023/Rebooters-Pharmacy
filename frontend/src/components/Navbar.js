@@ -62,7 +62,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to=""
+                  to="/helpYou"
                   className="nav-item"
                   onClick={() => handleLinkClick("")}
                   style={isActive("")}
@@ -70,6 +70,7 @@ const Navbar = () => {
                   <span>Help</span>
                 </Link>
               </li>
+              
             </ul>
           </div>
         </div>

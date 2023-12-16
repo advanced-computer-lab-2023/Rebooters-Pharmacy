@@ -8,29 +8,401 @@ and ordering medication that was prescribed.
 ## Motivation
 This project's purpose was initially, mainly for academic purposes. We learnt a ton of information on how to use MERN Stack which is an abbreviation for Mongodb, Express.js, React.js, Node.js. React and JavaScript being probably the most used framework for frontend and backend Web/App development made this project very fruitful. However, while developing the project, the team was motivated to design this project as if it were to be a real, usable website for people one day. We tried enhancing the UI/UX as much as possible to make the user want to recommend this website to other people.
 ## Build Status
-This project is supposedly built to have no bugs/errors however, in terms of speed, you can definitely tell the project is running using free database servers. This causes the speed at which database fetches important data slower than we would like. This sometimes causes run-time errors as the website is trying to use an object that it fetched from the database, but due to the slow-fetch from the database it causes an error.
-Additionally, it might not be considered a bug, but it is worth noting you can not sign in on 2 different accounts from the same browser application eg: Chrome, what will happen is that it will sign you out of the previous account and focus on the freshly signed in account.
+-   The project is currently still under development by Rebooters.
+-   The database server is slow due to free service.
+-  Unit tests are not yet made for faster automated testing (The team uses postman for a more interactive testing experience).
+- The system as a whole could be a bit more responsive in a more modern way instead of just flashing messages to the user.
 
 ## Code Style
-Standard coding conventions.
+- Standard coding conventions.
+- For variables, the naming convention is to always start with a lowercase letter and then capitalize the first letter of every subsequent word.
+- For functions, same as variables, the naming convention is to always start with a lowercase letter and then capitalize the first letter of every subsequent word.
+- All related functions of a certain user are all coded in one file.
+- All related routes of a certain user are all coded in one file.
+- We prefered the inline styling to be kept at minimum.
 ## Screenshots
+#### Home
+![image](screenshots/home.png)
+#### About Us 
+![image](screenshots/about-us.png)
+#### Help
+![image](screenshots/help.png)
+#### Help (continued)
+![image](screenshots/help2.png)
+#### Contact
+![image](screenshots/contact.png)
+#### Login
+![image](screenshots/login.png)
+#### Cart
+![image](screenshots/cart.png)
+#### Checkout
+![image](screenshots/checkout.png)
+#### Orders
+![image](screenshots/orders.png)
+#### Admin Dashboard
+![image](screenshots/admin.png)
+#### Add Admin
+![image](screenshots/add-admin.png)
 
 ## Tech/Framework Used
-MERN Stack
-
-**Client:** React, Bootstrap
-
-**Server:** Node, Express, Mongodb
+-   [React](https://reactjs.org/)
+-   [Node.js](https://nodejs.org/en/)
+-   [Express](https://expressjs.com/)
+-   [MongoDB](https://www.mongodb.com/)
+-   [Mongoose](https://mongoosejs.com/)
+-   [Git](https://git-scm.com/)
+-   [NodeMailer](https://nodemailer.com/about/)
+-   [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+-   [Postman](https://www.postman.com/)
+-   [VSCode](https://code.visualstudio.com/)
+-   [Bootstrap](https://getbootstrap.com/)
 
 
 ## Features
+### The system serves different type of users (Guest, Admin, Pharmacist & Patient)
 
-- Intuitive UI/UX
-- Cross Platform
+#### As an Admin I can 
+
+- Add other admins to the system
+- Manage patients/pharmacists on the system (View/Remove)
+- View sales report of the pharmacy system
+- View Pharmacist requests to join the system
+
+#### As a Patient I can 
+
+- View medicine list
+- Add medicines to my cart
+- Add medicines that need prescription to my cart (provided that Patient owns a recent prescription)
+- View my cart
+- Add delivery address
+- View upcoming/past/cancelled orders
+- Pay for order with wallet/card/cash on delivery
+- View alternatives to an out of stock medicine
+- Chat with a pharmacist
+
+#### As a Pharmacist I can 
+
+- View list of medicines and their full details
+- Add Medicine
+- Remove Medicine
+- Edit Medicine
+- Archive Medicine
+- Chat with a doctor
+- Chat with a patient
+- View sales report 
+- Filter sales repor
+
+#### As  Guest I can 
+
+- Sign up as a Patient
+- Sign up to request to become a Pharmacist
+- Login with an already made account
+- Use the forget-password protocol when needed
+- Read the about-us/contact/help pages of the website
+
 ## Usage/Examples
 
+#### Code Examples from the guestController.js
+```javascript
+const login = async(req, res) => {
+  const { username, password } = req.body;
+  try {
+    let user;
+    type = "";
+
+    // Search for the username in Patients
+    user = await Patient.findOne({ username });
+    type = "patient";
+    if (!user) {
+        // Search for the username in Admins
+        user = await Admin.findOne({ username });
+        type = "admin";
+    }
+    if (!user) {
+        // Search for the username in Pharmacists
+        user = await Doctor.findOne({ username });
+        type = "doctor";
+    }
+
+    if (user) {
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (isPasswordMatch) {
+            const token = createToken(user.username);
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.cookie('userType', type, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.cookie('username', username, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.status(200).json({ username, token, type});
+        } else {
+            res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        //DO REDIRECTING ACCORDING TO TYPE
+
+    } else {
+        res.status(401).json({ error: 'User not found' });
+    }
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while logging in.' });
+}
+};
+```
+
+
+```javascript
+const createPatient = async (req, res) => {
+    try {
+      const {username,name,email,password,dateOfBirth,gender,mobile_number,emergency_contact} = req.body; 
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const newPatient = new Patient({username,name,email,password:hashedPassword,dateOfBirth,gender,mobile_number,emergency_contact});
+      await newPatient.save();
+      const token = createToken(newPatient._id);
+      res.status(200).json({username, token});
+      } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while creating the patient.' });
+    }
+  };
+```
+#### Code Examples from the patientController.js
+```javascript
+const viewOrderDetails = async (req, res) => {
+  try {
+    const patientUsername = req.cookies.username; // Get the patient's username from the request
+    const orderId = req.body.orderId; // Get the order _id from the request
+
+    // Find the order with the given orderId
+    const order = await Order.findOne({ _id: orderId, patientUsername: patientUsername });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Construct a response object with the order details
+    const orderDetails = {
+      orderDate: order.orderDate,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      total: order.total,
+      items: order.items,
+       image: order.image
+        ? {
+            data: order.image.data,
+            contentType: order.image.contentType,
+            filename: order.image.filename,
+          }
+        : null,
+    
+    };
+
+    res.status(200).json(orderDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error viewing order details' });
+  }
+};
+```
+```javascript
+const addMedicineToCart = async (req, res) => {
+  try {
+    const username = req.cookies.username;
+    const patient = await Patient.findOne({ username: username });
+
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+
+    const Medicinename = req.body.name;
+    const medicine = await Medicine.findOne({ name: Medicinename });
+
+    if (!medicine) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    if (!medicine.PrescriptionNeeded) {
+      // OTC medicine
+      const cartItem = {
+        medicine: medicine._id,
+        name: medicine.name,
+        price: medicine.price,
+        quantity: 1,
+        image: {
+          data: medicine.image.data,
+          contentType: medicine.image.contentType,
+          filename: medicine.image.filename,
+        },
+        
+      };
+      patient.cart.push(cartItem);
+      await patient.save();
+      return res.status(200).json({ message: 'Medicine added to the cart' });
+    }
+
+    // Prescription needed
+    const recentPrescription = await mongoose.connection.db.collection('prescriptions').findOne({
+      patientName: patient.username,
+      'medicationInfo.medicine': medicine.name,
+      date: { $gte: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) } // Within the last week
+    });
+
+    if (recentPrescription) {
+      const cartItem = {
+        medicine: medicine._id,
+        name: medicine.name,
+        price: medicine.price,
+        quantity: 1,
+        image: {
+          data: medicine.image.data,
+          contentType: medicine.image.contentType,
+          filename: medicine.image.filename,
+        },
+      };
+      patient.cart.push(cartItem);
+      await patient.save();
+      return res.status(200).json({ message: 'Medicine added to the cart' });
+    } else {
+      return res.status(200).json({ message: 'Prescription is needed for this medicine or the prescription is not recent' });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error adding medicine to the cart', error: error.message });
+  }
+};
+```
+#### Code Examples from the PharmacistController.js
 ```javascript
 
+const filterSalesReport = async (req, res) => {
+  try {
+    const { medicineName, saleDate } = req.body;
+
+    if (medicineName && saleDate) {
+
+      const startOfDay = new Date(saleDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(saleDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      let filterCriteria = await Sales.find({
+        medicineName: { $regex: new RegExp(medicineName, "i") },
+        saleDate: { $gte: startOfDay, $lte: endOfDay },
+      }).exec();
+
+      console.log("Filter Criteria:", filterCriteria);
+
+      const result = filterCriteria.map((sale) => {
+        return {
+          medicineName: sale.medicineName,
+          quantitySold: sale.quantitySold,
+          saleDate: sale.saleDate,
+        };
+      });
+
+      return res.status(200).json(result);
+    } else if (!medicineName && saleDate) {
+
+      const startOfDay = new Date(saleDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(saleDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      let filterCriteria = await Sales.find({saleDate: { $gte: startOfDay, $lte: endOfDay }}).exec();
+
+      const result = filterCriteria.map((sale) => {
+        return {
+          medicineName: sale.medicineName,
+          quantitySold: sale.quantitySold,
+          saleDate: sale.saleDate,
+        };
+      });
+
+      return res.status(200).json(result);
+    }
+    else if (medicineName && !saleDate) {
+
+
+      let filterCriteria = await Sales.find({
+        medicineName: { $regex: new RegExp(medicineName, "i") } }).exec();
+
+      const result = filterCriteria.map((sale) => {
+        return {
+          medicineName: sale.medicineName,
+          quantitySold: sale.quantitySold,
+          saleDate: sale.saleDate,
+        };
+      });
+
+      return res.status(200).json(result);
+    } 
+    else {
+      return res.status(400).json({
+        error:
+          "Please provide at least search parameters (medicineName or saleDate).",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while filtering sales.",
+    });
+  }
+};
+```
+```javascript
+const addMedicine = async (req, res) => {
+  try {
+    const { name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded} = req.body;
+    const newMedicine = new Medicine({ name, activeIngredients, price, description, medicinalUse, quantity,sales,PrescriptionNeeded });
+
+    // Check if an image file was uploaded
+    if (req.file) {
+      newMedicine.image.data = req.file.buffer;
+      newMedicine.image.contentType = req.file.mimetype;
+      newMedicine.image.filename = req.file.originalname;
+    }
+
+    await newMedicine.save();
+    res.status(201).json(newMedicine);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error adding medicine' });
+  }
+};
+```
+#### Code Examples from the AdminController.js
+```javascript
+const addAdministrator = async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newAdministrator = new Administrator({
+      email,
+      username,
+      password: hashedPassword,
+    });
+    const savedAdministrator = await newAdministrator.save();
+    const token = createToken(newAdministrator._id);
+    res.status(201).json({ username, token, savedAdministrator });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error adding administrator" });
+  }
+};
+```
+```javascript
+const viewPharmacistApplication = async (req, res) => {
+      try {
+        // Fetch all pharmacist application data (customize this based on your data structure)
+        const pharmacistApplications = await NewPharmacistRequest.find({ status: 'pending' });
+        res.status(200).json(pharmacistApplications);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching pharmacist applications' });
+      }
+};
 ```
 
 
@@ -322,6 +694,12 @@ POST /api/patient/deleteChat/:chatId
 | Parameter               | Type   | Description                                    |
 | :---------------------- | :----- | :--------------------------------------------- |
 | `chatId`     | `number` | **Required**. ID of chat to close|
+
+#### Get Package
+
+```http
+GET /api/patient/getPackage
+```
 
 ### Pharmacist API
 
@@ -671,11 +1049,13 @@ To run tests to make sure the routes are working fine, download [Postman](https:
 
 
 ## How to Use?
-Open git bash/ or any terminal in a directory of your choice and do: 
+1. Copy the env-example file, and inside it enter the correct information, then rename it to ".env" and place it inside the "backend/src" folder.
+
+2. Open git bash/ or any terminal in a directory of your choice and do: 
 ```bash
   git clone **paste the github clone link here**
 ```
-Open a terminal inside the project directory and do the following:
+3. Open a terminal inside the project directory and do the following:
 ```bash
   cd backend
   npm install
@@ -683,13 +1063,13 @@ Open a terminal inside the project directory and do the following:
   cd frontend
   npm install
 ```
-To run the project, you need to open two terminals, in the first one:
+4. To run the project, you need to open two terminals, in the first one:
 ```bash
   cd backend
   cd src
   nodemon app.js OR node app.js
 ```
-In the second one:
+5. In the second one:
 ```bash
   cd frontend
   npm start
@@ -697,11 +1077,12 @@ In the second one:
 Then try using the website by registering as a patient and immediately getting access to the patient dashboard!
 ## Contributing
 
-Public Contributions are unfortunately not welcome yet as per this project's team decision; this project is still private.
+Public Contributions are unfortunately not welcome yet as per this project's team decision; this project is only modified by members of the Official Rebooters Team.
 
 
 ## Credits
-Full credit goes to [NetNinja](https://www.youtube.com/@NetNinja) youtube channel for their wonderful playlist on [MERN Stack](https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE&index=1&ab_channel=NetNinja) with the most thorough explanation on the framework.
+ - Full credit goes to [NetNinja](https://www.youtube.com/@NetNinja) youtube channel for their wonderful playlist on [MERN Stack](https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE&index=1&ab_channel=NetNinja) with the most thorough explanation on the framework.
+ - [Adding screenshots to README Tutorial](https://www.youtube.com/watch?v=Ljj1wGFJqPY&ab_channel=SeanCDavis)
 
 ## Authors
 

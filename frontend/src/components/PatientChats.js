@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import "../styles/patientChat.css";
 
 const PatientChats = () => {
   const [newChatContent, setNewChatContent] = useState('');
   const [messageContents, setMessageContents] = useState({});
   const [chats, setChats] = useState([]);
-  const [activeChat, setActiveChat] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [pollingInterval, setPollingInterval] = useState(null); 
+  const [pollingInterval, setPollingInterval] = useState(null);
 
   const fetchChats = async () => {
     try {
@@ -27,7 +27,6 @@ const PatientChats = () => {
   };
 
   useEffect(() => {
-
     fetchChats();
 
     // Poll for new messages every 2 seconds
@@ -54,8 +53,6 @@ const PatientChats = () => {
         body: JSON.stringify({ messageContent: newChatContent }),
       });
       const json = await response.json();
-      // Set the active chat to the newly created chat
-      setActiveChat(json._id);
       // Refresh the chat list
       setChats([...chats, json]);
       // Clear the newChatContent and error message
@@ -78,7 +75,7 @@ const PatientChats = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ chatId, messageContent: content}),
+        body: JSON.stringify({ chatId, messageContent: content }),
       });
       const json = await response.json();
 
@@ -93,104 +90,98 @@ const PatientChats = () => {
   };
 
   const deleteChat = async (chatId) => {
-  try {
-    const response = await fetch(`/api/patient/deleteChat/${chatId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const response = await fetch(`/api/patient/deleteChat/${chatId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (response.ok) {
-      // Reset the active chat to null
-      setActiveChat(null);
-
-      // Remove the closed chat from the frontend
-      setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
-    } else {
-      console.error('Error deleting chat:', response.statusText);
+      if (response.ok) {
+        // Remove the closed chat from the frontend
+        setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
+      } else {
+        console.error('Error deleting chat:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error deleting chat:', error);
     }
-  } catch (error) {
-    console.error('Error deleting chat:', error);
-  }
-};
-
+  };
 
   return (
-    <div className='chat-container container'>
-      <h2>My Chat</h2>
-      <div>
-        {/* Start a New Chat */}
-        {activeChat === null && (
+    <div className='container'>
+      <div className='card' style={{ border: '2px solid black' }}>
+        <div className='card-header' style={{ backgroundColor: '#44bab1' }}>
+          <h2>My Chat</h2>
+        </div>
+        <div className='card-body'>
           <div>
-            <h3>Start a New Chat</h3>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <input className='chat-box form-control'
-              rows="1"
-              cols="25"
-              placeholder="Type your message here..."
-              value={newChatContent}
-              onChange={(e) => setNewChatContent(e.target.value)}
-            ></input>
-            <br />
-            <button className='btn btn-primary' onClick={startNewChat}>
-              Start Chat
-            </button>
-          </div>
-        )}
-
-        {/* Existing Chats */}
-        <div>
-          {chats.map((chat) => (
-            <div key={chat._id}>
-              <h4>
-                {activeChat !== chat._id && (
-                  <button
-                    className='btn btn-secondary'
-                    style={{ marginLeft: '10px' }}
-                    onClick={() => deleteChat(chat._id)}
-                  >
-                    Close Chat
-                  </button>
-                )}
-              </h4>
-              <div>
-                {chat.messages.map((message, index) => (
-                  <div key={index}>
-                    <strong>{message.userType}: </strong> {message.content}
-                    <span style={{ marginLeft: '10px', color: 'gray' }}>
-                      {new Date(message.timestamp).toLocaleString()}
-                    </span>
+            {/* Start a New Chat */}
+            {chats.map((chat) => (
+              <div key={chat._id}>
+                {!chat.closed ? (
+                  <div>
+                    <h4>Continue Chat</h4>
+                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                    {chat.messages &&
+                    chat.messages.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`message2 ${message.userType === 'pharmacist' ? 'pharmacist-message2' : 'doctor-message2'}`}
+                      >
+                        <div className="message-content2">
+                          <strong>{message.userType === 'pharmacist' ? 'Pharmacist' : 'Patient'}:</strong>
+                          {message.content}
+                        </div>
+                        <span className="text-muted timestamp">
+                          {moment(message.timestamp).format('MMM DD, YYYY h:mm A')}
+                        </span>
+                      </div>
+                    ))}
+                    <input
+                      className='form-control'
+                      style={{ width: '250px', height: '48px' }}
+                      placeholder="Type your message here..."
+                      value={messageContents[chat._id] || ''}
+                      onChange={(e) =>
+                        setMessageContents({ ...messageContents, [chat._id]: e.target.value })
+                      }
+                    ></input>
+                    <br />
+                    <button className='btn btn-primary' onClick={() => continueChat(chat._id)}>
+                      Send
+                    </button>
+                    <button
+                      className='btn btn-secondary'
+                      style={{ marginLeft: '10px' }}
+                      onClick={() => deleteChat(chat._id)}
+                    >
+                      Close Chat
+                    </button>
                   </div>
-                ))}
+                ) : null}
               </div>
-              {activeChat === chat._id && (
-                <div>
-                  {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                  <input className='chat-box form-control'
-                    rows="1"
-                    cols="25"
-                    placeholder="Type your message here..."
-                    value={messageContents[chat._id] || ''}
-                    onChange={(e) =>
-                      setMessageContents({ ...messageContents, [chat._id]: e.target.value })
-                    }
-                  ></input>
-                  <br />
-                  <button className='btn btn-primary' onClick={() => continueChat(chat._id)}>
-                    Send
-                  </button>
-                  <button
-                    className='btn btn-danger'
-                    style={{ marginLeft: '10px' }}
-                    onClick={() => deleteChat(chat._id)}
-                  >
-                    Close Chat
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+            ))}
+            {/* Display "Start a New Chat" only if all chats are closed */}
+            {chats.every((chat) => chat.closed) && (
+              <div>
+                <h4>Start a New Chat</h4>
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                <input
+                  className='form-control'
+                  style={{ width: '250px', height: '48px' }}
+                  placeholder="Type your message here..."
+                  value={newChatContent}
+                  onChange={(e) => setNewChatContent(e.target.value)}
+                ></input>
+                <br />
+                <button className='btn btn-primary' onClick={startNewChat}>
+                  Start Chat
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

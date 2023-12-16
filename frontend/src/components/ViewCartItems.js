@@ -33,6 +33,28 @@ const ViewCartItems = () => {
   const [walletShow, setWalletShow] = useState(false);
   const [walletTarget, setWalletTarget] = useState(null);
   const walletRef = useRef(null);
+  const [packageDiscount, setPackageDiscount] = useState(0);
+  
+
+  useEffect(() => {
+    const fetchPackageDiscount = async () => {
+      try {
+        const response = await fetch('/api/patient/getPackage');
+        if (response.ok) {
+          const healthPackage = await response.json();
+          const discountOnMedicine = healthPackage?.discountOnMedicine || 0;
+          const packageDiscount = subtotal * discountOnMedicine;
+          setPackageDiscount(packageDiscount);
+        } else {
+          console.error('Error fetching health package');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching health package:', error);
+      }
+    };
+
+    fetchPackageDiscount();
+  }, [subtotal]);
 
   useEffect(() => {
     const getCartItems = async () => {
@@ -213,9 +235,17 @@ const ViewCartItems = () => {
     if (coupon.trim() === "") {
       setCouponError("Please fill in the coupon code.");
     } else if (coupon === "SUP60" || coupon === "sup60") {
-      const couponDiscount = subtotal * 0.6;
-      setDiscount(couponDiscount);
-      setCouponSuccess("The discount added successfully");
+      if (packageDiscount !== 0){
+        const newTotal = subtotal - packageDiscount;
+        const couponDiscount = newTotal * 0.6;
+        setDiscount(couponDiscount);
+        setCouponSuccess("The discount added successfully");
+      }
+      else {
+        const couponDiscount = subtotal * 0.6;
+        setDiscount(couponDiscount);
+        setCouponSuccess("The discount added successfully");
+      }
     } else {
       // Reset the discount if the coupon is not valid
       setDiscount(0);
@@ -387,7 +417,17 @@ const ViewCartItems = () => {
                 </div>
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <span className="text-black">Discount</span>
+                    <span className="text-black">Package Discount</span>
+                  </div>
+                  <div className="col-md-6 text-right">
+                    <strong className="text-black">
+                      -${packageDiscount.toFixed(2)}
+                    </strong>
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <span className="text-black">Coupon Discount</span>
                   </div>
                   <div className="col-md-6 text-right">
                     <strong className="text-black">
@@ -401,7 +441,7 @@ const ViewCartItems = () => {
                   </div>
                   <div className="col-md-6 text-right">
                     <strong className="text-black">
-                      ${(subtotal - discount).toFixed(2)}
+                      ${(subtotal - discount - packageDiscount).toFixed(2)}
                     </strong>
                   </div>
                 </div>

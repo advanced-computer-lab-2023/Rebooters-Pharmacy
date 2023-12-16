@@ -16,6 +16,7 @@ import Homey from "./pages/homePage";
 import Medicine from "./components/Medicine";
 import AddPatient from "./pages/regPat";
 import PharmReq from "./pages/regPharm";
+import Help from "./pages/help";
 
 function App() {
   return (
@@ -43,6 +44,10 @@ function App() {
           <Route path="/medicines" element={<Medicine />} />
           <Route path="/regPat" element={<AddPatient />} />
           <Route path="/regPharm" element={<PharmReq />} />
+          <Route path="/helpYou" element={<Help />} />
+
+
+
         </Routes>
       </BrowserRouter>
     </div>

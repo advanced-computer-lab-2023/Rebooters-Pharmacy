@@ -1,0 +1,56 @@
+/* Add this styling to your CSS file (e.g., ChatHistory.css) */
+
+.text-white {
+  color: #fff;
+}
+
+.chat-body12 {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.chat-box {
+  display: flex;
+  flex-direction: column; /* Change to row if you want messages in a row */
+}
+
+.message-box2 {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  white-space: normal; /* Set to normal to allow text to wrap */
+  display: block; /* Change from inline-block to block */
+}
+
+.doctor-message-box2 {
+  background-color: #d4edda;
+  overflow-wrap: break-word;
+}
+
+.pharmacist-message-box2 {
+  background-color: #cce5ff;
+  overflow-wrap: break-word;
+}
+
+.message-content12 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.timestamp12 {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.closed-chat-message {
+  color: #020202; /* Choose a color for closed chat messages */
+  font-style: italic;
+}
+
+.card-doc {
+  border: 2px solid #000; /* Set the border color to black */
+}

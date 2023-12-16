@@ -14,7 +14,7 @@ const Homey = () => {
   }, []);
 
   return (
-    <div className="site-wrap">
+    <div className="site-wrap" style={{ backgroundImage: `url(${loginCoverImage})`, backgroundSize: 'cover', height: '100vh', position: 'relative' }}>
       <Navbar />
       <div
         className="home-page"

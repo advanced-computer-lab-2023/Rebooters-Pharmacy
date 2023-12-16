@@ -11,7 +11,6 @@ import PharmacistChats from "../components/PharmacistChats";
 import Notifications from "../components/PharmacistNotifications"; // Import the Notifications component
 import SalesReportGenerator from "../components/Repo";
 import Wallet from "../components/Wallet";
-import MedicineDropdown from "../components/filterRepo";
 import Pharmacist_DoctorChats from "../components/Pharmacist_DoctorChats";
 import PharmacistRespondToDoc from "../components/PharmacistRespondToDoc";
 import axios from "axios";
@@ -21,6 +20,10 @@ import PharmacistProfile from "../components/pharmaProfile"; // Import the new c
 import ChatWithDoctor from "../components/ChatWithDoctor";
 import Footer from "../components/footer";
 import ChatNavbar from "../components/ChatNavbar";
+import ChatBox from "../components/ChatBox";
+import ki from "../content/images/ki.jpg";
+import BarChart from "../components/ProfitBarChartPharm";
+import "../styles/pharmHome.css";
 
 
 const PharmacistHome = () => {
@@ -30,6 +33,8 @@ const PharmacistHome = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
   const [activeComponent, setActiveComponent] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+
   
 
   useEffect(() => {
@@ -56,6 +61,7 @@ const PharmacistHome = () => {
       }
     };
   }, [navigate, activeChat]);
+  
   const handleLogout = async () => {
     try {
       if (activeChat) {
@@ -154,14 +160,14 @@ const PharmacistHome = () => {
             </li>
             <li
               className={`nav-btn nav-item ${
-                activeTab === "chat" ? "active" : ""
+                activeTab === "notification" ? "active" : ""
               }`}
             >
               <button
-                className="nav-link nav-btn"
-                onClick={() => handleTabClick("chat")}
+                className="nav-btn nav-link"
+                onClick={() => handleTabClick("notification")}
               >
-                Chat
+                Notifications
               </button>
             </li>
             <li
@@ -184,59 +190,83 @@ const PharmacistHome = () => {
           </ul>
         </div>
       </nav>
+          
       <div className="background-cover">
         <div className="container">
           {activeTab === "settings" && (
             <div className="card mt-4">
               <PharmacistProfile />
-              <button
-                className="btn btn-primary mt-2 d-inline-block w-auto"
-                onClick={togglePasswordPopup}
-              >
-                {showPasswordPopup ? "Hide" : "Change Password"}
-              </button>
-              {showPasswordPopup && (
-                <div className="popup">
-                  <ChangePassword userType="pharmacist" />
-                </div>
-              )}{" "}
+              
             </div>
           )}
-          {activeTab === "chat" && (
-            <div>
-               <ChatNavbar onChatButtonClick={handleChatButtonClick} />
-                {activeComponent === "ChatsWithPatients" && (
-                  <div>
-                    <PharmacistChats />
-                  </div>
-                )}
-                {activeComponent === "StartChatwithaDoctor" && (
-                  <div>
-                    <Pharmacist_DoctorChats setChats={setChats} chats={chats} />
-                  </div>
-                )}
-                {activeComponent === "ChatWithaDoctor" && (
-                  <div>
-                        <ChatWithDoctor />     
-                  </div>
-                )}
-                {activeComponent === "History" && (
-                  <div>
-                      <PharmacistRespondToDoc />
-                  </div>
-                )}
-            </div>
+          {activeTab === "notification" && (
+          <div>
+            <Notifications />
+          </div>
           )}
           {activeTab === "home" && (
-            <div>
-              <Wallet userType="pharmacist" />
-            </div>
-          )}
-          {activeTab === "home" && (
-            <div className="card mt-4">
-              <Notifications />
-            </div>
-          )}
+  <div className="home-container">
+    <div className="slogan-container">
+      <img src={ki} alt="Your Image Alt Text" className="slogan-image" />
+      <p className="slogan-text">
+        <span className="slogan-highlight">Empowering Health,</span>
+        <br />
+        Serving with Care
+      </p>
+      <div className="wallet-container">
+      <Wallet userType="pharmacist" />
+    </div>
+    </div>
+
+    {/* Opening Hours Table Container */}
+    {/* <div className="opening-hours-container">
+  <h2 style={{ textAlign: 'center' }}>Opening Hours</h2>
+  <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#f2f2f2' }}>
+    <tbody>
+      <tr style={{ borderBottom: '7px solid #ddd' }}>
+        <th style={{ padding: '13px', textAlign: 'center', border: '1px solid #ddd', backgroundColor: '#44bab1' }}>Day</th>
+        <th style={{ padding: '13px', textAlign: 'center', border: '1px solid #ddd',backgroundColor: '#44bab1' }}>Hours</th>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Monday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Tuesday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Wednesday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Thursday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Friday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>9:00 AM - 6:00 PM</td>
+      </tr>
+      <tr style={{ borderBottom: '1px solid #ddd' }}>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Saturday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>10:00 AM - 4:00 PM</td>
+      </tr>
+      <tr>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Sunday</td>
+        <td style={{ padding: '10px', textAlign: 'center', border: '4px solid #ddd' }}>Closed</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div> */}
+
+
+    <div className="barchart-container">
+      <BarChart />
+    </div>
+    
+  </div>
+)}
 
           {activeTab === "medicines" && (
             <div className="mt-4">{<Medicine modelName="pharmacist" />}</div>
@@ -246,20 +276,18 @@ const PharmacistHome = () => {
               <AddMedicine />
             </div>
           )}
-          {/*{activeTab === "medicines" && (
-        <div className="mt-4">
-          <EditMedicine />
-        </div>
-      )}*/}
+          
 
-          {activeTab === "home" && (
+          {activeTab === "medicines" && (
             <div className="mt-4">
               <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
               <SalesReportGenerator userType="pharmacist" />
             </div>
           )}
+          <ChatBox/>
         </div>
       </div>
+      
       <Footer />
     </div>
   );

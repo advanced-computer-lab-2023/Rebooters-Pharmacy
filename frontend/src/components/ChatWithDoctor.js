@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import moment from 'moment';
+import { Spinner } from 'react-bootstrap'; 
+import '../styles/ChatWithDoctor.css';
 
 const ChatWithDoctor = () => {
   const [chats, setChats] = useState([]);
   const [messageContents, setMessageContents] = useState({});
   const [pollingInterval, setPollingInterval] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const messagesEndRef = useRef(null);
 
   const fetchChats = async () => {
     try {
@@ -18,11 +23,14 @@ const ChatWithDoctor = () => {
         // Filter out closed chats
         const activeChats = json.filter((chat) => !chat.closed);
         setChats(activeChats);
+        setLoading(true); 
       } else {
         setChats([]);
+        setLoading(false); 
       }
     } catch (error) {
       console.error("Error fetching chats:", error);
+      setLoading(false); 
     }
   };
 
@@ -33,7 +41,7 @@ const ChatWithDoctor = () => {
     // Start polling for new messages every 5 seconds (adjust as needed)
     const interval = setInterval(() => {
       fetchChats();
-    }, 5000); // Poll every 5 seconds
+    }, 2000); // Poll every 5 seconds
 
     // Save the interval ID for cleanup
     setPollingInterval(interval);
@@ -70,38 +78,56 @@ const ChatWithDoctor = () => {
     }
   };
 
+
+
   return (
-    <div className="card">
-      <h2 className="card-header">Chat With a Doctor</h2>
-      {chats.length === 0 ? (
-        <p>There are no chats</p>
+    <div className="card doctor-card">
+      <div className="card-header doctor-chat-text text-white">
+        <h2>
+          {chats.length === 0 ? 'Chat' : 'Chatting... '}
+          {loading && <Spinner animation="border" variant="light" />}
+        </h2>
+      </div>
+      {chats.length === 0 && !loading ? (
+        <div className="card-body text-center">
+          <p className="text font-weight-bold">There are no chats</p>
+        </div>
       ) : (
         <div>
           {chats.map((chat) => (
-            <div key={chat._id}>
+            <div key={chat._id} className="mb-4">
               {!chat.closed && (
                 <>
-                  <h4>Chat ID: {chat._id}</h4>
+                  <h4 className="mb-3">Chat ID: {chat._id}</h4>
                   <div>
                     {chat.messages.length > 0 &&
                       chat.messages.map((message, index) => (
-                        <div key={index}>
-                          <strong>{message.userType}: </strong>{" "}
-                          {message.content}
-                          <span
-                            style={{ marginLeft: "10px", color: "gray" }}
-                          >
-                            {new Date(message.timestamp).toLocaleString()}
+                        <div
+                          key={index}
+                          className={`message-box ${
+                            message.userType === 'doctor'
+                              ? 'patient-message-box'
+                              : 'pharmacist-message-box'
+                          }`}
+                        >
+                          <div>
+                            <strong>
+                              {message.userType === 'doctor' ? 'Doctor' : 'Pharmacist'}:
+                            </strong>
+                            {message.content}
+                          </div>
+                          <span className="text-muted timestamp1">
+                            {moment(message.timestamp).format('MMM DD, YYYY h:mm A')}
                           </span>
                         </div>
                       ))}
                   </div>
-                  <div>
+                  <div style={{ marginTop: '10px' }}>
                     <textarea
-                      rows="1"
-                      cols="25"
+                      rows="2"
+                      className="form-control"
                       placeholder="Type your reply here..."
-                      value={messageContents[chat._id] || ""}
+                      value={messageContents[chat._id] || ''}
                       onChange={(e) =>
                         setMessageContents({
                           ...messageContents,
@@ -113,6 +139,7 @@ const ChatWithDoctor = () => {
                     <button
                       className="btn btn-primary"
                       onClick={() => sendMessageToDoctor(chat._id)}
+                      style={{ marginLeft: '10px' }}
                     >
                       Send
                     </button>

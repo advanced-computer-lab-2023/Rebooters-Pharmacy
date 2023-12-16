@@ -5,7 +5,8 @@ const {addAdministrator,
     removeUserFromSystem,
     viewPharmacistApplication,
     viewPharmacistInformation,getAdminProfile,
-    viewPatientInformation, generateSalesReport, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,approvePharmacistRequest,rejectPharmacistRequest, logout, changePassword} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
+    viewPatientInformation, generateSalesReport, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,approvePharmacistRequest,rejectPharmacistRequest, logout, changePassword,
+    viewAllPharmacists,viewAllAdmins,viewAllPatients,getMonthlyPendingOrdersTotal,getMedicineCountByPrescription} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
@@ -40,6 +41,20 @@ router.post('/rejectPharmacistRequest' , requireAuth, rejectPharmacistRequest);
 router.post('/generateSalesReport' , requireAuth, generateSalesReport);
 
 router.get('/profile', requireAuth, getAdminProfile);
+
+router.get('/viewAllPharmacists' , requireAuth, viewAllPharmacists);
+
+router.get('/viewAllAdmins' , requireAuth, viewAllAdmins);
+
+router.get('/viewAllPatients' , requireAuth, viewAllPatients);
+
+router.get('/getMonthlyPendingOrdersTotal' , requireAuth, getMonthlyPendingOrdersTotal);
+
+router.get('/getMedicineCountByPrescription' , requireAuth, getMedicineCountByPrescription);
+
+
+
+
 
 module.exports = router //we need to export that router at the end so that App.js can access it
 
