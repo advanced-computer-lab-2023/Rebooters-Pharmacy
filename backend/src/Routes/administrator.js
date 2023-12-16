@@ -6,7 +6,7 @@ const {addAdministrator,
     viewPharmacistApplication,
     viewPharmacistInformation,getAdminProfile,
     viewPatientInformation, generateSalesReport, viewMedicineInventory, filterMedicineByMedicinalUse, searchMedicineByName,approvePharmacistRequest,rejectPharmacistRequest, logout, changePassword,
-    viewAllPharmacists,viewAllAdmins,viewAllPatients,getMonthlyPendingOrdersTotal} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
+    viewAllPharmacists,viewAllAdmins,viewAllPatients,getMonthlyPendingOrdersTotal,getMedicineCountByPrescription} = require('../Controllers/AdminController') //we're destructuring so we need curly braces
 
 const router = express.Router() //create a router
 
@@ -49,6 +49,9 @@ router.get('/viewAllAdmins' , requireAuth, viewAllAdmins);
 router.get('/viewAllPatients' , requireAuth, viewAllPatients);
 
 router.get('/getMonthlyPendingOrdersTotal' , requireAuth, getMonthlyPendingOrdersTotal);
+
+router.get('/getMedicineCountByPrescription' , requireAuth, getMedicineCountByPrescription);
+
 
 
 

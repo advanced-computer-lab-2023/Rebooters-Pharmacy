@@ -1,8 +1,12 @@
 // AdminProfile.js
 import React, { useState, useEffect } from "react";
+import ChangePassword from "../components/ChangePassword";
+
 
 const AdminProfile = () => {
   const [adminData, setAdminData] = useState({});
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+
 
   useEffect(() => {
     const fetchAdminData = async () => {
@@ -22,8 +26,11 @@ const AdminProfile = () => {
     fetchAdminData();
   }, []);
 
+  const togglePasswordPopup = () => {
+    setShowPasswordPopup(!showPasswordPopup);
+  };
+
   return (
-    <div className="container">
       <div className="row">
         <div className="col-lg-4">
           <div className="card">
@@ -63,12 +70,21 @@ const AdminProfile = () => {
                   <span>{adminData.email}</span>
                 </div>
               </div>
-              {/* Add other fields based on your Admin model */}
             </div>
           </div>
+          <button
+                className="btn btn-primary mt-2 d-inline-block w-auto"
+                onClick={togglePasswordPopup}
+              >
+                {showPasswordPopup ? "Hide" : "Change Password"}
+              </button>
+              {showPasswordPopup && (
+                <div className="popup">
+                  <ChangePassword userType="administrator" />
+                </div>
+              )}
         </div>
       </div>
-    </div>
   );
 };
 

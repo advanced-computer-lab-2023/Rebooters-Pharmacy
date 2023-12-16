@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import debounce from "lodash.debounce";
 import "../styles/background.css";
+import "../styles/repoAdmin.css";
 import Medicine from "../components/Medicine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -13,13 +14,17 @@ import Footer from "../components/footer";
 import UserPieChart from "../components/UserPieChart";
 import UserCardsTotal from "../components/UserCardsTotal";
 import ProfitBarChart from "../components/ProfitBarChart";
+import MedicinePrescriptionChart from "../components/MedicinePrescriptionChart";
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
+import Carousel from 'react-bootstrap/Carousel';
 import pharmacist from '../content/images/pharmacist.png';
 import patient from '../content/images/patient.jpg';
 import remove from '../content/images/patient-pharmacist.jpg';
+import addAdmin from '../content/images/addAdmin.gif';
+import slideAdmin from '../content/images/slideAdmin.png';
 
 
 function Administrator() {
@@ -53,6 +58,7 @@ function Administrator() {
   const [searchTermPatient, setSearchTermPatient] = useState("");
   const [suggestedPatientUsernames, setSuggestedPatientUsernames] = useState([]);
   const [showPatientDropdown, setShowPatientDropdown] = useState(false);
+
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -441,6 +447,7 @@ const handlePatientDropdownSelection = (username) => {
     setShowPasswordPopup(!showPasswordPopup);
   };
 
+
   return (
     <div>
       <nav
@@ -498,6 +505,18 @@ const handlePatientDropdownSelection = (username) => {
             </li>
             <li
               className={`nav-btn nav-item ${
+                activeTab === "reports" ? "active" : ""
+              }`}
+            >
+              <button
+                className="nav-btn nav-link"
+                onClick={() => handleTabClick("reports")}
+              >
+                Sales
+              </button>
+            </li>
+            <li
+              className={`nav-btn nav-item ${
                 activeTab === "usermanager" ? "active" : ""
               }`}
             >
@@ -533,7 +552,7 @@ const handlePatientDropdownSelection = (username) => {
           {activeTab === "settings" && (
             <div className="card mt-4">
               <AdminProfile />
-              <button
+              {/* <button
                 className="btn btn-primary mt-2 d-inline-block w-auto"
                 onClick={togglePasswordPopup}
               >
@@ -543,7 +562,7 @@ const handlePatientDropdownSelection = (username) => {
                 <div className="popup">
                   <ChangePassword userType="administrator" />
                 </div>
-              )}{" "}
+              )}{" "} */}
             </div>
           )}
           {submissionStatus === "success" && (
@@ -553,43 +572,67 @@ const handlePatientDropdownSelection = (username) => {
             <div className="alert alert-danger">{message}</div>
           )}
           <br />
-          {activeTab === "administrators" && (
-            <div className="card mb-3">
-              <h2>Add Administrator</h2>
-              {submissionStatusAdmin === "error" && (
-                <div className="alert alert-danger">{message}</div>
-              )}
-              {submissionStatusAdmin === "success" && (
-                <div className="alert alert-success">{message}</div>
-              )}
-              <input
-                type="text"
-                placeholder="Administrator Username"
-                value={adminUsername}
-                onChange={(e) => setAdminUsername(e.target.value)}
-                className="form-control mb-2"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-control mb-2"
-              />
-              <input
-                type="text"
-                placeholder="Administrator Email"
-                value={email}
-                onChange={(e) => setAdminEmail(e.target.value)}
-                className="form-control mb-2"
-              />
-              <div>
-                <button className="btn btn-primary" onClick={addAdministrator}>
-                  Add Administrator
-                </button>
-              </div>
-            </div>
+
+          <div className="d-flex align-items-start justify-content-start">
+  {activeTab === "administrators" && (
+    <>
+      {/* Slides on the left */}
+      <Carousel style={{ width: '40%' }}>
+        <Carousel.Item>
+          <img src={slideAdmin} alt="First Slide" className="d-block w-100" />
+          <Carousel.Caption>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img src={addAdmin} alt="Second Slide" className="d-block w-100" />
+          <Carousel.Caption>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+
+      {/* Card on the right */}
+      <Card className="mb-3" border="dark" style={{ width: '50%', marginLeft: '20px', marginTop: '55px', borderWidth: '2px' }}>
+        <Card.Header className="text-center" style={{ background: '#44bab1', fontWeight: 'bold', color: 'black', fontSize: '22px' }}>Add Administrator</Card.Header>
+        <Card.Body>
+          {submissionStatusAdmin === "error" && (
+            <div className="alert alert-danger">{message}</div>
           )}
+          {submissionStatusAdmin === "success" && (
+            <div className="alert alert-success">{message}</div>
+          )}
+          <input
+            type="text"
+            placeholder="Administrator Username"
+            value={adminUsername}
+            onChange={(e) => setAdminUsername(e.target.value)}
+            className="form-control mb-2"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form-control mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Administrator Email"
+            value={email}
+            onChange={(e) => setAdminEmail(e.target.value)}
+            className="form-control mb-2"
+          />
+          <div>
+            <button className="btn btn-primary" onClick={addAdministrator}>
+              Add Administrator
+            </button>
+          </div>
+        </Card.Body>
+      </Card>
+    </>
+  )}
+</div>
+
+
           <Row>
           {activeTab === "usermanager" && (
           <Col md={6}>
@@ -733,12 +776,7 @@ const handlePatientDropdownSelection = (username) => {
         )}
 </Row>
 
-          {/* {activeTab === "home" && (
-            <div className="mt-4">
-              <h2 className="mb-4 mt-4 text-center">Sales Report</h2>
-              <SalesReportGenerator userType="administrator" />
-            </div>
-          )} */}
+          
           {activeTab === "home" && (
           <div >
             <UserCardsTotal /> 
@@ -931,6 +969,24 @@ const handlePatientDropdownSelection = (username) => {
           {activeTab === "medicines" && (
             <div className="mt-4">{<Medicine modelName="administrator" />}</div>
           )}
+          
+          {activeTab === "reports" && (
+            <div className="report" style={{ textAlign: 'center', marginBottom: '60px', fontSize: '20px', fontFamily: 'inherit' }}>
+              <h2 style={{ borderBottom: '1px solid #333', paddingBottom: '10px', display: 'inline-block', width: '100%' }}>Sales Report</h2>
+            </div>
+          )}
+
+          {activeTab === "reports" && (
+          <div style={{ width: "55%" ,paddingLeft:"5%" , float:"left"  }}>
+            <MedicinePrescriptionChart />
+          </div>
+        )}
+        {activeTab === "reports" && (
+          <div className="sales-container">
+             <SalesReportGenerator userType="administrator" />
+          </div>
+        )}
+          
         </div>
       </div>
       <Footer />
