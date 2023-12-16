@@ -15,6 +15,7 @@ const Login = () => {
   const location = useLocation();
   const errorMessage = location.state && location.state.errorMessage;
   const [showEmailWindow, setShowEmailWindow] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleForgotEmail = () => {
     setShowEmailWindow(true);
@@ -86,11 +87,23 @@ const Login = () => {
               <input
                 className="login-input form-control"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+
+              <input
+                style={{ marginLeft: "50px", marginBottom: "15px" }}
+                type="checkbox"
+                id="togglePassword"
+                className="toggle-password-checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              />
+              <label htmlFor="togglePassword" style={{ marginLeft: "5px" }}>
+                Show Password
+              </label>
               <br />
               {error && <p style={{ color: "red" }}>{error}</p>}
               <a className="forgot" onClick={handleForgotEmail}>
