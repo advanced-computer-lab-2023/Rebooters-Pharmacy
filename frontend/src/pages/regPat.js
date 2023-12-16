@@ -26,6 +26,7 @@ const AddPatient = () => {
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const onCancel = () => {
     navigate("/homePage");
   };
@@ -173,14 +174,34 @@ const AddPatient = () => {
                   <label htmlFor="password" className="form-label">
                     Password:
                   </label>
-                  <input
+                  {/* <input
                     type="password"
                     className="form-control"
                     id="password"
                     name="password"
                     value={newPatient.password}
                     onChange={handleInputChange}
+                  /> */}
+                  <input
+                    className="form-control"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={newPatient.password}
+                    onChange={handleInputChange}
                   />
+
+                  <input
+                    style={{ marginLeft: "4px" }}
+                    type="checkbox"
+                    id="togglePassword"
+                    className="toggle-password-checkbox"
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                  />
+                  <label htmlFor="togglePassword" style={{ marginLeft: "5px" }}>
+                    Show Password
+                  </label>
                 </div>
                 <div className="col-4 mb-3">
                   <label htmlFor="dateOfBirth" className="form-label">

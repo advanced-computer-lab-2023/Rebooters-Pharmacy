@@ -8,26 +8,98 @@ and ordering medication that was prescribed.
 ## Motivation
 This project's purpose was initially, mainly for academic purposes. We learnt a ton of information on how to use MERN Stack which is an abbreviation for Mongodb, Express.js, React.js, Node.js. React and JavaScript being probably the most used framework for frontend and backend Web/App development made this project very fruitful. However, while developing the project, the team was motivated to design this project as if it were to be a real, usable website for people one day. We tried enhancing the UI/UX as much as possible to make the user want to recommend this website to other people.
 ## Build Status
-This project is supposedly built to have no bugs/errors however, in terms of speed, you can definitely tell the project is running using free database servers. This causes the speed at which database fetches important data slower than we would like. This sometimes causes run-time errors as the website is trying to use an object that it fetched from the database, but due to the slow-fetch from the database it causes an error.
-Additionally, it might not be considered a bug, but it is worth noting you can not sign in on 2 different accounts from the same browser application eg: Chrome, what will happen is that it will sign you out of the previous account and focus on the freshly signed in account.
+-   The project is currently still under development by Rebooters.
+-   The database server is slow due to free service.
+-  Unit tests are not yet made for faster automated testing (The team uses postman for a more interactive testing experience).
+- The system as a whole could be a bit more responsive in a more modern way instead of just flashing messages to the user.
 
 ## Code Style
-Standard coding conventions.
-For variables, the naming convention is to always start with a lowercase letter and then capitalize the first letter of every subsequent word.
+- Standard coding conventions.
+- For variables, the naming convention is to always start with a lowercase letter and then capitalize the first letter of every subsequent word.
+- For functions, same as variables, the naming convention is to always start with a lowercase letter and then capitalize the first letter of every subsequent word.
+- All related functions of a certain user are all coded in one file.
+- All related routes of a certain user are all coded in one file.
+- We prefered the inline styling to be kept at minimum.
 ## Screenshots
+#### Home
+![image](screenshots/home.png)
+#### About Us 
+![image](screenshots/about-us.png)
+#### Help
+![image](screenshots/help.png)
+#### Help (continued)
+![image](screenshots/help2.png)
+#### Contact
+![image](screenshots/contact.png)
+#### Login
+![image](screenshots/login.png)
+#### Cart
+![image](screenshots/cart.png)
+#### Checkout
+![image](screenshots/checkout.png)
+#### Orders
+![image](screenshots/orders.png)
+#### Admin Dashboard
+![image](screenshots/admin.png)
+#### Add Admin
+![image](screenshots/add-admin.png)
 
 ## Tech/Framework Used
-MERN Stack
-
-**Client:** React, Bootstrap
-
-**Server:** Node, Express, Mongodb
+-   [React](https://reactjs.org/)
+-   [Node.js](https://nodejs.org/en/)
+-   [Express](https://expressjs.com/)
+-   [MongoDB](https://www.mongodb.com/)
+-   [Mongoose](https://mongoosejs.com/)
+-   [Git](https://git-scm.com/)
+-   [NodeMailer](https://nodemailer.com/about/)
+-   [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+-   [Postman](https://www.postman.com/)
+-   [VSCode](https://code.visualstudio.com/)
+-   [Bootstrap](https://getbootstrap.com/)
 
 
 ## Features
+### The system serves different type of users (Guest, Admin, Pharmacist & Patient)
 
-- Intuitive UI/UX
-- Cross Platform
+#### As an Admin I can 
+
+- Add other admins to the system
+- Manage patients/pharmacists on the system (View/Remove)
+- View sales report of the pharmacy system
+- View Pharmacist requests to join the system
+
+#### As a Patient I can 
+
+- View medicine list
+- Add medicines to my cart
+- Add medicines that need prescription to my cart (provided that Patient owns a recent prescription)
+- View my cart
+- Add delivery address
+- View upcoming/past/cancelled orders
+- Pay for order with wallet/card/cash on delivery
+- View alternatives to an out of stock medicine
+- Chat with a pharmacist
+
+#### As a Pharmacist I can 
+
+- View list of medicines and their full details
+- Add Medicine
+- Remove Medicine
+- Edit Medicine
+- Archive Medicine
+- Chat with a doctor
+- Chat with a patient
+- View sales report 
+- Filter sales repor
+
+#### As  Guest I can 
+
+- Sign up as a Patient
+- Sign up to request to become a Pharmacist
+- Login with an already made account
+- Use the forget-password protocol when needed
+- Read the about-us/contact/help pages of the website
+
 ## Usage/Examples
 
 #### Code Examples from the guestController.js
@@ -623,6 +695,12 @@ POST /api/patient/deleteChat/:chatId
 | :---------------------- | :----- | :--------------------------------------------- |
 | `chatId`     | `number` | **Required**. ID of chat to close|
 
+#### Get Package
+
+```http
+GET /api/patient/getPackage
+```
+
 ### Pharmacist API
 
 **Note**: All the following routes requires the pharmacist to be logged in. Upon logging in the pharmacist username gets stored in the cookies to be used in each route.
@@ -971,11 +1049,13 @@ To run tests to make sure the routes are working fine, download [Postman](https:
 
 
 ## How to Use?
-Open git bash/ or any terminal in a directory of your choice and do: 
+1. Copy the env-example file, and inside it enter the correct information, then rename it to ".env" and place it inside the "backend/src" folder.
+
+2. Open git bash/ or any terminal in a directory of your choice and do: 
 ```bash
   git clone **paste the github clone link here**
 ```
-Open a terminal inside the project directory and do the following:
+3. Open a terminal inside the project directory and do the following:
 ```bash
   cd backend
   npm install
@@ -983,13 +1063,13 @@ Open a terminal inside the project directory and do the following:
   cd frontend
   npm install
 ```
-To run the project, you need to open two terminals, in the first one:
+4. To run the project, you need to open two terminals, in the first one:
 ```bash
   cd backend
   cd src
   nodemon app.js OR node app.js
 ```
-In the second one:
+5. In the second one:
 ```bash
   cd frontend
   npm start
@@ -997,11 +1077,12 @@ In the second one:
 Then try using the website by registering as a patient and immediately getting access to the patient dashboard!
 ## Contributing
 
-Public Contributions are unfortunately not welcome yet as per this project's team decision; this project is still private.
+Public Contributions are unfortunately not welcome yet as per this project's team decision; this project is only modified by members of the Official Rebooters Team.
 
 
 ## Credits
-Full credit goes to [NetNinja](https://www.youtube.com/@NetNinja) youtube channel for their wonderful playlist on [MERN Stack](https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE&index=1&ab_channel=NetNinja) with the most thorough explanation on the framework.
+ - Full credit goes to [NetNinja](https://www.youtube.com/@NetNinja) youtube channel for their wonderful playlist on [MERN Stack](https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE&index=1&ab_channel=NetNinja) with the most thorough explanation on the framework.
+ - [Adding screenshots to README Tutorial](https://www.youtube.com/watch?v=Ljj1wGFJqPY&ab_channel=SeanCDavis)
 
 ## Authors
 
